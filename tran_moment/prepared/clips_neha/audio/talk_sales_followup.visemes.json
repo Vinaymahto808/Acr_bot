@@ -1,0 +1,346 @@
+{
+ "text": "Theek hai ji, aap aaram se soch lijiye. Main aapka number note kar leti hoon. Hamare sales advisor aapko call karke saari details de denge.",
+ "duration": 13.224,
+ "mouthCues": [
+  {
+   "start": 0.0,
+   "end": 0.263,
+   "value": "X"
+  },
+  {
+   "start": 0.263,
+   "end": 0.367,
+   "value": "B"
+  },
+  {
+   "start": 0.367,
+   "end": 0.646,
+   "value": "D"
+  },
+  {
+   "start": 0.646,
+   "end": 0.975,
+   "value": "C"
+  },
+  {
+   "start": 0.988,
+   "end": 1.094,
+   "value": "B"
+  },
+  {
+   "start": 1.094,
+   "end": 1.375,
+   "value": "D"
+  },
+  {
+   "start": 1.375,
+   "end": 1.613,
+   "value": "X"
+  },
+  {
+   "start": 1.613,
+   "end": 1.862,
+   "value": "C"
+  },
+  {
+   "start": 1.862,
+   "end": 1.963,
+   "value": "A"
+  },
+  {
+   "start": 1.975,
+   "end": 2.144,
+   "value": "C"
+  },
+  {
+   "start": 2.144,
+   "end": 2.201,
+   "value": "B"
+  },
+  {
+   "start": 2.201,
+   "end": 2.369,
+   "value": "C"
+  },
+  {
+   "start": 2.369,
+   "end": 2.438,
+   "value": "A"
+  },
+  {
+   "start": 2.451,
+   "end": 2.772,
+   "value": "B"
+  },
+  {
+   "start": 2.772,
+   "end": 2.979,
+   "value": "E"
+  },
+  {
+   "start": 2.979,
+   "end": 3.063,
+   "value": "B"
+  },
+  {
+   "start": 3.076,
+   "end": 3.142,
+   "value": "H"
+  },
+  {
+   "start": 3.142,
+   "end": 3.319,
+   "value": "D"
+  },
+  {
+   "start": 3.319,
+   "end": 3.385,
+   "value": "B"
+  },
+  {
+   "start": 3.385,
+   "end": 3.503,
+   "value": "D"
+  },
+  {
+   "start": 3.503,
+   "end": 3.65,
+   "value": "B"
+  },
+  {
+   "start": 3.65,
+   "end": 4.488,
+   "value": "X"
+  },
+  {
+   "start": 4.488,
+   "end": 4.575,
+   "value": "A"
+  },
+  {
+   "start": 4.575,
+   "end": 4.964,
+   "value": "C"
+  },
+  {
+   "start": 4.964,
+   "end": 5.072,
+   "value": "A"
+  },
+  {
+   "start": 5.072,
+   "end": 5.277,
+   "value": "C"
+  },
+  {
+   "start": 5.277,
+   "end": 5.37,
+   "value": "F"
+  },
+  {
+   "start": 5.37,
+   "end": 5.433,
+   "value": "A"
+  },
+  {
+   "start": 5.433,
+   "end": 5.686,
+   "value": "B"
+  },
+  {
+   "start": 5.686,
+   "end": 5.865,
+   "value": "E"
+  },
+  {
+   "start": 5.865,
+   "end": 5.994,
+   "value": "B"
+  },
+  {
+   "start": 5.994,
+   "end": 6.169,
+   "value": "C"
+  },
+  {
+   "start": 6.169,
+   "end": 6.309,
+   "value": "B"
+  },
+  {
+   "start": 6.309,
+   "end": 6.426,
+   "value": "D"
+  },
+  {
+   "start": 6.438,
+   "end": 6.605,
+   "value": "C"
+  },
+  {
+   "start": 6.605,
+   "end": 7.051,
+   "value": "F"
+  },
+  {
+   "start": 7.051,
+   "end": 7.163,
+   "value": "B"
+  },
+  {
+   "start": 7.163,
+   "end": 8.093,
+   "value": "X"
+  },
+  {
+   "start": 8.093,
+   "end": 8.191,
+   "value": "C"
+  },
+  {
+   "start": 8.191,
+   "end": 8.258,
+   "value": "A"
+  },
+  {
+   "start": 8.258,
+   "end": 8.478,
+   "value": "C"
+  },
+  {
+   "start": 8.478,
+   "end": 8.667,
+   "value": "B"
+  },
+  {
+   "start": 8.667,
+   "end": 8.815,
+   "value": "C"
+  },
+  {
+   "start": 8.815,
+   "end": 8.988,
+   "value": "B"
+  },
+  {
+   "start": 9.001,
+   "end": 9.116,
+   "value": "C"
+  },
+  {
+   "start": 9.116,
+   "end": 9.181,
+   "value": "B"
+  },
+  {
+   "start": 9.181,
+   "end": 9.246,
+   "value": "G"
+  },
+  {
+   "start": 9.246,
+   "end": 9.362,
+   "value": "D"
+  },
+  {
+   "start": 9.362,
+   "end": 9.427,
+   "value": "B"
+  },
+  {
+   "start": 9.427,
+   "end": 9.585,
+   "value": "E"
+  },
+  {
+   "start": 9.585,
+   "end": 9.65,
+   "value": "B"
+  },
+  {
+   "start": 9.663,
+   "end": 9.824,
+   "value": "C"
+  },
+  {
+   "start": 9.824,
+   "end": 9.944,
+   "value": "A"
+  },
+  {
+   "start": 9.944,
+   "end": 10.075,
+   "value": "E"
+  },
+  {
+   "start": 10.088,
+   "end": 10.345,
+   "value": "C"
+  },
+  {
+   "start": 10.345,
+   "end": 10.501,
+   "value": "H"
+  },
+  {
+   "start": 10.501,
+   "end": 10.689,
+   "value": "C"
+  },
+  {
+   "start": 10.689,
+   "end": 10.876,
+   "value": "B"
+  },
+  {
+   "start": 10.876,
+   "end": 11.064,
+   "value": "C"
+  },
+  {
+   "start": 11.064,
+   "end": 11.127,
+   "value": "B"
+  },
+  {
+   "start": 11.127,
+   "end": 11.238,
+   "value": "D"
+  },
+  {
+   "start": 11.251,
+   "end": 11.488,
+   "value": "B"
+  },
+  {
+   "start": 11.488,
+   "end": 11.638,
+   "value": "C"
+  },
+  {
+   "start": 11.638,
+   "end": 11.694,
+   "value": "H"
+  },
+  {
+   "start": 11.694,
+   "end": 12.251,
+   "value": "B"
+  },
+  {
+   "start": 12.251,
+   "end": 12.329,
+   "value": "C"
+  },
+  {
+   "start": 12.329,
+   "end": 12.501,
+   "value": "B"
+  },
+  {
+   "start": 12.501,
+   "end": 13.387,
+   "value": "X"
+  }
+ ]
+}

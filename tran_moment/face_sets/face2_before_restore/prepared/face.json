@@ -1,0 +1,84 @@
+{
+ "version": 1,
+ "width": 640,
+ "height": 852,
+ "source": "tran_moment\\prepared\\face_v2_flat_2x.png",
+ "points": {
+  "mouth_left": [
+   269.1,
+   345.5
+  ],
+  "mouth_right": [
+   365.4,
+   346.4
+  ],
+  "lip_top": [
+   311.7,
+   323.0
+  ],
+  "lip_upper_inner": [
+   312.5,
+   337.1
+  ],
+  "lip_lower_inner": [
+   312.5,
+   351.3
+  ],
+  "lip_bottom": [
+   312.2,
+   369.3
+  ],
+  "chin": [
+   314.8,
+   436.4
+  ],
+  "nose_bottom": [
+   310.6,
+   299.0
+  ],
+  "nose_tip": [
+   307.4,
+   282.0
+  ],
+  "eye_l_outer": [
+   240.1,
+   226.4
+  ],
+  "eye_l_inner": [
+   288.0,
+   228.5
+  ],
+  "eye_l_top": [
+   259.6,
+   216.2
+  ],
+  "eye_l_bottom": [
+   259.6,
+   232.7
+  ],
+  "brow_l": [
+   243.0,
+   178.9
+  ],
+  "eye_r_inner": [
+   347.5,
+   227.6
+  ],
+  "eye_r_outer": [
+   400.4,
+   224.9
+  ],
+  "eye_r_top": [
+   378.1,
+   214.5
+  ],
+  "eye_r_bottom": [
+   377.0,
+   230.9
+  ],
+  "brow_r": [
+   393.3,
+   175.5
+  ]
+ }
+}

@@ -1,0 +1,78 @@
+# ---- secrets: never in git ----
+.env
+.env.*
+!.env.example
+voice_clone/.env
+kb/.env
+human_bot/.env
+
+# ---- customer data and recordings (DPDP): stays on the server ----
+human_bot/data/
+kb/data/
+*.sqlite
+*.sqlite-wal
+*.sqlite-shm
+# the one exception: the committed crawl snapshot of the public ACR site that seeds a diskless host
+!kb/seed/kb.sqlite
+
+# ---- real-person media kept out of a public repo (consent / copyright) ----
+tran_moment/sample_audio.mp4
+tran_moment/prepared/clips/
+human_bot/web/samples/videoplayback*.m4a
+voice_models/
+
+voice_clone/src/
+voice_clone/consent/
+
+# ---- generated / large / local tooling ----
+node_modules/
+__pycache__/
+*.pyc
+.venv/
+venv/
+tools/
+kb/storage/
+kb/data/models/
+tran_moment/path_b/cache/
+tran_moment/motion/models/*.task
+human_bot/web/shots/
+avatar_widget/test/shots/
+*.log
+.DS_Store
+Thumbs.db
+*.ipynb_checkpoints/
+
+# third-party bundle captured for recon only
+research/aiva/widget.js
+
+# the AI-rendered expression grid is the puppet source: keep it
+!voice_clone/src/
+voice_clone/src/*
+!voice_clone/src/expressions_grid.png
+voice_clone/work/
+
+# Vercel CLI project link (ids only, machine-local)
+.vercel/
+
+.vercel
+.env*
+# kb/tools: the Q&A cleaning scripts (not the root tools/ with binaries and venvs)
+!kb/tools/
+# customer-call Q&A: internal business data, never in the public repo (kept on the machine / the host)
+kb/seed/acr_customer_qa*.csv
+kb/seed/CALLS_REVIEW.csv
+kb/seed/qa_pages.jsonl.gz.b64
+kb/seed/qa_rewrites.json
+kb/seed/QA_REVIEW.md
+tran_moment/prepared/acr_customer_qa*.csv
+tran_moment/path_b/sample.wav
+!human_bot/tools/
+# ACR fine-tuning data: built from real customer calls, keep private
+training/acr_sft/
+/ft_data.jsonl
+/fine_tune_neha.ipynb
+
+
+# large ML weights (downloaded; see tran_moment/restore_face.py, upscale_photo.py)
+tran_moment/motion/models/*.onnx
+tran_moment/motion/models/*.pb

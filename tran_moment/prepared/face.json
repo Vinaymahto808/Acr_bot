@@ -1,0 +1,84 @@
+{
+ "version": 1,
+ "width": 640,
+ "height": 852,
+ "source": "prepared\\face_v3_flat.png",
+ "points": {
+  "mouth_left": [
+   268.0,
+   345.4
+  ],
+  "mouth_right": [
+   365.0,
+   345.8
+  ],
+  "lip_top": [
+   310.4,
+   322.2
+  ],
+  "lip_upper_inner": [
+   311.4,
+   336.7
+  ],
+  "lip_lower_inner": [
+   311.6,
+   350.2
+  ],
+  "lip_bottom": [
+   311.2,
+   368.8
+  ],
+  "chin": [
+   313.5,
+   435.6
+  ],
+  "nose_bottom": [
+   309.0,
+   298.3
+  ],
+  "nose_tip": [
+   305.3,
+   281.1
+  ],
+  "eye_l_outer": [
+   239.9,
+   225.9
+  ],
+  "eye_l_inner": [
+   287.2,
+   228.5
+  ],
+  "eye_l_top": [
+   259.2,
+   215.5
+  ],
+  "eye_l_bottom": [
+   258.8,
+   232.5
+  ],
+  "brow_l": [
+   242.2,
+   178.4
+  ],
+  "eye_r_inner": [
+   347.0,
+   227.8
+  ],
+  "eye_r_outer": [
+   399.6,
+   225.0
+  ],
+  "eye_r_top": [
+   377.2,
+   214.4
+  ],
+  "eye_r_bottom": [
+   376.3,
+   230.6
+  ],
+  "brow_r": [
+   392.3,
+   175.3
+  ]
+ }
+}

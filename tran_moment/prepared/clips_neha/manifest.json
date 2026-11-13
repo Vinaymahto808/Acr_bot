@@ -1,0 +1,348 @@
+{
+  "_note": "Neha reaction set generated from prepared/ref_720x1280.png (AI portrait, see CONSENT.md) and installed by tran_moment/make_clips.py. 720x960, 24 fps, muted, ping-pong loops.",
+  "version": 2,
+  "set": "neha",
+  "crossfade_ms": 350,
+  "states": {
+    "idle": [
+      "idle.mp4",
+      "idle_2.mp4",
+      "idle_3.mp4",
+      "relax.mp4",
+      "relax_2.mp4",
+      "relax_3.mp4",
+      "body_idle.mp4",
+      "body_idle_2.mp4",
+      "body_idle_3.mp4",
+      "sway.mp4",
+      "sway_2.mp4",
+      "sway_3.mp4",
+      "breathe.mp4",
+      "breathe_2.mp4",
+      "breathe_3.mp4"
+    ],
+    "greeting": [
+      "greeting.mp4",
+      "greeting_2.mp4",
+      "greeting_3.mp4",
+      "idle.mp4",
+      "idle_2.mp4",
+      "idle_3.mp4"
+    ],
+    "listening": [
+      "listening.mp4",
+      "listening_2.mp4",
+      "listening_3.mp4",
+      "small_nod.mp4",
+      "small_nod_2.mp4",
+      "small_nod_3.mp4",
+      "attentive.mp4",
+      "attentive_2.mp4",
+      "attentive_3.mp4",
+      "look_down.mp4",
+      "look_down_2.mp4",
+      "look_down_3.mp4",
+      "body_idle.mp4",
+      "body_idle_2.mp4",
+      "body_idle_3.mp4",
+      "lean_forward.mp4",
+      "lean_forward_2.mp4",
+      "lean_forward_3.mp4"
+    ],
+    "thinking": [
+      "look_up.mp4",
+      "look_up_2.mp4",
+      "look_up_3.mp4",
+      "look_left.mp4",
+      "look_left_2.mp4",
+      "look_left_3.mp4",
+      "look_right.mp4",
+      "look_right_2.mp4",
+      "look_right_3.mp4"
+    ],
+    "backchannel": [
+      "head_wobble.mp4",
+      "head_wobble_2.mp4",
+      "head_wobble_3.mp4",
+      "small_nod.mp4",
+      "small_nod_2.mp4",
+      "small_nod_3.mp4",
+      "agree.mp4",
+      "agree_2.mp4",
+      "agree_3.mp4"
+    ],
+    "speaking": [
+      "talk_greeting.mp4",
+      "talk_ask.mp4",
+      "talk_explain.mp4",
+      "talk_reassure.mp4",
+      "talk_price.mp4",
+      "talk_booking.mp4",
+      "talk_close.mp4"
+    ],
+    "sales": [
+      "talk_sales_welcome.mp4",
+      "talk_sales_needs.mp4",
+      "talk_sales_budget.mp4",
+      "talk_sales_recommend.mp4",
+      "talk_sales_objection.mp4",
+      "talk_sales_testdrive.mp4",
+      "talk_sales_finance.mp4",
+      "talk_sales_followup.mp4"
+    ]
+  },
+  "gestures": {
+    "idle": [
+      "idle.mp4",
+      "idle_2.mp4",
+      "idle_3.mp4",
+      "relax.mp4",
+      "relax_2.mp4",
+      "relax_3.mp4",
+      "body_idle.mp4",
+      "body_idle_2.mp4",
+      "body_idle_3.mp4",
+      "sway.mp4",
+      "sway_2.mp4",
+      "sway_3.mp4"
+    ],
+    "pause": [
+      "idle.mp4",
+      "idle_2.mp4",
+      "idle_3.mp4",
+      "relax.mp4",
+      "relax_2.mp4",
+      "relax_3.mp4",
+      "look_down.mp4",
+      "look_down_2.mp4",
+      "look_down_3.mp4",
+      "breathe.mp4",
+      "breathe_2.mp4",
+      "breathe_3.mp4"
+    ],
+    "small_nod": [
+      "small_nod.mp4",
+      "small_nod_2.mp4",
+      "small_nod_3.mp4",
+      "listening.mp4",
+      "listening_2.mp4",
+      "listening_3.mp4",
+      "attentive.mp4",
+      "attentive_2.mp4",
+      "attentive_3.mp4"
+    ],
+    "nod": [
+      "nod.mp4",
+      "nod_2.mp4",
+      "nod_3.mp4",
+      "small_nod.mp4",
+      "small_nod_2.mp4",
+      "small_nod_3.mp4",
+      "agree.mp4",
+      "agree_2.mp4",
+      "agree_3.mp4"
+    ],
+    "slow_nod": [
+      "slow_nod.mp4",
+      "slow_nod_2.mp4",
+      "slow_nod_3.mp4",
+      "thank.mp4",
+      "thank_2.mp4",
+      "thank_3.mp4",
+      "apologetic.mp4",
+      "apologetic_2.mp4",
+      "apologetic_3.mp4"
+    ],
+    "tilt_head": [
+      "tilt_head.mp4",
+      "tilt_head_2.mp4",
+      "tilt_head_3.mp4",
+      "slow_nod.mp4",
+      "slow_nod_2.mp4",
+      "slow_nod_3.mp4",
+      "concerned.mp4",
+      "concerned_2.mp4",
+      "concerned_3.mp4",
+      "shoulder_tilt.mp4",
+      "shoulder_tilt_2.mp4",
+      "shoulder_tilt_3.mp4"
+    ],
+    "head_wobble": [
+      "head_wobble.mp4",
+      "head_wobble_2.mp4",
+      "head_wobble_3.mp4",
+      "small_nod.mp4",
+      "small_nod_2.mp4",
+      "small_nod_3.mp4",
+      "agree.mp4",
+      "agree_2.mp4",
+      "agree_3.mp4"
+    ],
+    "look_up": [
+      "look_up.mp4",
+      "look_up_2.mp4",
+      "look_up_3.mp4",
+      "look_left.mp4",
+      "look_left_2.mp4",
+      "look_left_3.mp4",
+      "look_right.mp4",
+      "look_right_2.mp4",
+      "look_right_3.mp4"
+    ],
+    "open_palm": [
+      "open_palm.mp4",
+      "open_palm_2.mp4",
+      "open_palm_3.mp4",
+      "lean_close.mp4",
+      "lean_close_2.mp4",
+      "lean_close_3.mp4",
+      "explain.mp4",
+      "explain_2.mp4",
+      "explain_3.mp4"
+    ],
+    "both_hands": [
+      "both_hands.mp4",
+      "both_hands_2.mp4",
+      "both_hands_3.mp4",
+      "explain.mp4",
+      "explain_2.mp4",
+      "explain_3.mp4"
+    ],
+    "lean_in": [
+      "lean_in.mp4",
+      "lean_in_2.mp4",
+      "lean_in_3.mp4",
+      "both_hands.mp4",
+      "both_hands_2.mp4",
+      "both_hands_3.mp4",
+      "lean_close.mp4",
+      "lean_close_2.mp4",
+      "lean_close_3.mp4",
+      "attentive.mp4",
+      "attentive_2.mp4",
+      "attentive_3.mp4",
+      "lean_forward.mp4",
+      "lean_forward_2.mp4",
+      "lean_forward_3.mp4"
+    ],
+    "greeting": [
+      "greeting.mp4",
+      "greeting_2.mp4",
+      "greeting_3.mp4"
+    ],
+    "surprised": [
+      "surprised.mp4",
+      "surprised_2.mp4",
+      "surprised_3.mp4"
+    ],
+    "question": [
+      "surprised.mp4",
+      "surprised_2.mp4",
+      "surprised_3.mp4",
+      "shrug.mp4",
+      "shrug_2.mp4",
+      "shrug_3.mp4"
+    ],
+    "look_left": [
+      "look_left.mp4",
+      "look_left_2.mp4",
+      "look_left_3.mp4"
+    ],
+    "look_right": [
+      "look_right.mp4",
+      "look_right_2.mp4",
+      "look_right_3.mp4"
+    ],
+    "look_down": [
+      "look_down.mp4",
+      "look_down_2.mp4",
+      "look_down_3.mp4"
+    ],
+    "lean_close": [
+      "lean_close.mp4",
+      "lean_close_2.mp4",
+      "lean_close_3.mp4"
+    ],
+    "agree": [
+      "agree.mp4",
+      "agree_2.mp4",
+      "agree_3.mp4"
+    ],
+    "concerned": [
+      "concerned.mp4",
+      "concerned_2.mp4",
+      "concerned_3.mp4"
+    ],
+    "apologetic": [
+      "apologetic.mp4",
+      "apologetic_2.mp4",
+      "apologetic_3.mp4"
+    ],
+    "thank": [
+      "thank.mp4",
+      "thank_2.mp4",
+      "thank_3.mp4"
+    ],
+    "attentive": [
+      "attentive.mp4",
+      "attentive_2.mp4",
+      "attentive_3.mp4",
+      "sit_up.mp4",
+      "sit_up_2.mp4",
+      "sit_up_3.mp4"
+    ],
+    "relax": [
+      "relax.mp4",
+      "relax_2.mp4",
+      "relax_3.mp4",
+      "relax_shoulders.mp4",
+      "relax_shoulders_2.mp4",
+      "relax_shoulders_3.mp4"
+    ],
+    "body_idle": [
+      "body_idle.mp4",
+      "body_idle_2.mp4",
+      "body_idle_3.mp4"
+    ],
+    "breathe": [
+      "breathe.mp4",
+      "breathe_2.mp4",
+      "breathe_3.mp4"
+    ],
+    "shrug": [
+      "shrug.mp4",
+      "shrug_2.mp4",
+      "shrug_3.mp4"
+    ],
+    "lean_forward": [
+      "lean_forward.mp4",
+      "lean_forward_2.mp4",
+      "lean_forward_3.mp4"
+    ],
+    "sit_up": [
+      "sit_up.mp4",
+      "sit_up_2.mp4",
+      "sit_up_3.mp4"
+    ],
+    "sway": [
+      "sway.mp4",
+      "sway_2.mp4",
+      "sway_3.mp4"
+    ],
+    "shoulder_tilt": [
+      "shoulder_tilt.mp4",
+      "shoulder_tilt_2.mp4",
+      "shoulder_tilt_3.mp4"
+    ],
+    "relax_shoulders": [
+      "relax_shoulders.mp4",
+      "relax_shoulders_2.mp4",
+      "relax_shoulders_3.mp4"
+    ],
+    "explain": [
+      "explain.mp4",
+      "explain_2.mp4",
+      "explain_3.mp4"
+    ]
+  }
+}

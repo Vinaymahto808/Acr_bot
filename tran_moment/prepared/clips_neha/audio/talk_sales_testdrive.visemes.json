@@ -1,0 +1,296 @@
+{
+ "text": "Kyun na aap ek baar test drive le kar dekhein? Main aapke liye time book kar deti hoon. Kal subah theek rahega, ya shaam ko?",
+ "duration": 11.208,
+ "mouthCues": [
+  {
+   "start": 0.0,
+   "end": 0.245,
+   "value": "X"
+  },
+  {
+   "start": 0.245,
+   "end": 0.311,
+   "value": "C"
+  },
+  {
+   "start": 0.311,
+   "end": 0.377,
+   "value": "D"
+  },
+  {
+   "start": 0.377,
+   "end": 0.583,
+   "value": "E"
+  },
+  {
+   "start": 0.595,
+   "end": 0.654,
+   "value": "B"
+  },
+  {
+   "start": 0.654,
+   "end": 1.04,
+   "value": "C"
+  },
+  {
+   "start": 1.04,
+   "end": 1.12,
+   "value": "A"
+  },
+  {
+   "start": 1.133,
+   "end": 1.279,
+   "value": "B"
+  },
+  {
+   "start": 1.279,
+   "end": 1.345,
+   "value": "C"
+  },
+  {
+   "start": 1.357,
+   "end": 1.431,
+   "value": "A"
+  },
+  {
+   "start": 1.431,
+   "end": 1.61,
+   "value": "C"
+  },
+  {
+   "start": 1.61,
+   "end": 2.094,
+   "value": "B"
+  },
+  {
+   "start": 2.094,
+   "end": 2.246,
+   "value": "D"
+  },
+  {
+   "start": 2.246,
+   "end": 2.392,
+   "value": "G"
+  },
+  {
+   "start": 2.392,
+   "end": 2.551,
+   "value": "B"
+  },
+  {
+   "start": 2.551,
+   "end": 2.67,
+   "value": "C"
+  },
+  {
+   "start": 2.683,
+   "end": 2.875,
+   "value": "B"
+  },
+  {
+   "start": 2.875,
+   "end": 2.934,
+   "value": "C"
+  },
+  {
+   "start": 2.934,
+   "end": 3.067,
+   "value": "B"
+  },
+  {
+   "start": 3.067,
+   "end": 3.173,
+   "value": "D"
+  },
+  {
+   "start": 3.173,
+   "end": 3.233,
+   "value": "B"
+  },
+  {
+   "start": 3.233,
+   "end": 4.095,
+   "value": "X"
+  },
+  {
+   "start": 4.095,
+   "end": 4.179,
+   "value": "A"
+  },
+  {
+   "start": 4.179,
+   "end": 4.576,
+   "value": "C"
+  },
+  {
+   "start": 4.576,
+   "end": 4.692,
+   "value": "A"
+  },
+  {
+   "start": 4.692,
+   "end": 4.863,
+   "value": "B"
+  },
+  {
+   "start": 4.863,
+   "end": 4.938,
+   "value": "D"
+  },
+  {
+   "start": 4.938,
+   "end": 5.126,
+   "value": "B"
+  },
+  {
+   "start": 5.126,
+   "end": 5.271,
+   "value": "D"
+  },
+  {
+   "start": 5.271,
+   "end": 5.442,
+   "value": "A"
+  },
+  {
+   "start": 5.442,
+   "end": 5.638,
+   "value": "F"
+  },
+  {
+   "start": 5.638,
+   "end": 5.814,
+   "value": "C"
+  },
+  {
+   "start": 5.814,
+   "end": 5.954,
+   "value": "B"
+  },
+  {
+   "start": 5.954,
+   "end": 6.07,
+   "value": "D"
+  },
+  {
+   "start": 6.083,
+   "end": 6.258,
+   "value": "C"
+  },
+  {
+   "start": 6.258,
+   "end": 6.728,
+   "value": "F"
+  },
+  {
+   "start": 6.728,
+   "end": 6.845,
+   "value": "B"
+  },
+  {
+   "start": 6.845,
+   "end": 7.707,
+   "value": "X"
+  },
+  {
+   "start": 7.707,
+   "end": 7.928,
+   "value": "C"
+  },
+  {
+   "start": 7.928,
+   "end": 8.07,
+   "value": "H"
+  },
+  {
+   "start": 8.07,
+   "end": 8.158,
+   "value": "F"
+  },
+  {
+   "start": 8.158,
+   "end": 8.219,
+   "value": "A"
+  },
+  {
+   "start": 8.219,
+   "end": 8.358,
+   "value": "C"
+  },
+  {
+   "start": 8.37,
+   "end": 8.437,
+   "value": "B"
+  },
+  {
+   "start": 8.437,
+   "end": 8.616,
+   "value": "D"
+  },
+  {
+   "start": 8.616,
+   "end": 8.683,
+   "value": "C"
+  },
+  {
+   "start": 8.695,
+   "end": 8.752,
+   "value": "B"
+  },
+  {
+   "start": 8.752,
+   "end": 8.912,
+   "value": "C"
+  },
+  {
+   "start": 8.912,
+   "end": 9.04,
+   "value": "B"
+  },
+  {
+   "start": 9.04,
+   "end": 9.27,
+   "value": "C"
+  },
+  {
+   "start": 9.27,
+   "end": 9.586,
+   "value": "X"
+  },
+  {
+   "start": 9.586,
+   "end": 9.745,
+   "value": "C"
+  },
+  {
+   "start": 9.758,
+   "end": 9.822,
+   "value": "B"
+  },
+  {
+   "start": 9.822,
+   "end": 10.016,
+   "value": "C"
+  },
+  {
+   "start": 10.016,
+   "end": 10.095,
+   "value": "A"
+  },
+  {
+   "start": 10.108,
+   "end": 10.216,
+   "value": "C"
+  },
+  {
+   "start": 10.216,
+   "end": 10.483,
+   "value": "E"
+  },
+  {
+   "start": 10.483,
+   "end": 11.353,
+   "value": "X"
+  }
+ ]
+}

@@ -1,0 +1,90 @@
+# Render blueprint (standalone Auto Car Repair project): the two servers the static site (Vercel) talks to.
+# Vercel hosts only files; the Python bot and the Node knowledge service need a real host like this.
+#   1. Render dashboard -> New -> Blueprint -> this repo.
+#   2. Fill the env vars marked sync:false (keys) in the dashboard. Never commit them.
+#   3. Put the bot's public URL (https://acr-neha-bot.onrender.com) into the Vercel landing page / data-api.
+services:
+  - type: web
+    name: acr-neha-bot
+    runtime: python
+    # free = preview: sleeps after 15 min idle (first call ~30-50 s), no persistent disk (recordings
+    # vanish on redeploy). For customers: plan starter + the disk block below (see DEPLOYMENT.md).
+    plan: free
+    region: singapore                 # closest Render region to Delhi NCR
+    buildCommand: pip install edge-tts numpy pillow
+    startCommand: python human_bot/server/app.py --host 0.0.0.0 --port $PORT --persona auto-car-repair
+    healthCheckPath: /health
+    # disk:                           # paid plans only; conversation records + audio (human_bot/data)
+    #   name: data
+    #   mountPath: /opt/render/project/src/human_bot/data
+    #   sizeGB: 5
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.6
+      - key: HUMAN_BOT_BEHIND_PROXY
+        value: "1"
+      # "1": the bot's own URL shows autocarrepair.in with the Neha launcher injected, exactly like
+      # http://127.0.0.1:4001 on the laptop (demo/preview). For customers the dealer site carries the
+      # one-line script tag instead; set this to "0" then.
+      - key: HUMAN_BOT_SITE_MIRROR
+        value: "1"
+      - key: HUMAN_BOT_ALLOWED_ORIGINS
+        value: https://autocarrepair.in,https://www.autocarrepair.in,https://avatarwidget-five.vercel.app
+      - key: HUMAN_BOT_AVATAR_PROVIDER
+        value: puppet
+      - key: HUMAN_BOT_VOICE_STYLE
+        value: hindi
+      - key: HUMAN_BOT_RECORD
+        value: "1"
+      - key: ACR_LEADS_MODE
+        value: dry
+      - key: KB_URL
+        fromService:
+          type: web
+          name: acr-neha-kb
+          envVarKey: RENDER_EXTERNAL_URL
+      - key: GROQ_API_KEY
+        sync: false
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: SIMLI_API_KEY
+        sync: false
+      - key: HUMAN_BOT_ADMIN_KEY
+        generateValue: true
+      - key: KB_ADMIN_KEY
+        sync: false
+
+  - type: web
+    name: acr-neha-kb
+    runtime: node
+    # free (512 MB) runs the lexical + Gemini path; the local embedding model wants plan standard (~1 GB).
+    plan: free
+    region: singapore
+    rootDir: kb
+    buildCommand: npm ci --omit=dev --ignore-scripts
+    # seed.js copies the committed crawl snapshot (seed/kb.sqlite) into data/ when no database exists
+    startCommand: node src/seed.js && node src/server.js
+    healthCheckPath: /health
+    # disk:                           # paid plans only: kb.sqlite + the embedding model cache survive deploys
+    #   name: kbdata
+    #   mountPath: /opt/render/project/src/kb/data
+    #   sizeGB: 2
+    envVars:
+      - key: NODE_VERSION
+        value: "24"
+      - key: KB_HOST
+        value: 0.0.0.0
+      - key: KB_PORT
+        value: "10000"
+      - key: KB_TRUST_PROXY
+        value: "1"
+      - key: KB_QUERY_PROVIDER
+        value: gemini               # "local" once the service has >= 1 GB RAM (plan standard)
+      - key: KB_LOCAL_MODEL
+        value: ""                   # skip the 130 MB model download on the free plan
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: KB_ADMIN_KEY
+        sync: false

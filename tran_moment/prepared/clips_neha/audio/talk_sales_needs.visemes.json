@@ -1,0 +1,311 @@
+{
+ "text": "Acha ji. Gaadi zyada tar city mein chalegi ya highway par bhi? Aur family mein kitne log hain, taaki main sahi option bata sakoon?",
+ "duration": 10.224,
+ "mouthCues": [
+  {
+   "start": 0.0,
+   "end": 0.193,
+   "value": "X"
+  },
+  {
+   "start": 0.193,
+   "end": 0.322,
+   "value": "C"
+  },
+  {
+   "start": 0.322,
+   "end": 0.466,
+   "value": "B"
+  },
+  {
+   "start": 0.466,
+   "end": 0.746,
+   "value": "C"
+  },
+  {
+   "start": 0.746,
+   "end": 0.943,
+   "value": "D"
+  },
+  {
+   "start": 0.943,
+   "end": 1.147,
+   "value": "C"
+  },
+  {
+   "start": 1.147,
+   "end": 1.386,
+   "value": "D"
+  },
+  {
+   "start": 1.386,
+   "end": 1.7,
+   "value": "C"
+  },
+  {
+   "start": 1.713,
+   "end": 1.777,
+   "value": "B"
+  },
+  {
+   "start": 1.777,
+   "end": 1.893,
+   "value": "C"
+  },
+  {
+   "start": 1.893,
+   "end": 2.023,
+   "value": "B"
+  },
+  {
+   "start": 2.023,
+   "end": 2.264,
+   "value": "D"
+  },
+  {
+   "start": 2.276,
+   "end": 2.336,
+   "value": "A"
+  },
+  {
+   "start": 2.336,
+   "end": 2.499,
+   "value": "B"
+  },
+  {
+   "start": 2.499,
+   "end": 2.639,
+   "value": "C"
+  },
+  {
+   "start": 2.639,
+   "end": 2.803,
+   "value": "B"
+  },
+  {
+   "start": 2.803,
+   "end": 2.981,
+   "value": "D"
+  },
+  {
+   "start": 2.981,
+   "end": 3.144,
+   "value": "C"
+  },
+  {
+   "start": 3.144,
+   "end": 3.25,
+   "value": "D"
+  },
+  {
+   "start": 3.25,
+   "end": 3.309,
+   "value": "C"
+  },
+  {
+   "start": 3.309,
+   "end": 3.368,
+   "value": "F"
+  },
+  {
+   "start": 3.368,
+   "end": 3.526,
+   "value": "C"
+  },
+  {
+   "start": 3.539,
+   "end": 3.599,
+   "value": "A"
+  },
+  {
+   "start": 3.599,
+   "end": 3.722,
+   "value": "C"
+  },
+  {
+   "start": 3.735,
+   "end": 3.866,
+   "value": "A"
+  },
+  {
+   "start": 3.866,
+   "end": 4.151,
+   "value": "D"
+  },
+  {
+   "start": 4.151,
+   "end": 4.996,
+   "value": "X"
+  },
+  {
+   "start": 4.996,
+   "end": 5.221,
+   "value": "E"
+  },
+  {
+   "start": 5.221,
+   "end": 5.302,
+   "value": "B"
+  },
+  {
+   "start": 5.315,
+   "end": 5.375,
+   "value": "G"
+  },
+  {
+   "start": 5.375,
+   "end": 5.474,
+   "value": "C"
+  },
+  {
+   "start": 5.474,
+   "end": 5.544,
+   "value": "A"
+  },
+  {
+   "start": 5.544,
+   "end": 5.646,
+   "value": "D"
+  },
+  {
+   "start": 5.646,
+   "end": 5.703,
+   "value": "H"
+  },
+  {
+   "start": 5.703,
+   "end": 5.805,
+   "value": "D"
+  },
+  {
+   "start": 5.817,
+   "end": 5.877,
+   "value": "A"
+  },
+  {
+   "start": 5.877,
+   "end": 6.031,
+   "value": "B"
+  },
+  {
+   "start": 6.031,
+   "end": 6.236,
+   "value": "D"
+  },
+  {
+   "start": 6.236,
+   "end": 6.356,
+   "value": "B"
+  },
+  {
+   "start": 6.369,
+   "end": 6.429,
+   "value": "H"
+  },
+  {
+   "start": 6.429,
+   "end": 6.577,
+   "value": "E"
+  },
+  {
+   "start": 6.577,
+   "end": 6.972,
+   "value": "C"
+  },
+  {
+   "start": 6.972,
+   "end": 7.03,
+   "value": "B"
+  },
+  {
+   "start": 7.03,
+   "end": 7.239,
+   "value": "X"
+  },
+  {
+   "start": 7.239,
+   "end": 7.296,
+   "value": "B"
+  },
+  {
+   "start": 7.296,
+   "end": 7.528,
+   "value": "C"
+  },
+  {
+   "start": 7.528,
+   "end": 7.631,
+   "value": "D"
+  },
+  {
+   "start": 7.643,
+   "end": 7.705,
+   "value": "A"
+  },
+  {
+   "start": 7.705,
+   "end": 8.075,
+   "value": "C"
+  },
+  {
+   "start": 8.075,
+   "end": 8.207,
+   "value": "D"
+  },
+  {
+   "start": 8.219,
+   "end": 8.309,
+   "value": "E"
+  },
+  {
+   "start": 8.309,
+   "end": 8.41,
+   "value": "A"
+  },
+  {
+   "start": 8.41,
+   "end": 8.483,
+   "value": "D"
+  },
+  {
+   "start": 8.483,
+   "end": 8.623,
+   "value": "E"
+  },
+  {
+   "start": 8.636,
+   "end": 8.681,
+   "value": "A"
+  },
+  {
+   "start": 8.681,
+   "end": 8.893,
+   "value": "C"
+  },
+  {
+   "start": 8.905,
+   "end": 8.979,
+   "value": "B"
+  },
+  {
+   "start": 8.979,
+   "end": 9.185,
+   "value": "C"
+  },
+  {
+   "start": 9.185,
+   "end": 9.383,
+   "value": "F"
+  },
+  {
+   "start": 9.383,
+   "end": 9.457,
+   "value": "B"
+  },
+  {
+   "start": 9.457,
+   "end": 10.317,
+   "value": "X"
+  }
+ ]
+}

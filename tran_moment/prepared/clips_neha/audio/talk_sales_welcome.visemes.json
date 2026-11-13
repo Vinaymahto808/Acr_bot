@@ -1,0 +1,296 @@
+{
+ "text": "Namaste ji, main Neha. Aap nayi gaadi dekh rahe hain? Bahut accha. Main aapki poori madad karungi, aaram se bataiye.",
+ "duration": 11.424,
+ "mouthCues": [
+  {
+   "start": 0.0,
+   "end": 0.202,
+   "value": "X"
+  },
+  {
+   "start": 0.202,
+   "end": 0.267,
+   "value": "B"
+  },
+  {
+   "start": 0.267,
+   "end": 0.383,
+   "value": "C"
+  },
+  {
+   "start": 0.383,
+   "end": 0.462,
+   "value": "A"
+  },
+  {
+   "start": 0.462,
+   "end": 0.578,
+   "value": "C"
+  },
+  {
+   "start": 0.578,
+   "end": 0.967,
+   "value": "B"
+  },
+  {
+   "start": 0.967,
+   "end": 1.239,
+   "value": "D"
+  },
+  {
+   "start": 1.239,
+   "end": 1.477,
+   "value": "X"
+  },
+  {
+   "start": 1.477,
+   "end": 1.547,
+   "value": "A"
+  },
+  {
+   "start": 1.547,
+   "end": 1.739,
+   "value": "C"
+  },
+  {
+   "start": 1.752,
+   "end": 1.953,
+   "value": "B"
+  },
+  {
+   "start": 1.953,
+   "end": 2.202,
+   "value": "C"
+  },
+  {
+   "start": 2.202,
+   "end": 3.064,
+   "value": "X"
+  },
+  {
+   "start": 3.064,
+   "end": 3.313,
+   "value": "C"
+  },
+  {
+   "start": 3.313,
+   "end": 3.48,
+   "value": "A"
+  },
+  {
+   "start": 3.48,
+   "end": 3.574,
+   "value": "C"
+  },
+  {
+   "start": 3.574,
+   "end": 3.769,
+   "value": "D"
+  },
+  {
+   "start": 3.769,
+   "end": 3.939,
+   "value": "C"
+  },
+  {
+   "start": 3.939,
+   "end": 4.052,
+   "value": "D"
+  },
+  {
+   "start": 4.064,
+   "end": 4.265,
+   "value": "B"
+  },
+  {
+   "start": 4.265,
+   "end": 4.513,
+   "value": "C"
+  },
+  {
+   "start": 4.513,
+   "end": 4.615,
+   "value": "B"
+  },
+  {
+   "start": 4.627,
+   "end": 4.927,
+   "value": "C"
+  },
+  {
+   "start": 4.927,
+   "end": 5.79,
+   "value": "X"
+  },
+  {
+   "start": 5.79,
+   "end": 5.875,
+   "value": "A"
+  },
+  {
+   "start": 5.875,
+   "end": 6.07,
+   "value": "C"
+  },
+  {
+   "start": 6.07,
+   "end": 6.194,
+   "value": "F"
+  },
+  {
+   "start": 6.194,
+   "end": 6.265,
+   "value": "B"
+  },
+  {
+   "start": 6.277,
+   "end": 6.421,
+   "value": "C"
+  },
+  {
+   "start": 6.421,
+   "end": 6.584,
+   "value": "B"
+  },
+  {
+   "start": 6.584,
+   "end": 6.827,
+   "value": "C"
+  },
+  {
+   "start": 6.865,
+   "end": 6.928,
+   "value": "A"
+  },
+  {
+   "start": 6.928,
+   "end": 7.281,
+   "value": "C"
+  },
+  {
+   "start": 7.281,
+   "end": 7.404,
+   "value": "A"
+  },
+  {
+   "start": 7.404,
+   "end": 7.552,
+   "value": "D"
+  },
+  {
+   "start": 7.565,
+   "end": 7.627,
+   "value": "A"
+  },
+  {
+   "start": 7.627,
+   "end": 7.815,
+   "value": "F"
+  },
+  {
+   "start": 7.815,
+   "end": 7.952,
+   "value": "D"
+  },
+  {
+   "start": 7.964,
+   "end": 8.028,
+   "value": "A"
+  },
+  {
+   "start": 8.028,
+   "end": 8.546,
+   "value": "C"
+  },
+  {
+   "start": 8.546,
+   "end": 8.626,
+   "value": "B"
+  },
+  {
+   "start": 8.626,
+   "end": 8.766,
+   "value": "F"
+  },
+  {
+   "start": 8.766,
+   "end": 8.845,
+   "value": "B"
+  },
+  {
+   "start": 8.845,
+   "end": 8.924,
+   "value": "C"
+  },
+  {
+   "start": 8.924,
+   "end": 9.064,
+   "value": "D"
+  },
+  {
+   "start": 9.065,
+   "end": 9.277,
+   "value": "X"
+  },
+  {
+   "start": 9.277,
+   "end": 9.45,
+   "value": "C"
+  },
+  {
+   "start": 9.45,
+   "end": 9.508,
+   "value": "B"
+  },
+  {
+   "start": 9.508,
+   "end": 9.681,
+   "value": "C"
+  },
+  {
+   "start": 9.681,
+   "end": 9.815,
+   "value": "A"
+  },
+  {
+   "start": 9.815,
+   "end": 9.927,
+   "value": "B"
+  },
+  {
+   "start": 9.94,
+   "end": 10.017,
+   "value": "A"
+  },
+  {
+   "start": 10.017,
+   "end": 10.13,
+   "value": "C"
+  },
+  {
+   "start": 10.13,
+   "end": 10.194,
+   "value": "B"
+  },
+  {
+   "start": 10.194,
+   "end": 10.385,
+   "value": "C"
+  },
+  {
+   "start": 10.385,
+   "end": 10.498,
+   "value": "D"
+  },
+  {
+   "start": 10.498,
+   "end": 10.64,
+   "value": "B"
+  },
+  {
+   "start": 10.639,
+   "end": 11.526,
+   "value": "X"
+  }
+ ]
+}

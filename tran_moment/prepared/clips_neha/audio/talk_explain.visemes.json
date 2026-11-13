@@ -1,0 +1,336 @@
+{
+ "text": "Dekhiye ji, pehle hum gaadi ko scan karte hain. Phir brake pads aur disc check hote hain. Genuine parts hi lagte hain, warranty ke saath.",
+ "duration": 13.008,
+ "mouthCues": [
+  {
+   "start": 0.0,
+   "end": 0.224,
+   "value": "X"
+  },
+  {
+   "start": 0.224,
+   "end": 0.501,
+   "value": "B"
+  },
+  {
+   "start": 0.501,
+   "end": 0.587,
+   "value": "C"
+  },
+  {
+   "start": 0.587,
+   "end": 0.74,
+   "value": "D"
+  },
+  {
+   "start": 0.74,
+   "end": 1.055,
+   "value": "B"
+  },
+  {
+   "start": 1.055,
+   "end": 1.352,
+   "value": "D"
+  },
+  {
+   "start": 1.352,
+   "end": 1.542,
+   "value": "X"
+  },
+  {
+   "start": 1.542,
+   "end": 1.622,
+   "value": "A"
+  },
+  {
+   "start": 1.622,
+   "end": 1.805,
+   "value": "C"
+  },
+  {
+   "start": 1.805,
+   "end": 1.871,
+   "value": "H"
+  },
+  {
+   "start": 1.871,
+   "end": 2.017,
+   "value": "B"
+  },
+  {
+   "start": 2.031,
+   "end": 2.239,
+   "value": "C"
+  },
+  {
+   "start": 2.239,
+   "end": 2.391,
+   "value": "A"
+  },
+  {
+   "start": 2.391,
+   "end": 2.583,
+   "value": "C"
+  },
+  {
+   "start": 2.583,
+   "end": 2.775,
+   "value": "D"
+  },
+  {
+   "start": 2.775,
+   "end": 2.901,
+   "value": "E"
+  },
+  {
+   "start": 2.914,
+   "end": 2.98,
+   "value": "B"
+  },
+  {
+   "start": 2.98,
+   "end": 3.161,
+   "value": "C"
+  },
+  {
+   "start": 3.161,
+   "end": 3.289,
+   "value": "B"
+  },
+  {
+   "start": 3.289,
+   "end": 3.472,
+   "value": "C"
+  },
+  {
+   "start": 3.472,
+   "end": 3.58,
+   "value": "B"
+  },
+  {
+   "start": 3.594,
+   "end": 3.933,
+   "value": "C"
+  },
+  {
+   "start": 3.933,
+   "end": 4.875,
+   "value": "X"
+  },
+  {
+   "start": 4.875,
+   "end": 4.991,
+   "value": "A"
+  },
+  {
+   "start": 4.991,
+   "end": 5.16,
+   "value": "D"
+  },
+  {
+   "start": 5.16,
+   "end": 5.255,
+   "value": "B"
+  },
+  {
+   "start": 5.269,
+   "end": 5.359,
+   "value": "A"
+  },
+  {
+   "start": 5.359,
+   "end": 5.432,
+   "value": "B"
+  },
+  {
+   "start": 5.432,
+   "end": 5.636,
+   "value": "C"
+  },
+  {
+   "start": 5.65,
+   "end": 5.782,
+   "value": "A"
+  },
+  {
+   "start": 5.782,
+   "end": 5.976,
+   "value": "C"
+  },
+  {
+   "start": 5.976,
+   "end": 6.084,
+   "value": "B"
+  },
+  {
+   "start": 6.098,
+   "end": 6.302,
+   "value": "E"
+  },
+  {
+   "start": 6.315,
+   "end": 6.389,
+   "value": "B"
+  },
+  {
+   "start": 6.389,
+   "end": 6.521,
+   "value": "D"
+  },
+  {
+   "start": 6.521,
+   "end": 6.595,
+   "value": "B"
+  },
+  {
+   "start": 6.595,
+   "end": 6.743,
+   "value": "C"
+  },
+  {
+   "start": 6.743,
+   "end": 6.879,
+   "value": "B"
+  },
+  {
+   "start": 6.879,
+   "end": 7.007,
+   "value": "C"
+  },
+  {
+   "start": 7.007,
+   "end": 7.189,
+   "value": "E"
+  },
+  {
+   "start": 7.189,
+   "end": 7.307,
+   "value": "B"
+  },
+  {
+   "start": 7.321,
+   "end": 7.674,
+   "value": "C"
+  },
+  {
+   "start": 7.674,
+   "end": 8.625,
+   "value": "X"
+  },
+  {
+   "start": 8.625,
+   "end": 8.706,
+   "value": "C"
+  },
+  {
+   "start": 8.706,
+   "end": 8.965,
+   "value": "B"
+  },
+  {
+   "start": 8.965,
+   "end": 9.108,
+   "value": "F"
+  },
+  {
+   "start": 9.108,
+   "end": 9.251,
+   "value": "D"
+  },
+  {
+   "start": 9.251,
+   "end": 9.332,
+   "value": "B"
+  },
+  {
+   "start": 9.345,
+   "end": 9.457,
+   "value": "A"
+  },
+  {
+   "start": 9.457,
+   "end": 9.62,
+   "value": "C"
+  },
+  {
+   "start": 9.62,
+   "end": 9.759,
+   "value": "B"
+  },
+  {
+   "start": 9.759,
+   "end": 9.912,
+   "value": "D"
+  },
+  {
+   "start": 9.912,
+   "end": 10.103,
+   "value": "C"
+  },
+  {
+   "start": 10.103,
+   "end": 10.215,
+   "value": "B"
+  },
+  {
+   "start": 10.228,
+   "end": 10.582,
+   "value": "C"
+  },
+  {
+   "start": 10.582,
+   "end": 10.745,
+   "value": "X"
+  },
+  {
+   "start": 10.745,
+   "end": 10.825,
+   "value": "F"
+  },
+  {
+   "start": 10.825,
+   "end": 10.967,
+   "value": "C"
+  },
+  {
+   "start": 10.967,
+   "end": 11.046,
+   "value": "B"
+  },
+  {
+   "start": 11.046,
+   "end": 11.188,
+   "value": "C"
+  },
+  {
+   "start": 11.188,
+   "end": 11.268,
+   "value": "B"
+  },
+  {
+   "start": 11.268,
+   "end": 11.475,
+   "value": "D"
+  },
+  {
+   "start": 11.475,
+   "end": 11.717,
+   "value": "B"
+  },
+  {
+   "start": 11.717,
+   "end": 12.068,
+   "value": "C"
+  },
+  {
+   "start": 12.068,
+   "end": 12.185,
+   "value": "B"
+  },
+  {
+   "start": 12.185,
+   "end": 13.132,
+   "value": "X"
+  }
+ ]
+}

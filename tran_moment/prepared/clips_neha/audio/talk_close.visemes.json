@@ -1,0 +1,321 @@
+{
+ "text": "Bahut shukriya ji. Aapki request note ho gayi hai. Hamari team aapko jaldi call karegi. Aapka din accha rahe.",
+ "duration": 11.256,
+ "mouthCues": [
+  {
+   "start": 0.0,
+   "end": 0.225,
+   "value": "X"
+  },
+  {
+   "start": 0.225,
+   "end": 0.313,
+   "value": "A"
+  },
+  {
+   "start": 0.313,
+   "end": 0.514,
+   "value": "C"
+  },
+  {
+   "start": 0.514,
+   "end": 0.642,
+   "value": "F"
+  },
+  {
+   "start": 0.642,
+   "end": 0.787,
+   "value": "B"
+  },
+  {
+   "start": 0.787,
+   "end": 0.892,
+   "value": "F"
+  },
+  {
+   "start": 0.892,
+   "end": 0.951,
+   "value": "C"
+  },
+  {
+   "start": 0.951,
+   "end": 1.011,
+   "value": "B"
+  },
+  {
+   "start": 1.011,
+   "end": 1.175,
+   "value": "D"
+  },
+  {
+   "start": 1.175,
+   "end": 1.353,
+   "value": "C"
+  },
+  {
+   "start": 1.366,
+   "end": 1.455,
+   "value": "B"
+  },
+  {
+   "start": 1.455,
+   "end": 1.692,
+   "value": "D"
+  },
+  {
+   "start": 1.706,
+   "end": 1.866,
+   "value": "C"
+  },
+  {
+   "start": 1.866,
+   "end": 1.985,
+   "value": "A"
+  },
+  {
+   "start": 1.985,
+   "end": 2.127,
+   "value": "D"
+  },
+  {
+   "start": 2.141,
+   "end": 2.331,
+   "value": "B"
+  },
+  {
+   "start": 2.331,
+   "end": 2.39,
+   "value": "C"
+  },
+  {
+   "start": 2.39,
+   "end": 2.494,
+   "value": "F"
+  },
+  {
+   "start": 2.494,
+   "end": 2.762,
+   "value": "B"
+  },
+  {
+   "start": 2.762,
+   "end": 2.919,
+   "value": "E"
+  },
+  {
+   "start": 2.919,
+   "end": 3.044,
+   "value": "B"
+  },
+  {
+   "start": 3.044,
+   "end": 3.226,
+   "value": "E"
+  },
+  {
+   "start": 3.226,
+   "end": 3.319,
+   "value": "C"
+  },
+  {
+   "start": 3.319,
+   "end": 3.459,
+   "value": "D"
+  },
+  {
+   "start": 3.472,
+   "end": 3.73,
+   "value": "C"
+  },
+  {
+   "start": 3.73,
+   "end": 4.686,
+   "value": "X"
+  },
+  {
+   "start": 4.686,
+   "end": 4.856,
+   "value": "C"
+  },
+  {
+   "start": 4.856,
+   "end": 4.93,
+   "value": "A"
+  },
+  {
+   "start": 4.93,
+   "end": 5.114,
+   "value": "C"
+  },
+  {
+   "start": 5.114,
+   "end": 5.175,
+   "value": "B"
+  },
+  {
+   "start": 5.175,
+   "end": 5.338,
+   "value": "D"
+  },
+  {
+   "start": 5.352,
+   "end": 5.421,
+   "value": "B"
+  },
+  {
+   "start": 5.421,
+   "end": 5.606,
+   "value": "D"
+  },
+  {
+   "start": 5.606,
+   "end": 5.691,
+   "value": "A"
+  },
+  {
+   "start": 5.705,
+   "end": 5.891,
+   "value": "C"
+  },
+  {
+   "start": 5.891,
+   "end": 5.967,
+   "value": "A"
+  },
+  {
+   "start": 5.967,
+   "end": 6.029,
+   "value": "C"
+  },
+  {
+   "start": 6.029,
+   "end": 6.18,
+   "value": "E"
+  },
+  {
+   "start": 6.194,
+   "end": 6.256,
+   "value": "B"
+  },
+  {
+   "start": 6.256,
+   "end": 6.366,
+   "value": "C"
+  },
+  {
+   "start": 6.366,
+   "end": 6.428,
+   "value": "H"
+  },
+  {
+   "start": 6.428,
+   "end": 6.491,
+   "value": "B"
+  },
+  {
+   "start": 6.491,
+   "end": 6.656,
+   "value": "D"
+  },
+  {
+   "start": 6.67,
+   "end": 6.929,
+   "value": "C"
+  },
+  {
+   "start": 6.929,
+   "end": 7.023,
+   "value": "H"
+  },
+  {
+   "start": 7.036,
+   "end": 7.255,
+   "value": "C"
+  },
+  {
+   "start": 7.255,
+   "end": 7.509,
+   "value": "B"
+  },
+  {
+   "start": 7.509,
+   "end": 7.587,
+   "value": "C"
+  },
+  {
+   "start": 7.587,
+   "end": 7.797,
+   "value": "D"
+  },
+  {
+   "start": 7.797,
+   "end": 8.735,
+   "value": "X"
+  },
+  {
+   "start": 8.735,
+   "end": 8.938,
+   "value": "C"
+  },
+  {
+   "start": 8.938,
+   "end": 9.021,
+   "value": "A"
+  },
+  {
+   "start": 9.021,
+   "end": 9.292,
+   "value": "C"
+  },
+  {
+   "start": 9.305,
+   "end": 9.374,
+   "value": "B"
+  },
+  {
+   "start": 9.374,
+   "end": 9.495,
+   "value": "D"
+  },
+  {
+   "start": 9.495,
+   "end": 9.564,
+   "value": "B"
+  },
+  {
+   "start": 9.577,
+   "end": 9.681,
+   "value": "C"
+  },
+  {
+   "start": 9.681,
+   "end": 9.797,
+   "value": "B"
+  },
+  {
+   "start": 9.797,
+   "end": 9.971,
+   "value": "C"
+  },
+  {
+   "start": 9.985,
+   "end": 10.057,
+   "value": "B"
+  },
+  {
+   "start": 10.057,
+   "end": 10.259,
+   "value": "C"
+  },
+  {
+   "start": 10.259,
+   "end": 10.42,
+   "value": "B"
+  },
+  {
+   "start": 10.42,
+   "end": 11.381,
+   "value": "X"
+  }
+ ]
+}

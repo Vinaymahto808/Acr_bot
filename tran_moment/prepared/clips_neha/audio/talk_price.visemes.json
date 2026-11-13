@@ -1,0 +1,316 @@
+{
+ "text": "Exact quote gaadi dekh kar hi banega ji. Main confirm karke aapko call par bata dungi. Koi hidden charge nahi hoga.",
+ "duration": 10.968,
+ "mouthCues": [
+  {
+   "start": 0.0,
+   "end": 0.233,
+   "value": "X"
+  },
+  {
+   "start": 0.233,
+   "end": 0.463,
+   "value": "B"
+  },
+  {
+   "start": 0.463,
+   "end": 0.854,
+   "value": "C"
+  },
+  {
+   "start": 0.854,
+   "end": 0.957,
+   "value": "B"
+  },
+  {
+   "start": 0.972,
+   "end": 1.033,
+   "value": "C"
+  },
+  {
+   "start": 1.033,
+   "end": 1.143,
+   "value": "F"
+  },
+  {
+   "start": 1.143,
+   "end": 1.294,
+   "value": "E"
+  },
+  {
+   "start": 1.294,
+   "end": 1.355,
+   "value": "B"
+  },
+  {
+   "start": 1.369,
+   "end": 1.607,
+   "value": "C"
+  },
+  {
+   "start": 1.607,
+   "end": 1.666,
+   "value": "B"
+  },
+  {
+   "start": 1.666,
+   "end": 1.824,
+   "value": "D"
+  },
+  {
+   "start": 1.838,
+   "end": 2.12,
+   "value": "B"
+  },
+  {
+   "start": 2.12,
+   "end": 2.446,
+   "value": "C"
+  },
+  {
+   "start": 2.446,
+   "end": 2.591,
+   "value": "D"
+  },
+  {
+   "start": 2.605,
+   "end": 2.666,
+   "value": "A"
+  },
+  {
+   "start": 2.666,
+   "end": 2.805,
+   "value": "C"
+  },
+  {
+   "start": 2.805,
+   "end": 2.966,
+   "value": "B"
+  },
+  {
+   "start": 2.966,
+   "end": 3.117,
+   "value": "C"
+  },
+  {
+   "start": 3.131,
+   "end": 3.189,
+   "value": "B"
+  },
+  {
+   "start": 3.189,
+   "end": 3.344,
+   "value": "D"
+  },
+  {
+   "start": 3.358,
+   "end": 3.419,
+   "value": "A"
+  },
+  {
+   "start": 3.419,
+   "end": 3.664,
+   "value": "C"
+  },
+  {
+   "start": 3.664,
+   "end": 3.822,
+   "value": "E"
+  },
+  {
+   "start": 3.822,
+   "end": 3.887,
+   "value": "B"
+  },
+  {
+   "start": 3.887,
+   "end": 3.952,
+   "value": "G"
+  },
+  {
+   "start": 3.952,
+   "end": 4.067,
+   "value": "D"
+  },
+  {
+   "start": 4.067,
+   "end": 4.131,
+   "value": "B"
+  },
+  {
+   "start": 4.131,
+   "end": 4.21,
+   "value": "A"
+  },
+  {
+   "start": 4.224,
+   "end": 4.405,
+   "value": "C"
+  },
+  {
+   "start": 4.405,
+   "end": 4.47,
+   "value": "B"
+  },
+  {
+   "start": 4.47,
+   "end": 4.535,
+   "value": "C"
+  },
+  {
+   "start": 4.535,
+   "end": 4.679,
+   "value": "B"
+  },
+  {
+   "start": 4.693,
+   "end": 4.877,
+   "value": "C"
+  },
+  {
+   "start": 4.877,
+   "end": 4.951,
+   "value": "A"
+  },
+  {
+   "start": 4.951,
+   "end": 5.013,
+   "value": "C"
+  },
+  {
+   "start": 5.013,
+   "end": 5.162,
+   "value": "E"
+  },
+  {
+   "start": 5.176,
+   "end": 5.469,
+   "value": "C"
+  },
+  {
+   "start": 5.469,
+   "end": 5.574,
+   "value": "H"
+  },
+  {
+   "start": 5.588,
+   "end": 5.649,
+   "value": "A"
+  },
+  {
+   "start": 5.649,
+   "end": 5.787,
+   "value": "C"
+  },
+  {
+   "start": 5.801,
+   "end": 5.861,
+   "value": "A"
+  },
+  {
+   "start": 5.861,
+   "end": 6.128,
+   "value": "C"
+  },
+  {
+   "start": 6.142,
+   "end": 6.236,
+   "value": "B"
+  },
+  {
+   "start": 6.236,
+   "end": 6.487,
+   "value": "F"
+  },
+  {
+   "start": 6.487,
+   "end": 6.55,
+   "value": "B"
+  },
+  {
+   "start": 6.55,
+   "end": 6.644,
+   "value": "C"
+  },
+  {
+   "start": 6.644,
+   "end": 6.895,
+   "value": "D"
+  },
+  {
+   "start": 6.895,
+   "end": 7.882,
+   "value": "X"
+  },
+  {
+   "start": 7.882,
+   "end": 7.949,
+   "value": "C"
+  },
+  {
+   "start": 7.949,
+   "end": 8.114,
+   "value": "E"
+  },
+  {
+   "start": 8.114,
+   "end": 8.294,
+   "value": "D"
+  },
+  {
+   "start": 8.308,
+   "end": 8.371,
+   "value": "C"
+  },
+  {
+   "start": 8.371,
+   "end": 8.483,
+   "value": "D"
+  },
+  {
+   "start": 8.483,
+   "end": 8.748,
+   "value": "B"
+  },
+  {
+   "start": 8.763,
+   "end": 9.019,
+   "value": "C"
+  },
+  {
+   "start": 9.019,
+   "end": 9.111,
+   "value": "B"
+  },
+  {
+   "start": 9.111,
+   "end": 9.391,
+   "value": "C"
+  },
+  {
+   "start": 9.391,
+   "end": 9.544,
+   "value": "D"
+  },
+  {
+   "start": 9.558,
+   "end": 9.632,
+   "value": "C"
+  },
+  {
+   "start": 9.632,
+   "end": 9.814,
+   "value": "E"
+  },
+  {
+   "start": 9.814,
+   "end": 10.112,
+   "value": "C"
+  },
+  {
+   "start": 10.112,
+   "end": 11.101,
+   "value": "X"
+  }
+ ]
+}

@@ -1,0 +1,416 @@
+{
+ "text": "Aap bilkul chinta mat kijiye. Pickup free hai. Hamari team Gurgaon mein aapke ghar se gaadi le jaayegi, aur shaam tak wapas pahuncha degi.",
+ "duration": 13.752,
+ "mouthCues": [
+  {
+   "start": 0.0,
+   "end": 0.215,
+   "value": "X"
+  },
+  {
+   "start": 0.215,
+   "end": 0.495,
+   "value": "C"
+  },
+  {
+   "start": 0.495,
+   "end": 0.702,
+   "value": "A"
+  },
+  {
+   "start": 0.702,
+   "end": 0.817,
+   "value": "D"
+  },
+  {
+   "start": 0.817,
+   "end": 0.881,
+   "value": "H"
+  },
+  {
+   "start": 0.881,
+   "end": 0.946,
+   "value": "C"
+  },
+  {
+   "start": 0.946,
+   "end": 1.061,
+   "value": "F"
+  },
+  {
+   "start": 1.061,
+   "end": 1.125,
+   "value": "H"
+  },
+  {
+   "start": 1.139,
+   "end": 1.215,
+   "value": "C"
+  },
+  {
+   "start": 1.215,
+   "end": 1.35,
+   "value": "D"
+  },
+  {
+   "start": 1.35,
+   "end": 1.425,
+   "value": "B"
+  },
+  {
+   "start": 1.425,
+   "end": 1.56,
+   "value": "C"
+  },
+  {
+   "start": 1.574,
+   "end": 1.682,
+   "value": "A"
+  },
+  {
+   "start": 1.682,
+   "end": 1.839,
+   "value": "C"
+  },
+  {
+   "start": 1.839,
+   "end": 1.927,
+   "value": "B"
+  },
+  {
+   "start": 1.941,
+   "end": 2.016,
+   "value": "C"
+  },
+  {
+   "start": 2.016,
+   "end": 2.216,
+   "value": "D"
+  },
+  {
+   "start": 2.216,
+   "end": 2.292,
+   "value": "B"
+  },
+  {
+   "start": 2.292,
+   "end": 2.425,
+   "value": "D"
+  },
+  {
+   "start": 2.425,
+   "end": 2.593,
+   "value": "B"
+  },
+  {
+   "start": 2.593,
+   "end": 3.535,
+   "value": "X"
+  },
+  {
+   "start": 3.535,
+   "end": 3.632,
+   "value": "A"
+  },
+  {
+   "start": 3.632,
+   "end": 3.773,
+   "value": "D"
+  },
+  {
+   "start": 3.773,
+   "end": 3.853,
+   "value": "C"
+  },
+  {
+   "start": 3.853,
+   "end": 3.994,
+   "value": "F"
+  },
+  {
+   "start": 3.994,
+   "end": 4.092,
+   "value": "A"
+  },
+  {
+   "start": 4.105,
+   "end": 4.166,
+   "value": "G"
+  },
+  {
+   "start": 4.166,
+   "end": 4.227,
+   "value": "B"
+  },
+  {
+   "start": 4.227,
+   "end": 4.391,
+   "value": "D"
+  },
+  {
+   "start": 4.404,
+   "end": 4.676,
+   "value": "C"
+  },
+  {
+   "start": 4.676,
+   "end": 5.613,
+   "value": "X"
+  },
+  {
+   "start": 5.613,
+   "end": 5.783,
+   "value": "C"
+  },
+  {
+   "start": 5.783,
+   "end": 5.858,
+   "value": "A"
+  },
+  {
+   "start": 5.858,
+   "end": 6.041,
+   "value": "C"
+  },
+  {
+   "start": 6.041,
+   "end": 6.102,
+   "value": "B"
+  },
+  {
+   "start": 6.102,
+   "end": 6.266,
+   "value": "D"
+  },
+  {
+   "start": 6.279,
+   "end": 6.349,
+   "value": "B"
+  },
+  {
+   "start": 6.349,
+   "end": 6.534,
+   "value": "D"
+  },
+  {
+   "start": 6.534,
+   "end": 6.619,
+   "value": "A"
+  },
+  {
+   "start": 6.632,
+   "end": 6.691,
+   "value": "C"
+  },
+  {
+   "start": 6.691,
+   "end": 6.795,
+   "value": "F"
+  },
+  {
+   "start": 6.795,
+   "end": 6.853,
+   "value": "B"
+  },
+  {
+   "start": 6.853,
+   "end": 7.015,
+   "value": "C"
+  },
+  {
+   "start": 7.015,
+   "end": 7.158,
+   "value": "E"
+  },
+  {
+   "start": 7.158,
+   "end": 7.217,
+   "value": "B"
+  },
+  {
+   "start": 7.23,
+   "end": 7.319,
+   "value": "A"
+  },
+  {
+   "start": 7.319,
+   "end": 7.529,
+   "value": "B"
+  },
+  {
+   "start": 7.543,
+   "end": 7.756,
+   "value": "C"
+  },
+  {
+   "start": 7.756,
+   "end": 7.843,
+   "value": "A"
+  },
+  {
+   "start": 7.843,
+   "end": 7.914,
+   "value": "C"
+  },
+  {
+   "start": 7.914,
+   "end": 8.073,
+   "value": "B"
+  },
+  {
+   "start": 8.086,
+   "end": 8.276,
+   "value": "C"
+  },
+  {
+   "start": 8.276,
+   "end": 8.683,
+   "value": "B"
+  },
+  {
+   "start": 8.683,
+   "end": 8.896,
+   "value": "C"
+  },
+  {
+   "start": 8.896,
+   "end": 9.037,
+   "value": "D"
+  },
+  {
+   "start": 9.051,
+   "end": 9.114,
+   "value": "H"
+  },
+  {
+   "start": 9.114,
+   "end": 9.343,
+   "value": "B"
+  },
+  {
+   "start": 9.343,
+   "end": 9.566,
+   "value": "C"
+  },
+  {
+   "start": 9.566,
+   "end": 9.698,
+   "value": "D"
+  },
+  {
+   "start": 9.698,
+   "end": 9.863,
+   "value": "B"
+  },
+  {
+   "start": 9.863,
+   "end": 9.938,
+   "value": "C"
+  },
+  {
+   "start": 9.938,
+   "end": 10.07,
+   "value": "D"
+  },
+  {
+   "start": 10.07,
+   "end": 10.301,
+   "value": "X"
+  },
+  {
+   "start": 10.301,
+   "end": 10.481,
+   "value": "E"
+  },
+  {
+   "start": 10.481,
+   "end": 10.64,
+   "value": "B"
+  },
+  {
+   "start": 10.64,
+   "end": 10.882,
+   "value": "C"
+  },
+  {
+   "start": 10.882,
+   "end": 10.98,
+   "value": "A"
+  },
+  {
+   "start": 10.994,
+   "end": 11.055,
+   "value": "B"
+  },
+  {
+   "start": 11.055,
+   "end": 11.225,
+   "value": "C"
+  },
+  {
+   "start": 11.238,
+   "end": 11.303,
+   "value": "G"
+  },
+  {
+   "start": 11.303,
+   "end": 11.497,
+   "value": "C"
+  },
+  {
+   "start": 11.497,
+   "end": 11.575,
+   "value": "A"
+  },
+  {
+   "start": 11.575,
+   "end": 11.69,
+   "value": "C"
+  },
+  {
+   "start": 11.69,
+   "end": 11.755,
+   "value": "B"
+  },
+  {
+   "start": 11.768,
+   "end": 11.828,
+   "value": "A"
+  },
+  {
+   "start": 11.828,
+   "end": 11.956,
+   "value": "C"
+  },
+  {
+   "start": 11.956,
+   "end": 12.133,
+   "value": "F"
+  },
+  {
+   "start": 12.133,
+   "end": 12.217,
+   "value": "C"
+  },
+  {
+   "start": 12.23,
+   "end": 12.595,
+   "value": "B"
+  },
+  {
+   "start": 12.595,
+   "end": 12.708,
+   "value": "C"
+  },
+  {
+   "start": 12.708,
+   "end": 12.91,
+   "value": "D"
+  },
+  {
+   "start": 12.91,
+   "end": 13.867,
+   "value": "X"
+  }
+ ]
+}

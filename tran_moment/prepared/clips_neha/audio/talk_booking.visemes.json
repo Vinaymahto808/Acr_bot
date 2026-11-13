@@ -1,0 +1,281 @@
+{
+ "text": "Toh main note kar leti hoon. Creta, brake ka kaam, Gurgaon se kal subah pickup. Main yeh request bhej doon?",
+ "duration": 11.472,
+ "mouthCues": [
+  {
+   "start": 0.0,
+   "end": 0.232,
+   "value": "X"
+  },
+  {
+   "start": 0.232,
+   "end": 0.291,
+   "value": "B"
+  },
+  {
+   "start": 0.291,
+   "end": 0.436,
+   "value": "E"
+  },
+  {
+   "start": 0.449,
+   "end": 0.509,
+   "value": "A"
+  },
+  {
+   "start": 0.509,
+   "end": 0.64,
+   "value": "C"
+  },
+  {
+   "start": 0.653,
+   "end": 0.733,
+   "value": "B"
+  },
+  {
+   "start": 0.733,
+   "end": 0.927,
+   "value": "E"
+  },
+  {
+   "start": 0.927,
+   "end": 1.063,
+   "value": "B"
+  },
+  {
+   "start": 1.063,
+   "end": 1.244,
+   "value": "C"
+  },
+  {
+   "start": 1.244,
+   "end": 1.397,
+   "value": "B"
+  },
+  {
+   "start": 1.397,
+   "end": 1.523,
+   "value": "D"
+  },
+  {
+   "start": 1.536,
+   "end": 1.715,
+   "value": "C"
+  },
+  {
+   "start": 1.715,
+   "end": 2.192,
+   "value": "F"
+  },
+  {
+   "start": 2.192,
+   "end": 2.311,
+   "value": "B"
+  },
+  {
+   "start": 2.311,
+   "end": 3.253,
+   "value": "X"
+  },
+  {
+   "start": 3.253,
+   "end": 3.354,
+   "value": "C"
+  },
+  {
+   "start": 3.354,
+   "end": 3.78,
+   "value": "B"
+  },
+  {
+   "start": 3.78,
+   "end": 3.959,
+   "value": "C"
+  },
+  {
+   "start": 3.959,
+   "end": 4.081,
+   "value": "X"
+  },
+  {
+   "start": 4.081,
+   "end": 4.184,
+   "value": "A"
+  },
+  {
+   "start": 4.184,
+   "end": 4.269,
+   "value": "B"
+  },
+  {
+   "start": 4.269,
+   "end": 5.095,
+   "value": "C"
+  },
+  {
+   "start": 5.095,
+   "end": 5.209,
+   "value": "A"
+  },
+  {
+   "start": 5.209,
+   "end": 5.345,
+   "value": "X"
+  },
+  {
+   "start": 5.345,
+   "end": 5.409,
+   "value": "C"
+  },
+  {
+   "start": 5.409,
+   "end": 5.522,
+   "value": "F"
+  },
+  {
+   "start": 5.522,
+   "end": 5.586,
+   "value": "B"
+  },
+  {
+   "start": 5.586,
+   "end": 5.764,
+   "value": "C"
+  },
+  {
+   "start": 5.764,
+   "end": 5.92,
+   "value": "E"
+  },
+  {
+   "start": 5.92,
+   "end": 6.242,
+   "value": "B"
+  },
+  {
+   "start": 6.255,
+   "end": 6.465,
+   "value": "C"
+  },
+  {
+   "start": 6.465,
+   "end": 6.541,
+   "value": "H"
+  },
+  {
+   "start": 6.554,
+   "end": 6.614,
+   "value": "B"
+  },
+  {
+   "start": 6.614,
+   "end": 6.721,
+   "value": "F"
+  },
+  {
+   "start": 6.721,
+   "end": 6.795,
+   "value": "A"
+  },
+  {
+   "start": 6.795,
+   "end": 6.962,
+   "value": "C"
+  },
+  {
+   "start": 6.975,
+   "end": 7.085,
+   "value": "A"
+  },
+  {
+   "start": 7.085,
+   "end": 7.243,
+   "value": "D"
+  },
+  {
+   "start": 7.243,
+   "end": 7.333,
+   "value": "C"
+  },
+  {
+   "start": 7.333,
+   "end": 7.491,
+   "value": "F"
+  },
+  {
+   "start": 7.491,
+   "end": 7.6,
+   "value": "A"
+  },
+  {
+   "start": 7.6,
+   "end": 8.538,
+   "value": "X"
+  },
+  {
+   "start": 8.538,
+   "end": 8.633,
+   "value": "A"
+  },
+  {
+   "start": 8.633,
+   "end": 8.891,
+   "value": "C"
+  },
+  {
+   "start": 8.905,
+   "end": 8.98,
+   "value": "D"
+  },
+  {
+   "start": 8.98,
+   "end": 9.19,
+   "value": "C"
+  },
+  {
+   "start": 9.204,
+   "end": 9.389,
+   "value": "B"
+  },
+  {
+   "start": 9.389,
+   "end": 9.446,
+   "value": "C"
+  },
+  {
+   "start": 9.446,
+   "end": 9.548,
+   "value": "F"
+  },
+  {
+   "start": 9.548,
+   "end": 9.734,
+   "value": "B"
+  },
+  {
+   "start": 9.747,
+   "end": 9.837,
+   "value": "A"
+  },
+  {
+   "start": 9.837,
+   "end": 10.209,
+   "value": "B"
+  },
+  {
+   "start": 10.209,
+   "end": 10.535,
+   "value": "F"
+  },
+  {
+   "start": 10.535,
+   "end": 10.658,
+   "value": "B"
+  },
+  {
+   "start": 10.658,
+   "end": 11.604,
+   "value": "X"
+  }
+ ]
+}

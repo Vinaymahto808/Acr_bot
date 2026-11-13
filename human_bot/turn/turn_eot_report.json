@@ -1,0 +1,31 @@
+{
+  "trained": "2026-11-12 10:56",
+  "real_turns": 681,
+  "synth_turns": 708,
+  "params": 110529,
+  "arch": {
+    "d": 64,
+    "heads": 4,
+    "layers": 2,
+    "ff": 192,
+    "bytes": 160
+  },
+  "threshold": 0.5,
+  "test_examples": 408,
+  "test": {
+    "model": {
+      "accuracy": null,
+      "interrupts_mid_thought": 0.174,
+      "waits_after_finished": 0.456,
+      "auc": 0.767,
+      "note": "threshold moved 0.66 -> 0.5 after training (MAX_INTERRUPT 0.15), measured on the same held-out test"
+    },
+    "rule": {
+      "accuracy": 0.407,
+      "interrupts_mid_thought": 0.79,
+      "waits_after_finished": 0.01
+    }
+  },
+  "numpy_drift": 0.00023,
+  "ms_per_call": 4.39
+}

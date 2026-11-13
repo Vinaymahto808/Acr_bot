@@ -1,0 +1,83 @@
+{
+  "canvas": {
+    "width": 640,
+    "height": 852
+  },
+  "mouth_alpha_box": [
+    185,
+    268,
+    447,
+    464
+  ],
+  "shapes": {
+    "rest": "X.png",
+    "closed": "closed.png",
+    "A": "A.png",
+    "E": "E.png",
+    "I": "I.png",
+    "O": "O.png",
+    "U": "U.png",
+    "FV": "FV.png",
+    "L": "L.png"
+  },
+  "rhubarb": {
+    "A": "closed.png",
+    "B": "E.png",
+    "C": "A.png",
+    "D": "I.png",
+    "E": "O.png",
+    "F": "U.png",
+    "G": "FV.png",
+    "H": "L.png",
+    "X": "X.png"
+  },
+  "open": {
+    "rest": 0.0,
+    "closed": -1.0,
+    "A": 0.9,
+    "E": 0.5,
+    "I": 0.38,
+    "O": 0.66,
+    "U": 0.46,
+    "FV": 0.18,
+    "L": 0.55
+  },
+  "width": {
+    "rest": 0.0,
+    "closed": 0.0,
+    "A": 0.05,
+    "E": 0.85,
+    "I": 0.92,
+    "O": -0.85,
+    "U": -0.95,
+    "FV": 0.22,
+    "L": 0.28
+  },
+  "note": "Photo-accurate warp of prepared/face.jpg. Replace PNGs with designer shapes; keep filenames and canvas size.",
+  "grid": {
+    "file": "grid.jpg",
+    "box": [
+      185,
+      268,
+      262,
+      196
+    ],
+    "opens": [
+      -1.0,
+      -0.5,
+      0.0,
+      0.16,
+      0.34,
+      0.52,
+      0.72,
+      0.92
+    ],
+    "widths": [
+      -0.95,
+      -0.45,
+      0.0,
+      0.45,
+      0.92
+    ]
+  }
+}

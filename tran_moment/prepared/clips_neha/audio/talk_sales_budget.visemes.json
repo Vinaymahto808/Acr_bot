@@ -1,0 +1,296 @@
+{
+ "text": "Aapne budget kitna socha hai ji? Bas ek range bata dijiye. Main usi mein aapke liye best options nikaal deti hoon.",
+ "duration": 10.632,
+ "mouthCues": [
+  {
+   "start": 0.0,
+   "end": 0.191,
+   "value": "X"
+  },
+  {
+   "start": 0.191,
+   "end": 0.48,
+   "value": "C"
+  },
+  {
+   "start": 0.48,
+   "end": 0.597,
+   "value": "A"
+  },
+  {
+   "start": 0.597,
+   "end": 0.693,
+   "value": "B"
+  },
+  {
+   "start": 0.706,
+   "end": 0.766,
+   "value": "A"
+  },
+  {
+   "start": 0.766,
+   "end": 0.944,
+   "value": "F"
+  },
+  {
+   "start": 0.944,
+   "end": 1.156,
+   "value": "B"
+  },
+  {
+   "start": 1.156,
+   "end": 1.328,
+   "value": "D"
+  },
+  {
+   "start": 1.328,
+   "end": 1.466,
+   "value": "C"
+  },
+  {
+   "start": 1.478,
+   "end": 1.539,
+   "value": "B"
+  },
+  {
+   "start": 1.539,
+   "end": 1.688,
+   "value": "E"
+  },
+  {
+   "start": 1.688,
+   "end": 2.041,
+   "value": "C"
+  },
+  {
+   "start": 2.054,
+   "end": 2.157,
+   "value": "B"
+  },
+  {
+   "start": 2.157,
+   "end": 2.434,
+   "value": "D"
+  },
+  {
+   "start": 2.434,
+   "end": 3.278,
+   "value": "X"
+  },
+  {
+   "start": 3.278,
+   "end": 3.406,
+   "value": "A"
+  },
+  {
+   "start": 3.406,
+   "end": 3.591,
+   "value": "C"
+  },
+  {
+   "start": 3.591,
+   "end": 3.834,
+   "value": "B"
+  },
+  {
+   "start": 3.834,
+   "end": 3.891,
+   "value": "C"
+  },
+  {
+   "start": 3.903,
+   "end": 3.983,
+   "value": "B"
+  },
+  {
+   "start": 3.983,
+   "end": 4.124,
+   "value": "C"
+  },
+  {
+   "start": 4.124,
+   "end": 4.204,
+   "value": "B"
+  },
+  {
+   "start": 4.204,
+   "end": 4.283,
+   "value": "C"
+  },
+  {
+   "start": 4.295,
+   "end": 4.355,
+   "value": "A"
+  },
+  {
+   "start": 4.355,
+   "end": 4.614,
+   "value": "C"
+  },
+  {
+   "start": 4.626,
+   "end": 4.696,
+   "value": "B"
+  },
+  {
+   "start": 4.696,
+   "end": 4.88,
+   "value": "D"
+  },
+  {
+   "start": 4.88,
+   "end": 4.95,
+   "value": "B"
+  },
+  {
+   "start": 4.95,
+   "end": 5.073,
+   "value": "D"
+  },
+  {
+   "start": 5.073,
+   "end": 5.227,
+   "value": "B"
+  },
+  {
+   "start": 5.227,
+   "end": 6.085,
+   "value": "X"
+  },
+  {
+   "start": 6.085,
+   "end": 6.164,
+   "value": "A"
+  },
+  {
+   "start": 6.164,
+   "end": 6.379,
+   "value": "C"
+  },
+  {
+   "start": 6.391,
+   "end": 6.515,
+   "value": "F"
+  },
+  {
+   "start": 6.515,
+   "end": 6.585,
+   "value": "B"
+  },
+  {
+   "start": 6.585,
+   "end": 6.71,
+   "value": "D"
+  },
+  {
+   "start": 6.722,
+   "end": 6.782,
+   "value": "A"
+  },
+  {
+   "start": 6.782,
+   "end": 6.893,
+   "value": "B"
+  },
+  {
+   "start": 6.906,
+   "end": 7.083,
+   "value": "C"
+  },
+  {
+   "start": 7.083,
+   "end": 7.156,
+   "value": "A"
+  },
+  {
+   "start": 7.156,
+   "end": 7.215,
+   "value": "C"
+  },
+  {
+   "start": 7.215,
+   "end": 7.401,
+   "value": "B"
+  },
+  {
+   "start": 7.401,
+   "end": 7.475,
+   "value": "D"
+  },
+  {
+   "start": 7.475,
+   "end": 7.567,
+   "value": "B"
+  },
+  {
+   "start": 7.58,
+   "end": 7.681,
+   "value": "A"
+  },
+  {
+   "start": 7.681,
+   "end": 7.947,
+   "value": "B"
+  },
+  {
+   "start": 7.96,
+   "end": 8.072,
+   "value": "E"
+  },
+  {
+   "start": 8.072,
+   "end": 8.179,
+   "value": "A"
+  },
+  {
+   "start": 8.179,
+   "end": 8.263,
+   "value": "D"
+  },
+  {
+   "start": 8.263,
+   "end": 8.485,
+   "value": "E"
+  },
+  {
+   "start": 8.485,
+   "end": 8.616,
+   "value": "D"
+  },
+  {
+   "start": 8.616,
+   "end": 8.858,
+   "value": "C"
+  },
+  {
+   "start": 8.858,
+   "end": 8.99,
+   "value": "B"
+  },
+  {
+   "start": 8.99,
+   "end": 9.099,
+   "value": "D"
+  },
+  {
+   "start": 9.112,
+   "end": 9.29,
+   "value": "C"
+  },
+  {
+   "start": 9.29,
+   "end": 9.765,
+   "value": "F"
+  },
+  {
+   "start": 9.765,
+   "end": 9.884,
+   "value": "B"
+  },
+  {
+   "start": 9.884,
+   "end": 10.723,
+   "value": "X"
+  }
+ ]
+}

@@ -1,0 +1,276 @@
+{
+ "text": "Ji, Creta hai aapki. Yeh brake ki awaaz kab se aa rahi hai? Aur zyada kab hoti hai, slow speed par ya highway par?",
+ "duration": 11.88,
+ "mouthCues": [
+  {
+   "start": 0.0,
+   "end": 0.213,
+   "value": "X"
+  },
+  {
+   "start": 0.213,
+   "end": 0.369,
+   "value": "B"
+  },
+  {
+   "start": 0.369,
+   "end": 0.784,
+   "value": "D"
+  },
+  {
+   "start": 0.784,
+   "end": 0.974,
+   "value": "X"
+  },
+  {
+   "start": 0.974,
+   "end": 1.046,
+   "value": "C"
+  },
+  {
+   "start": 1.046,
+   "end": 1.349,
+   "value": "B"
+  },
+  {
+   "start": 1.349,
+   "end": 2.007,
+   "value": "C"
+  },
+  {
+   "start": 2.007,
+   "end": 2.112,
+   "value": "A"
+  },
+  {
+   "start": 2.112,
+   "end": 2.198,
+   "value": "C"
+  },
+  {
+   "start": 2.198,
+   "end": 2.428,
+   "value": "D"
+  },
+  {
+   "start": 2.428,
+   "end": 3.37,
+   "value": "X"
+  },
+  {
+   "start": 3.37,
+   "end": 3.474,
+   "value": "D"
+  },
+  {
+   "start": 3.474,
+   "end": 3.764,
+   "value": "C"
+  },
+  {
+   "start": 3.777,
+   "end": 3.857,
+   "value": "A"
+  },
+  {
+   "start": 3.857,
+   "end": 3.922,
+   "value": "B"
+  },
+  {
+   "start": 3.922,
+   "end": 4.191,
+   "value": "C"
+  },
+  {
+   "start": 4.191,
+   "end": 4.389,
+   "value": "D"
+  },
+  {
+   "start": 4.402,
+   "end": 4.586,
+   "value": "C"
+  },
+  {
+   "start": 4.586,
+   "end": 4.647,
+   "value": "G"
+  },
+  {
+   "start": 4.647,
+   "end": 4.83,
+   "value": "C"
+  },
+  {
+   "start": 4.83,
+   "end": 4.891,
+   "value": "B"
+  },
+  {
+   "start": 4.905,
+   "end": 5.065,
+   "value": "C"
+  },
+  {
+   "start": 5.065,
+   "end": 5.136,
+   "value": "A"
+  },
+  {
+   "start": 5.149,
+   "end": 5.367,
+   "value": "B"
+  },
+  {
+   "start": 5.38,
+   "end": 5.645,
+   "value": "C"
+  },
+  {
+   "start": 5.645,
+   "end": 5.774,
+   "value": "D"
+  },
+  {
+   "start": 5.788,
+   "end": 6.073,
+   "value": "C"
+  },
+  {
+   "start": 6.073,
+   "end": 7.024,
+   "value": "X"
+  },
+  {
+   "start": 7.024,
+   "end": 7.294,
+   "value": "E"
+  },
+  {
+   "start": 7.294,
+   "end": 7.504,
+   "value": "B"
+  },
+  {
+   "start": 7.504,
+   "end": 8.008,
+   "value": "C"
+  },
+  {
+   "start": 8.008,
+   "end": 8.071,
+   "value": "A"
+  },
+  {
+   "start": 8.084,
+   "end": 8.14,
+   "value": "C"
+  },
+  {
+   "start": 8.14,
+   "end": 8.33,
+   "value": "E"
+  },
+  {
+   "start": 8.33,
+   "end": 8.478,
+   "value": "D"
+  },
+  {
+   "start": 8.492,
+   "end": 8.75,
+   "value": "C"
+  },
+  {
+   "start": 8.75,
+   "end": 8.981,
+   "value": "X"
+  },
+  {
+   "start": 8.981,
+   "end": 9.075,
+   "value": "B"
+  },
+  {
+   "start": 9.075,
+   "end": 9.169,
+   "value": "H"
+  },
+  {
+   "start": 9.169,
+   "end": 9.429,
+   "value": "E"
+  },
+  {
+   "start": 9.443,
+   "end": 9.519,
+   "value": "B"
+  },
+  {
+   "start": 9.519,
+   "end": 9.612,
+   "value": "A"
+  },
+  {
+   "start": 9.612,
+   "end": 9.815,
+   "value": "D"
+  },
+  {
+   "start": 9.815,
+   "end": 9.891,
+   "value": "B"
+  },
+  {
+   "start": 9.905,
+   "end": 9.951,
+   "value": "A"
+  },
+  {
+   "start": 9.951,
+   "end": 10.291,
+   "value": "C"
+  },
+  {
+   "start": 10.291,
+   "end": 10.398,
+   "value": "D"
+  },
+  {
+   "start": 10.398,
+   "end": 10.458,
+   "value": "C"
+  },
+  {
+   "start": 10.458,
+   "end": 10.519,
+   "value": "F"
+  },
+  {
+   "start": 10.519,
+   "end": 10.679,
+   "value": "C"
+  },
+  {
+   "start": 10.693,
+   "end": 10.801,
+   "value": "A"
+  },
+  {
+   "start": 10.801,
+   "end": 10.958,
+   "value": "C"
+  },
+  {
+   "start": 10.958,
+   "end": 11.046,
+   "value": "B"
+  },
+  {
+   "start": 11.046,
+   "end": 11.993,
+   "value": "X"
+  }
+ ]
+}

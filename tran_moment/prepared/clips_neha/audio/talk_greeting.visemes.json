@@ -1,0 +1,301 @@
+{
+ "text": "Namaste ji. Main Neha, Auto Car Repair se. Bataiye, aapki gaadi mein kya dikkat hai? Main poori help karungi.",
+ "duration": 10.104,
+ "mouthCues": [
+  {
+   "start": 0.0,
+   "end": 0.225,
+   "value": "X"
+  },
+  {
+   "start": 0.225,
+   "end": 0.293,
+   "value": "B"
+  },
+  {
+   "start": 0.293,
+   "end": 0.414,
+   "value": "C"
+  },
+  {
+   "start": 0.414,
+   "end": 0.497,
+   "value": "A"
+  },
+  {
+   "start": 0.497,
+   "end": 0.618,
+   "value": "C"
+  },
+  {
+   "start": 0.618,
+   "end": 0.966,
+   "value": "B"
+  },
+  {
+   "start": 0.966,
+   "end": 1.095,
+   "value": "D"
+  },
+  {
+   "start": 1.108,
+   "end": 1.168,
+   "value": "A"
+  },
+  {
+   "start": 1.168,
+   "end": 1.298,
+   "value": "C"
+  },
+  {
+   "start": 1.312,
+   "end": 1.542,
+   "value": "B"
+  },
+  {
+   "start": 1.542,
+   "end": 1.828,
+   "value": "C"
+  },
+  {
+   "start": 1.828,
+   "end": 2.046,
+   "value": "X"
+  },
+  {
+   "start": 2.046,
+   "end": 2.228,
+   "value": "E"
+  },
+  {
+   "start": 2.228,
+   "end": 2.293,
+   "value": "B"
+  },
+  {
+   "start": 2.293,
+   "end": 2.453,
+   "value": "E"
+  },
+  {
+   "start": 2.467,
+   "end": 2.677,
+   "value": "C"
+  },
+  {
+   "start": 2.677,
+   "end": 2.922,
+   "value": "B"
+  },
+  {
+   "start": 2.922,
+   "end": 2.982,
+   "value": "A"
+  },
+  {
+   "start": 2.982,
+   "end": 3.224,
+   "value": "C"
+  },
+  {
+   "start": 3.224,
+   "end": 3.336,
+   "value": "B"
+  },
+  {
+   "start": 3.35,
+   "end": 3.436,
+   "value": "A"
+  },
+  {
+   "start": 3.436,
+   "end": 3.561,
+   "value": "C"
+  },
+  {
+   "start": 3.561,
+   "end": 3.632,
+   "value": "B"
+  },
+  {
+   "start": 3.632,
+   "end": 3.843,
+   "value": "C"
+  },
+  {
+   "start": 3.843,
+   "end": 3.968,
+   "value": "D"
+  },
+  {
+   "start": 3.968,
+   "end": 4.124,
+   "value": "B"
+  },
+  {
+   "start": 4.124,
+   "end": 4.287,
+   "value": "X"
+  },
+  {
+   "start": 4.287,
+   "end": 4.489,
+   "value": "C"
+  },
+  {
+   "start": 4.489,
+   "end": 4.571,
+   "value": "A"
+  },
+  {
+   "start": 4.571,
+   "end": 4.638,
+   "value": "C"
+  },
+  {
+   "start": 4.638,
+   "end": 4.881,
+   "value": "D"
+  },
+  {
+   "start": 4.881,
+   "end": 5.079,
+   "value": "C"
+  },
+  {
+   "start": 5.079,
+   "end": 5.211,
+   "value": "D"
+  },
+  {
+   "start": 5.225,
+   "end": 5.285,
+   "value": "A"
+  },
+  {
+   "start": 5.285,
+   "end": 5.51,
+   "value": "B"
+  },
+  {
+   "start": 5.51,
+   "end": 5.673,
+   "value": "C"
+  },
+  {
+   "start": 5.687,
+   "end": 5.746,
+   "value": "B"
+  },
+  {
+   "start": 5.746,
+   "end": 5.852,
+   "value": "D"
+  },
+  {
+   "start": 5.852,
+   "end": 6.076,
+   "value": "C"
+  },
+  {
+   "start": 6.076,
+   "end": 6.135,
+   "value": "B"
+  },
+  {
+   "start": 6.149,
+   "end": 6.475,
+   "value": "C"
+  },
+  {
+   "start": 6.475,
+   "end": 7.417,
+   "value": "X"
+  },
+  {
+   "start": 7.417,
+   "end": 7.497,
+   "value": "A"
+  },
+  {
+   "start": 7.497,
+   "end": 7.716,
+   "value": "C"
+  },
+  {
+   "start": 7.729,
+   "end": 7.797,
+   "value": "A"
+  },
+  {
+   "start": 7.797,
+   "end": 7.946,
+   "value": "F"
+  },
+  {
+   "start": 7.946,
+   "end": 8.002,
+   "value": "B"
+  },
+  {
+   "start": 8.002,
+   "end": 8.151,
+   "value": "D"
+  },
+  {
+   "start": 8.164,
+   "end": 8.229,
+   "value": "C"
+  },
+  {
+   "start": 8.229,
+   "end": 8.373,
+   "value": "B"
+  },
+  {
+   "start": 8.373,
+   "end": 8.438,
+   "value": "H"
+  },
+  {
+   "start": 8.438,
+   "end": 8.517,
+   "value": "A"
+  },
+  {
+   "start": 8.531,
+   "end": 8.753,
+   "value": "C"
+  },
+  {
+   "start": 8.753,
+   "end": 8.833,
+   "value": "B"
+  },
+  {
+   "start": 8.833,
+   "end": 8.976,
+   "value": "F"
+  },
+  {
+   "start": 8.976,
+   "end": 9.056,
+   "value": "B"
+  },
+  {
+   "start": 9.056,
+   "end": 9.136,
+   "value": "C"
+  },
+  {
+   "start": 9.136,
+   "end": 9.278,
+   "value": "D"
+  },
+  {
+   "start": 9.278,
+   "end": 10.229,
+   "value": "X"
+  }
+ ]
+}

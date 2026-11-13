@@ -1,0 +1,371 @@
+{
+ "text": "Finance ka option bhi hai ji. Hamari team EMI ka poora hisaab aapko call par samjha degi, bilkul aapki suvidha ke hisaab se.",
+ "duration": 9.984,
+ "mouthCues": [
+  {
+   "start": 0.0,
+   "end": 0.306,
+   "value": "X"
+  },
+  {
+   "start": 0.306,
+   "end": 0.407,
+   "value": "G"
+  },
+  {
+   "start": 0.407,
+   "end": 0.585,
+   "value": "D"
+  },
+  {
+   "start": 0.585,
+   "end": 0.686,
+   "value": "B"
+  },
+  {
+   "start": 0.686,
+   "end": 0.865,
+   "value": "C"
+  },
+  {
+   "start": 0.865,
+   "end": 0.965,
+   "value": "B"
+  },
+  {
+   "start": 0.965,
+   "end": 1.286,
+   "value": "C"
+  },
+  {
+   "start": 1.299,
+   "end": 1.398,
+   "value": "E"
+  },
+  {
+   "start": 1.398,
+   "end": 1.501,
+   "value": "A"
+  },
+  {
+   "start": 1.501,
+   "end": 1.578,
+   "value": "D"
+  },
+  {
+   "start": 1.578,
+   "end": 1.728,
+   "value": "E"
+  },
+  {
+   "start": 1.74,
+   "end": 1.805,
+   "value": "A"
+  },
+  {
+   "start": 1.805,
+   "end": 1.948,
+   "value": "D"
+  },
+  {
+   "start": 1.96,
+   "end": 2.193,
+   "value": "C"
+  },
+  {
+   "start": 2.206,
+   "end": 2.266,
+   "value": "B"
+  },
+  {
+   "start": 2.266,
+   "end": 2.484,
+   "value": "D"
+  },
+  {
+   "start": 2.484,
+   "end": 2.566,
+   "value": "C"
+  },
+  {
+   "start": 2.566,
+   "end": 2.626,
+   "value": "A"
+  },
+  {
+   "start": 2.626,
+   "end": 2.806,
+   "value": "C"
+  },
+  {
+   "start": 2.806,
+   "end": 2.929,
+   "value": "D"
+  },
+  {
+   "start": 2.941,
+   "end": 3.008,
+   "value": "B"
+  },
+  {
+   "start": 3.008,
+   "end": 3.189,
+   "value": "D"
+  },
+  {
+   "start": 3.189,
+   "end": 3.272,
+   "value": "A"
+  },
+  {
+   "start": 3.284,
+   "end": 3.493,
+   "value": "B"
+  },
+  {
+   "start": 3.493,
+   "end": 3.607,
+   "value": "A"
+  },
+  {
+   "start": 3.607,
+   "end": 3.829,
+   "value": "D"
+  },
+  {
+   "start": 3.829,
+   "end": 3.958,
+   "value": "C"
+  },
+  {
+   "start": 3.97,
+   "end": 4.03,
+   "value": "A"
+  },
+  {
+   "start": 4.03,
+   "end": 4.19,
+   "value": "F"
+  },
+  {
+   "start": 4.19,
+   "end": 4.396,
+   "value": "C"
+  },
+  {
+   "start": 4.396,
+   "end": 4.5,
+   "value": "D"
+  },
+  {
+   "start": 4.5,
+   "end": 4.558,
+   "value": "B"
+  },
+  {
+   "start": 4.558,
+   "end": 4.732,
+   "value": "C"
+  },
+  {
+   "start": 4.732,
+   "end": 4.804,
+   "value": "A"
+  },
+  {
+   "start": 4.816,
+   "end": 4.969,
+   "value": "C"
+  },
+  {
+   "start": 4.969,
+   "end": 5.083,
+   "value": "A"
+  },
+  {
+   "start": 5.083,
+   "end": 5.208,
+   "value": "E"
+  },
+  {
+   "start": 5.22,
+   "end": 5.473,
+   "value": "C"
+  },
+  {
+   "start": 5.473,
+   "end": 5.563,
+   "value": "H"
+  },
+  {
+   "start": 5.576,
+   "end": 5.636,
+   "value": "A"
+  },
+  {
+   "start": 5.636,
+   "end": 5.735,
+   "value": "C"
+  },
+  {
+   "start": 5.747,
+   "end": 5.804,
+   "value": "B"
+  },
+  {
+   "start": 5.804,
+   "end": 5.905,
+   "value": "C"
+  },
+  {
+   "start": 5.905,
+   "end": 5.974,
+   "value": "A"
+  },
+  {
+   "start": 5.974,
+   "end": 6.031,
+   "value": "B"
+  },
+  {
+   "start": 6.031,
+   "end": 6.201,
+   "value": "C"
+  },
+  {
+   "start": 6.213,
+   "end": 6.542,
+   "value": "B"
+  },
+  {
+   "start": 6.542,
+   "end": 6.644,
+   "value": "C"
+  },
+  {
+   "start": 6.644,
+   "end": 6.826,
+   "value": "D"
+  },
+  {
+   "start": 6.826,
+   "end": 6.973,
+   "value": "X"
+  },
+  {
+   "start": 6.973,
+   "end": 7.055,
+   "value": "A"
+  },
+  {
+   "start": 7.055,
+   "end": 7.176,
+   "value": "D"
+  },
+  {
+   "start": 7.176,
+   "end": 7.244,
+   "value": "H"
+  },
+  {
+   "start": 7.244,
+   "end": 7.311,
+   "value": "C"
+  },
+  {
+   "start": 7.311,
+   "end": 7.432,
+   "value": "F"
+  },
+  {
+   "start": 7.432,
+   "end": 7.5,
+   "value": "H"
+  },
+  {
+   "start": 7.512,
+   "end": 7.655,
+   "value": "C"
+  },
+  {
+   "start": 7.655,
+   "end": 7.763,
+   "value": "A"
+  },
+  {
+   "start": 7.763,
+   "end": 7.892,
+   "value": "D"
+  },
+  {
+   "start": 7.904,
+   "end": 7.963,
+   "value": "B"
+  },
+  {
+   "start": 7.963,
+   "end": 8.067,
+   "value": "F"
+  },
+  {
+   "start": 8.067,
+   "end": 8.127,
+   "value": "G"
+  },
+  {
+   "start": 8.127,
+   "end": 8.231,
+   "value": "D"
+  },
+  {
+   "start": 8.231,
+   "end": 8.29,
+   "value": "B"
+  },
+  {
+   "start": 8.29,
+   "end": 8.441,
+   "value": "C"
+  },
+  {
+   "start": 8.441,
+   "end": 8.517,
+   "value": "B"
+  },
+  {
+   "start": 8.529,
+   "end": 8.587,
+   "value": "C"
+  },
+  {
+   "start": 8.587,
+   "end": 8.691,
+   "value": "D"
+  },
+  {
+   "start": 8.691,
+   "end": 8.749,
+   "value": "B"
+  },
+  {
+   "start": 8.749,
+   "end": 8.924,
+   "value": "C"
+  },
+  {
+   "start": 8.924,
+   "end": 8.995,
+   "value": "A"
+  },
+  {
+   "start": 9.007,
+   "end": 9.35,
+   "value": "B"
+  },
+  {
+   "start": 9.35,
+   "end": 10.19,
+   "value": "X"
+  }
+ ]
+}
