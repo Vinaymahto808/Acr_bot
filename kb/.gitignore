@@ -3,3 +3,5 @@ data/
 storage/
 .env
 *.tgz
+# curation of the customer-call Q&A (src/curate.js): question texts come from internal call data
+seed/qa_overrides.json

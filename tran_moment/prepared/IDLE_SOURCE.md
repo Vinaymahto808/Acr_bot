@@ -1,5 +1,9 @@
 # idle.mp4 — LOCAL TEST ASSET ONLY
 
+**Deleted 2026-11-24** (no consent record for the person; it was being served at `/avatar_idle.mp4` and copied
+into the production image). `/avatar_idle.mp4` now answers 404 and the card uses CSS motion on the still.
+The notes below are kept as the record of what it was.
+
 - Source: `tran_moment/sample_audio.mp4` (Galaxy Toyota showroom walkthrough), shot 00:01:19.7–00:01:23.5,
   portrait crop 202x360 at x=204, upscaled 2x (406x720), forward+reverse ping-pong, audio removed.
 - Person: the female presenter (00:00–00:55 speaker). **No consent record exists for her face.**

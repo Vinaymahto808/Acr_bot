@@ -6,8 +6,9 @@ import { embedTextsLocal, loadLocal, LOCAL_MODEL } from "./embed/local.js";
 import { embedTexts, embeddingInfo } from "./embed/gemini.js";
 import { extractPage, sha256 } from "./extract/extract.js";
 import { log } from "./log.js";
+import { enforceSite, loadOverrides } from "./curate.js";
 
-const ERROR_VIEW_RE = /(something (broke|went wrong)|unexpected error|error boundary|unable to preload css|page not found|404\b[^\n]{0,40}not found|reload (the )?page to recover|chunkloaderror)/i;
+const ERROR_VIEW_RE = /(something (broke|went wrong)|unexpected error|error boundary|unable to preload css|page not found|404\b[^\n]{0,40}not found|reload (the )?page to recover|chunkloaderror|couldn.t load this page)/i;
 
 /** Fixed-size chunks, or H-Net-style dynamic ones (KB_CHUNKER=dynamic) when the local model is usable. */
 export async function chunkPage(page) {
@@ -31,6 +32,13 @@ export async function chunkPage(page) {
 export function chunkerSignature() {
   const c = settings.chunk;
   return c.mode === "dynamic" ? `dyn:${c.targetChars}:${c.minChars}:${c.maxChars}:${c.overlapRatio}` : `fixed:${c.size}:${c.overlap}`;
+}
+
+/** Website content rules (kb/seed/qa_overrides.json site_rules, src/curate.js): an excluded page goes inactive again
+ *  and copied / expired / price text is dropped or stripped right after the crawl wrote the page. Never fails the crawl. */
+async function curate(store, siteId, url) {
+  try { await enforceSite(store, siteId, loadOverrides(), { urls: [url] }); }
+  catch (err) { log.warn("curation rules failed for page", { url, err: String(err.message).slice(0, 160) }); }
 }
 
 /** Short pages dominated by a client-side error / not-found view are not knowledge. */
@@ -62,6 +70,7 @@ export async function processPage({ store, site, url, html, httpStatus, jobId })
   const existing = store.getPage(site.id, finalUrl);
   if (existing && existing.status === "active" && existing.content_hash === page.contentHash) {
     store.touchPage(existing.id, jobId, httpStatus);
+    await curate(store, site.id, finalUrl);
     log.debug("page unchanged", { website: site.id, url: finalUrl });
     return { outcome: "unchanged", chunks: existing.chunk_count, url: finalUrl };
   }
@@ -106,6 +115,7 @@ export async function processPage({ store, site, url, html, httpStatus, jobId })
     websiteId: site.id, page, chunks, model: vecModel, dim: vecDim, jobId, httpStatus,
     localModel: LOCAL_MODEL || "", localVecs,
   });
+  await curate(store, site.id, finalUrl);
   log.info(existing ? "page updated" : "page indexed", {
     website: site.id, url: finalUrl, type: page.pageType, chunks: chunks.length, model: vecModel, ms: Date.now() - t0,
   });

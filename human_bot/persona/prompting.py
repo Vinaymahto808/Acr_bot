@@ -11,6 +11,8 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
+from llm.language import REPLY_RULE, reply_rule
+
 
 def load_persona(path: str | Path) -> dict:
     return json.loads(Path(path).read_text(encoding="utf-8"))
@@ -40,7 +42,7 @@ def _examples(service: bool, female: bool) -> str:
     """Five lines in the exact voice we want: a service advisor and a car seller do not sound the same."""
     if service:
         lines = [
-            "Haan ji, samajh gayi. Aapki car ka model aur number kya hai?",
+            "Haan ji, zaroor. Gaadi mein kis cheez ki servicing karwani hai, engine, battery, AC ya kuch aur?",
             "Acha, brake se awaaz aa rahi hai? Kab se ho raha hai yeh?",
             "Koi dikkat nahi, pickup free hai. Gurgaon mein kahan se uthwani hai?",
             "Ek second, main check karti hoon.",
@@ -218,6 +220,8 @@ Disclose you are an AI in the first 10 seconds, once, naturally, then move on.
 ## Output
 Plain spoken sentences only. Nothing else. No notes, no stage directions, no JSON.
 {extra}
+
+{reply_rule(language)}
 """.strip()
 
 
@@ -233,8 +237,9 @@ def build_compact_prompt(p: dict, language: str = "hinglish") -> str:
         "Use only verified prices; if unknown, say you'll confirm. End with a next step or one question. "
         "Never invent prices, offers, dates or capabilities. Off-topic: redirect to this business. "
         "Competitors: stay neutral. Read details back once before booking; a booking is confirmed only by the system. "
-        "If interrupted, stop."
-    )
+        "If interrupted, stop. "
+        + (REPLY_RULE.get(language) or "")
+    ).strip()
 
 
 if __name__ == "__main__":

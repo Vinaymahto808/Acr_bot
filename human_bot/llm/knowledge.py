@@ -57,6 +57,9 @@ def knowledge_block(hits: list[dict], website_name: str, max_chars: int = 3500) 
         "If the answer is not in these passages, say in the customer's language that you cannot verify "
         "it right now, and offer to connect them to the team or take a call-back — never guess, never "
         "invent a price, discount, EMI or availability.",
+        "Every number you say (price, months of warranty, days, timings) must be in a passage. Keep its range and "
+        "who it applies to: if parts and labour differ (e.g. parts 6-12 months, labour 3 months), say both, never "
+        "one bigger promise.",
     ]
     used = 0
     for i, h in enumerate(hits, 1):

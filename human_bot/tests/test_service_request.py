@@ -7,7 +7,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from crm import acr_leads  # noqa: E402
-from crm.service_request import form_asked, form_prefill, form_reason, validate_form  # noqa: E402
+from crm.service_request import form_asked, form_prefill, form_reason, is_hold, is_question, validate_form, wants_booking  # noqa: E402
 from crm.service_request import asked_confirmation, collect, is_no, is_yes, missing, prompt_block, summary_line, wants_request  # noqa: E402
 
 
@@ -30,7 +30,7 @@ class CollectTests(unittest.TestCase):
         tr = turns("service karwani hai", "Aapki Creta ki service, Gurgaon se?")
         s = collect(tr)
         self.assertNotIn("car", s); self.assertNotIn("area", s)
-        self.assertEqual(missing(s), ["name", "phone", "car", "problem", "area"][:5] if "problem" not in s else ["name", "phone", "car", "area"])
+        self.assertEqual(missing(s), ["problem", "phone", "name"] if "problem" not in s else ["phone", "name"])
 
     def test_wants_request(self):
         self.assertTrue(wants_request(turns("brake se awaaz aa rahi hai"), collect(turns("brake se awaaz aa rahi hai"))))
@@ -76,6 +76,20 @@ class FormTests(unittest.TestCase):
         # Neha's own words never open it
         self.assertIsNone(form_reason([{"role": "assistant", "text": "Kya aap booking karna chahenge?"}]))
 
+    def test_a_question_is_answered_before_the_form_opens(self):
+        for t in ("pickup free hai kya?", "kal subah ka slot mil jayega", "pickup milega", "do you offer pickup",
+                  "क्या पिकअप फ्री है"):
+            self.assertTrue(is_question(t), t)
+        for t in ("brake repair karwana hai kal", "mujhe insurance claim karwana hai", "pickup chahiye Sector 56 se",
+                  "haan book kar dijiye"):
+            self.assertFalse(is_question(t), t)
+
+    def test_wait_does_not_open_the_form(self):
+        for t in ("minute, rukye rukye,", "ruko ruko", "ek minute", "hold on please", "रुकिए"):
+            self.assertTrue(is_hold(t), t)
+        for t in ("haan book kar dijiye", "brake repair karwana hai kal", "Rukmini Sharma"):
+            self.assertFalse(is_hold(t), t)
+
     def test_customer_can_ask_for_the_form_again(self):
         for t in ("form open kar dijiye", "इसके लिए आप form fill करा लीजें", "फॉर्म खोल दो", "Form bhar deta hoon"):
             self.assertTrue(form_asked(t), t)
@@ -102,6 +116,20 @@ class FormTests(unittest.TestCase):
         slots, errors = validate_form({"name": "Vinay", "phone": "9811223344", "car": "Creta", "service": "AC repair"})
         self.assertEqual(errors, {})
         self.assertNotIn("registration", slots); self.assertNotIn("area", slots)
+
+
+class BookingTriggerTests(unittest.TestCase):
+    """2026-11-24 owner: the form opens only on an explicit booking request; talking about a service is explained first."""
+
+    def test_explicit_booking_opens_the_form(self):
+        for t in ("book karna hai", "service book kar do", "mujhe booking karni hai", "appointment chahiye",
+                  "kal ka slot book karo", "form kholiye", "I want to book an AC service", "बुक करना है"):
+            self.assertTrue(wants_booking(t), t)
+
+    def test_talking_about_a_service_does_not(self):
+        for t in ("service karwani hai", "brake se awaaz aa rahi hai", "insurance claim karana hai", "AC thanda nahi kar raha",
+                  "pickup free hai?", "AC service kitne ka hai", "kya online book kar sakte hain?"):
+            self.assertFalse(wants_booking(t), t)
 
 
 if __name__ == "__main__":

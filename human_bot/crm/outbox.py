@@ -59,9 +59,10 @@ class Outbox:
             self.thread.start()
 
     # ---------------------------------------------------------------- producer
-    def enqueue(self, record: dict) -> bool:
+    def enqueue(self, record: dict, again: bool = False) -> bool:
         """Queue a conversation record once; a second call for the same id refreshes the payload only if
-        the row has not been delivered yet (a longer transcript after a late save)."""
+        the row has not been delivered yet (a longer transcript after a late save). again=True re-queues a
+        delivered row: the booking pushed the lead early and the end of the call updates it (the sink upserts)."""
         cid = record.get("id")
         if not cid:
             return False
@@ -73,6 +74,9 @@ class Outbox:
                 self.db.execute("INSERT INTO crm_outbox(conversation_id, payload, created, next_at) VALUES(?,?,?,?)", (cid, payload, now, now))
             elif cur["done_at"] is None:
                 self.db.execute("UPDATE crm_outbox SET payload=? WHERE conversation_id=?", (payload, cid))
+            elif again:
+                self.db.execute("UPDATE crm_outbox SET payload=?, done_at=NULL, attempts=0, next_at=? WHERE conversation_id=?",
+                                (payload, now, cid))
             else:
                 self.db.commit()
                 return False

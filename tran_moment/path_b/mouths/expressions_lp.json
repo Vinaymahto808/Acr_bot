@@ -1,0 +1,99 @@
+{
+ "version": "lp2f55bc1999",
+ "layers": {
+  "brows_up": {
+   "region": "brows",
+   "box": [
+    213,
+    134
+   ],
+   "size": [
+    212,
+    72
+   ],
+   "frames": [
+    "lp_brows_up/f01.webp",
+    "lp_brows_up/f02.webp",
+    "lp_brows_up/f03.webp",
+    "lp_brows_up/f04.webp",
+    "lp_brows_up/f05.webp",
+    "lp_brows_up/f06.webp"
+   ],
+   "max_px": 3.2,
+   "note": "LivePortrait"
+  },
+  "brows_concern": {
+   "region": "brows",
+   "box": [
+    213,
+    134
+   ],
+   "size": [
+    212,
+    72
+   ],
+   "frames": [
+    "brows_concern/f01.webp",
+    "brows_concern/f02.webp",
+    "brows_concern/f03.webp",
+    "brows_concern/f04.webp",
+    "brows_concern/f05.webp",
+    "brows_concern/f06.webp",
+    "brows_concern/f07.webp"
+   ],
+   "max_px": 7.28
+  },
+  "smile_soft": {
+   "region": "face",
+   "box": [
+    185,
+    248
+   ],
+   "size": [
+    265,
+    162
+   ],
+   "frames": [
+    "smile_soft/f01.webp",
+    "smile_soft/f02.webp",
+    "smile_soft/f03.webp",
+    "smile_soft/f04.webp",
+    "smile_soft/f05.webp",
+    "smile_soft/f06.webp",
+    "smile_soft/f07.webp",
+    "smile_soft/f08.webp"
+   ],
+   "max_px": 7.21
+  },
+  "smile_warm": {
+   "region": "face",
+   "box": [
+    185,
+    248
+   ],
+   "size": [
+    265,
+    162
+   ],
+   "frames": [
+    "smile_warm/f01.webp",
+    "smile_warm/f02.webp",
+    "smile_warm/f03.webp",
+    "smile_warm/f04.webp",
+    "smile_warm/f05.webp",
+    "smile_warm/f06.webp",
+    "smile_warm/f07.webp",
+    "smile_warm/f08.webp",
+    "smile_warm/f09.webp",
+    "smile_warm/f10.webp"
+   ],
+   "max_px": 11.45
+  }
+ },
+ "moods": {
+  "greeting": "smile_warm",
+  "backchannel": "smile_soft",
+  "listening": null
+ },
+ "note": "LivePortrait set (lp_build.py): brows_up from LivePortrait; brows_concern, smile_soft, smile_warm = the photo-warp sequences"
+}

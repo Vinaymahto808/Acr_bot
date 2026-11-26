@@ -4,10 +4,10 @@
     "height": 852
   },
   "mouth_alpha_box": [
-    185,
-    268,
-    447,
-    464
+    189,
+    275,
+    445,
+    452
   ],
   "shapes": {
     "rest": "X.png",
@@ -55,29 +55,46 @@
   },
   "note": "Photo-accurate warp of prepared/face.jpg. Replace PNGs with designer shapes; keep filenames and canvas size.",
   "grid": {
-    "file": "grid.jpg",
+    "file": "grid2.jpg",
     "box": [
-      185,
-      268,
-      262,
-      196
+      180,
+      251,
+      274,
+      245
     ],
     "opens": [
       -1.0,
-      -0.5,
+      -0.8,
+      -0.6,
+      -0.45,
+      -0.3,
+      -0.15,
       0.0,
-      0.16,
-      0.34,
-      0.52,
-      0.72,
-      0.92
+      0.07,
+      0.14,
+      0.22,
+      0.3,
+      0.38,
+      0.47,
+      0.56,
+      0.66,
+      0.76,
+      0.88,
+      1.0
     ],
     "widths": [
       -0.95,
-      -0.45,
+      -0.62,
+      -0.3,
       0.0,
-      0.45,
-      0.92
-    ]
+      0.3,
+      0.62,
+      0.92,
+      1.6
+    ],
+    "tuck_w": 1.6,
+    "feather": 10,
+    "snap": true,
+    "note": "generate_grid_v2.py (closed-lips portrait: avatar_v2 renderer, procedural upper teeth); nearest cell, no cross-fade"
   }
 }

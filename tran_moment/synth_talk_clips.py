@@ -188,6 +188,75 @@ def align(cues: list[dict], onset: float, lead: float = 0.05) -> list[dict]:
     return out
 
 
+def loudness(wav: Path, hop: float = 0.005, win: float = 0.02):
+    """RMS envelope of the voice (one value per `hop` s), scaled so a normal stressed syllable is ~1.0."""
+    import wave
+    import numpy as np
+    with wave.open(str(wav), "rb") as f:
+        sr = f.getframerate()
+        x = np.frombuffer(f.readframes(f.getnframes()), dtype=np.int16).astype(np.float32) / 32768.0
+    h, n = int(sr * hop), int(sr * win)
+    env = np.array([np.sqrt(np.mean(x[i:i + n] ** 2)) if i + n <= len(x) else 0.0 for i in range(0, len(x), h)])
+    voiced = env[env > env.max() * 0.08] if env.size else env
+    ref = float(np.percentile(voiced, 90)) if voiced.size else 1.0
+    return env / max(ref, 1e-6), hop
+
+
+# Card lip model (human_bot/web/embed.html lipTarget + puppetDraw): the jaw opens in ~38 ms, closes in ~65 ms,
+# M/B/P seal fully, a pause inside a sentence relaxes the lips almost shut, and loudness sets how far the jaw drops.
+LIP_LEAD = 0.07            # lips move ~30 ms before the sound (coarticulation) + ~40 ms to cover the jaw easing lag
+TAU_OPEN, TAU_CLOSE, TAU_SEAL, TAU_WIDTH, TAU_ALPHA = 0.038, 0.065, 0.012, 0.060, 0.080
+PAUSE_OPEN = -0.45
+# (open, width, loudness-scaled) per mouth letter of llm/visemes.py, on the grid of mouths.json. Consonants sit
+# near "teeth together" whatever the volume; only vowels drop the jaw, and louder (stressed) vowels drop it more.
+GRID_VISEME = {
+    "A": (-1.00, 0.00, False),   # p b m: lips sealed
+    "B": (0.18, 0.45, False),    # t d n s r j ch: teeth nearly together, lips just parted
+    "C": (0.62, 0.15, True),     # a aa: open jaw
+    "D": (0.36, 0.85, True),     # i ee y: spread lips, small jaw drop
+    "E": (0.50, -0.80, True),    # o au: rounded open
+    "F": (0.22, -0.95, False),   # u oo w: pucker
+    "G": (0.02, 0.25, False),    # f v: lower lip under the upper teeth
+    "H": (0.40, 0.25, True),     # l: tongue up, jaw half open
+}
+
+
+def lip_track(cues: list[dict], wav: Path, total: float, kit) -> list[tuple[float, float, float]]:
+    """Per-frame (open, width, alpha) on the mouth grid, simulated at 1 ms and sampled at the clip's fps."""
+    import math
+    env, hop = loudness(wav)
+    spoken = [c for c in cues if c["value"] != "X"]
+    if not spoken:
+        return []
+    t0, t1 = spoken[0]["start"], spoken[-1]["end"]
+
+    def target(t: float):
+        tl = t + LIP_LEAD
+        c = next((c for c in cues if c["start"] <= tl < c["end"]), None)
+        v = GRID_VISEME.get(c["value"]) if c else None
+        if v is None:
+            return (PAUSE_OPEN, 0.0, 1.0) if t0 - LIP_LEAD <= tl <= t1 + 0.05 else (0.0, 0.0, 0.0)
+        p_o, p_w, scaled = v
+        if not scaled:
+            return (p_o, p_w, 1.0)
+        amp = float(env[min(len(env) - 1, int(t / hop))]) if len(env) else 0.6
+        return (max(0.12, min(0.85, p_o * (0.55 + 0.55 * min(1.0, amp * 1.4)))), p_w, 1.0)
+
+    dt, o, w, a = 0.001, 0.0, 0.0, 0.0
+    out, next_frame, t = [], 0.0, 0.0
+    while t <= total + 1e-9:
+        if t >= next_frame - 1e-9:
+            out.append((o, w, a))
+            next_frame += 1.0 / sfc.FPS
+        to, tw, ta = target(t)
+        tau = TAU_OPEN if to > o else (TAU_SEAL if to <= -0.99 else TAU_CLOSE)
+        o += (to - o) * (1 - math.exp(-dt / tau))
+        w += (tw - w) * (1 - math.exp(-dt / TAU_WIDTH))
+        a += (ta - a) * (1 - math.exp(-dt / TAU_ALPHA))
+        t += dt
+    return out
+
+
 def plan(name: str, emotion: str, cues: list[dict], duration: float, tracks: dict) -> sfc.Script:
     """Calm delivery: a blink every 3.6-5.2 s, at most one glance in the longest pause, brows up on a question,
     a small slow nod (half amplitude, stretched) at every second phrase end."""
@@ -224,6 +293,14 @@ def plan(name: str, emotion: str, cues: list[dict], duration: float, tracks: dic
 
 
 def main(argv: list[str]) -> int:
+    def opt(flag: str, default: str | None = None) -> str | None:
+        if flag in argv:
+            v = argv[argv.index(flag) + 1]
+            del argv[argv.index(flag):argv.index(flag) + 2]
+            return v
+        return default
+    lips_mode = opt("--lips", "grid")          # grid: continuous lips like the card; shapes: the old 9-shape crossfade
+    out_dir = opt("--out")                      # render elsewhere (no manifest update), e.g. to compare takes
     only = set(argv[argv.index("--only") + 1:]) if "--only" in argv else None
     with_audio = "--no-audio" not in argv
     tracks, idle = sc.load_tracks()
@@ -233,6 +310,8 @@ def main(argv: list[str]) -> int:
     spec = importlib.util.spec_from_file_location("make_clips", ROOT / "make_clips.py")
     mk = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(mk)
+    if out_dir:
+        mk.OUT = Path(out_dir).resolve()
     mk.OUT.mkdir(parents=True, exist_ok=True)
     audio_dir = mk.OUT / "audio"
     audio_dir.mkdir(exist_ok=True)
@@ -247,6 +326,8 @@ def main(argv: list[str]) -> int:
             cues = cues_rhubarb(wav) or align(cues_from_words(words, line, duration), speech_onset(wav))
             (audio_dir / f"{name}.visemes.json").write_text(json.dumps({"text": line, "duration": duration, "mouthCues": cues}, ensure_ascii=False, indent=1), encoding="utf-8")
             script = plan(name, emotion, cues, duration, tracks)
+            if lips_mode == "grid" and kit.grid:
+                script.lips = lip_track(cues, wav, script.dur, kit)
             raw = Path(td) / f"{name}.mp4"
             n = sfc.render(script, kit, tracks, idle, raw)
             silent = Path(td) / f"{name}.norm.mp4"
@@ -258,7 +339,9 @@ def main(argv: list[str]) -> int:
             else:
                 shutil.copyfile(silent, dst)
             print(f"{name:14s} {duration:5.2f}s {n:4d} frames, {len(words):2d} words, {len(cues):3d} cues, "
-                  f"{len(script.nods)} nods, {len(script.blinks)} blinks -> {dst.relative_to(ROOT)} ({dst.stat().st_size // 1024} KB)")
+                  f"{len(script.nods)} nods, {len(script.blinks)} blinks, lips={lips_mode} -> {dst} ({dst.stat().st_size // 1024} KB)")
+    if out_dir:
+        return 0
     m = mk.write_manifest()
     print("manifest speaking:", m["states"].get("speaking"))
     return 0

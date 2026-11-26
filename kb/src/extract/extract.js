@@ -133,6 +133,12 @@ export function extractPage(html, url) {
   tables.forEach((md, i) => { markdown = markdown.replace(TABLE_TOKEN(i), md ? `\n\n${md}\n\n` : ""); });
   markdown = cleanMarkdown(markdown);
   if (title && !markdown.startsWith("# ")) markdown = `# ${title}\n\n${markdown}`;
+  // ACR detailing pages state their price ("Starting Rs 5,000") only in the meta description: keep it as page
+  // text, or "teflon coating price" can never be answered. Price-bearing descriptions only (generic ones are noise).
+  if (/(₹|\bRs\.?\s?|\bINR\s?)\d/i.test(description) && !markdown.includes(description)) {
+    markdown = markdown.replace(/^(# .*\n)/, `$1\n${description}\n`);
+    if (!markdown.includes(description)) markdown = `${description}\n\n${markdown}`;
+  }
   const text = markdown.replace(/[#*_>|`-]+/g, " ").replace(/\s+/g, " ").trim();
 
   return {

@@ -36,12 +36,13 @@ CENTRES = [
 SERVICES = [
     ("Car Insurance Claim", r"insurance|claim|bima|beema|cashless"),
     ("Car AC Service & Repair", r"\bac\b|a\.c|air ?con|cooling|thanda|compressor|condenser"),
-    ("Car Battery", r"battery|batri|tyre|tire"),
-    ("Car Brake & Wheel Maintenance", r"brake|break|wheel|alignment|balancing"),
+    ("Car Battery", r"battery|batri|battary|jump start"),
+    ("Car Brake & Wheel Maintenance", r"brake|break|wheel|alignment|balancing|tyre|tire|puncture"),
     ("Car Clutch Work", r"clutch"),
     ("Car Denting & Painting", r"dent|paint|scratch|bumper|body ?work|panel"),
     ("Car Care & Detailing", r"detailing|wash|clean|polish|coating|ceramic|graphene|interior"),
-    ("Car Lights and Glass Work", r"light|glass|windshield|windscreen|headlamp|mirror"),
+    ("Car Repairs & Inspection", r"check engine|engine|gear ?box|gear"),   # "check engine light" is engine work, not a lamp
+    ("Car Lights and Glass Work", r"light|headlight|taillight|tail light|foglight|fog lamp|glass|windshield|windscreen|headlamp|mirror"),
     ("Car Suspension Work", r"suspension|shocker|jhatk|noise from below"),
     ("Car Emergency Services", r"emergency|tow|breakdown|band ho gayi|start nahi|accident"),
     ("Regular Car Service", r"periodic|regular|general service|servicing|oil change|\bservice\b"),
@@ -54,7 +55,7 @@ BRANDS = {   # spoken / written make -> how the site's brand list spells it (mat
     "mahindra": "Mahindra", "kia": "Kia", "mg": "MG", "skoda": "Skoda", "volkswagen": "Volkswagen", "vw": "Volkswagen",
     "renault": "Renault", "nissan": "Nissan", "ford": "Ford", "bmw": "BMW", "audi": "Audi", "mercedes": "Mercedes",
     "benz": "Mercedes", "jeep": "Jeep", "volvo": "Volvo", "jaguar": "Jaguar", "land rover": "Land Rover", "porsche": "Porsche",
-    "fiat": "Fiat", "chevrolet": "Chevrolet", "datsun": "Datsun", "isuzu": "Isuzu", "citroen": "Citron", "lexus": "Lexus",
+    "fiat": "Fiat", "chevrolet": "Chevrolet", "datsun": "Datsun", "isuzu": "Isuzu", "citroen": "Citroen", "lexus": "Lexus",
 }
 
 
@@ -69,7 +70,7 @@ def centre(area: str) -> str:
 def service(*texts: str) -> str:
     t = " ".join(x or "" for x in texts).lower()
     for name, rx in SERVICES:
-        if re.search(rx, t):
+        if re.search(r"(?<![a-z])(?:" + rx + ")", t):   # words start at a boundary: "accident" is not "dent"
             return name
     return DEFAULT_SERVICE
 
@@ -91,11 +92,21 @@ def car_parts(car: str) -> dict[str, str]:
             break
     model = re.sub(r"\s+", " ", low).strip()
     if not brand:
-        for word in model.split():
+        words = model.split()
+        joined = [w for w in words] + [a + b for a, b in zip(words, words[1:])] + ["".join(words)]   # "i 20" -> "i20"
+        for word in joined:
             if word in MODEL_MAKE:
                 brand = MODEL_MAKE[word].split()[0]
                 break
     return {"brand": brand, "model": model, "year": year}
+
+
+def mobile(raw) -> str:
+    """The first 10-digit Indian mobile number in the text ('+91 98765 43210', '098765 43210'), else ''.
+    '98765432109' (11 digits) or two numbers run together are not cut down to a wrong number."""
+    t = str(raw or "")
+    m = re.search(r"(?<!\d)(?:\+?91[\s-]?|0)?([6-9]\d{4}[\s-]?\d{5})(?!\d)", t)
+    return re.sub(r"\D", "", m.group(1)) if m else ""
 
 
 def payload(slots: dict) -> dict:
@@ -112,7 +123,7 @@ def payload(slots: dict) -> dict:
     ) if x)
     return {
         "name": slots.get("name", ""),
-        "phone": re.sub(r"\D", "", slots.get("phone", ""))[-10:],
+        "phone": mobile(slots.get("phone")),
         "email": slots.get("email", ""),
         "location": centre(slots.get("area", "")),
         "registration": (slots.get("registration") or "").upper(),
@@ -122,6 +133,14 @@ def payload(slots: dict) -> dict:
         "service": service(svc_text, problem),
         "description": desc[:400],
     }
+
+
+def complete(fill: dict) -> bool:
+    """Every required field of the site form has a value. Brand and model are required selects on step 2: without
+    them the site keeps "Next Step" disabled and the popup is left half-filled in front of the customer
+    (2026-11-24: the car was never said, the form stopped at VEHICLE DETAILS). Then the server files the lead."""
+    return (all(str(fill.get(k) or "").strip() for k in ("name", "phone", "brand", "model"))
+            and re.fullmatch(r"[6-9]\d{9}", str(fill.get("phone") or "")) is not None)
 
 
 def usable(context: dict | None) -> bool:

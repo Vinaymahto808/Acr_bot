@@ -26,7 +26,7 @@ class PromptContractTests(unittest.TestCase):
                 self.assertGreaterEqual(len(p["conversation"]["visitor_types"]), 4)
                 self.assertGreaterEqual(len(p["sales"]["flow"]), 5)
                 phone = next(f for f in p["sales"]["capture_fields"] if f["field"] == "phone")
-                self.assertIn("only if", phone["when"])  # phone is asked only for a call-back / pickup / test drive
+                self.assertTrue("only if" in phone["when"] or "only after" in phone["when"])  # never at the start of the call
 
     def test_system_prompt_renders_every_block(self):
         for name, p in PERSONAS.items():

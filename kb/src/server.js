@@ -210,12 +210,32 @@ export function createApp({ store, jobs }) {
     if (mode !== "lexical") hitCache.set(cacheKey, body);   // a degraded answer is not kept: next time may be better
     res.json(body);
   };
+  // ---- customer-call Q&A for the bot's fast path (human_bot/llm/fastpath.py) ----
+  // One row per active qa page: the question variants (heading, "a | b | c"), Neha's answer (first line) and its
+  // English line. Admin-only: these rows come from private call notes (see qa_bundle.js), never public.
+  app.get("/api/knowledge/faq", requireAdmin, (req, res) => {
+    const site = siteParam(String(req.query.website ?? ""));
+    if (!site) return bad(res, "website required");
+    const rows = store.db.prepare(
+      `SELECT p.url, c.heading, c.text FROM chunks c JOIN pages p ON p.id = c.page_id
+       WHERE p.website_id = ? AND p.page_type = 'qa' AND p.status = 'active' ORDER BY p.id, c.chunk_index`).all(site.id);
+    const out = [];
+    for (const r of rows) {
+      const text = String(r.text || "");
+      const answer = text.split("\n", 1)[0].trim();
+      const en = /English:\s*(.+?)(?:\n|$)/.exec(text)?.[1]?.trim() || "";
+      const questions = String(r.heading || "").split("|").map((q) => q.trim()).filter(Boolean);
+      if (answer && questions.length) out.push({ url: r.url, questions, answer, answer_en: en });
+    }
+    res.json({ website_id: site.id, version: store.versionOf(site.id), count: out.length, rows: out });
+  });
   app.get("/api/knowledge/search", search);
   app.post("/api/knowledge/search", search);
 
   app.use((_req, res) => res.status(404).json({ error: "not found" }));
   app.use((err, _req, res, _next) => { // eslint-disable-line no-unused-vars
     log.error("unhandled", { err });
+    if (res.headersSent) return;   // a handler already answered: a second response threw ERR_HTTP_HEADERS_SENT
     res.status(err.type === "entity.parse.failed" ? 400 : 500).json({ error: err.type === "entity.parse.failed" ? "invalid JSON" : "internal error" });
   });
   return app;

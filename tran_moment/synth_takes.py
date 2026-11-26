@@ -127,7 +127,7 @@ def main(argv: list[str]) -> int:
     for k, v in CALM.items():
         setattr(sf, k, v)
     tracks, idle = sc.load_tracks()
-    cues = json.loads((sf.PB / "cache" / "sample.visemes.json").read_text(encoding="utf-8"))["mouthCues"]
+    cues = sf.load_sample_cues()
     kit = sf.Kit()
     spec = importlib.util.spec_from_file_location("make_clips", ROOT / "make_clips.py")
     mk = importlib.util.module_from_spec(spec)

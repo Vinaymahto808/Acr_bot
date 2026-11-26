@@ -4,113 +4,124 @@
   "height": 852
  },
  "layers": {
-  "eyes_closed": {
-   "file": "eyes_closed.png",
+  "eyes_half": {
+   "file": "eyes_half.webp",
    "kind": "eyes",
    "box": [
     219,
-    184,
+    191,
     419,
-    246
+    249
+   ],
+   "closed": 0.5
+  },
+  "eyes_low": {
+   "file": "eyes_low.webp",
+   "kind": "eyes",
+   "box": [
+    219,
+    191,
+    419,
+    249
+   ],
+   "closed": 0.85
+  },
+  "eyes_closed": {
+   "file": "eyes_closed.webp",
+   "kind": "eyes",
+   "box": [
+    219,
+    191,
+    419,
+    249
    ],
    "closed": 1.0
   },
-  "eyes_half": {
-   "file": "eyes_half.png",
-   "kind": "eyes",
-   "box": [
-    219,
-    184,
-    419,
-    246
-   ],
-   "closed": 0.55
-  },
   "gaze_left": {
-   "file": "gaze_left.png",
+   "file": "gaze_left.webp",
    "kind": "eyes",
    "box": [
     219,
-    184,
+    191,
     419,
-    246
+    249
    ],
    "gaze": [
-    -6.5,
+    -5.0,
     0.0
    ]
   },
   "gaze_right": {
-   "file": "gaze_right.png",
+   "file": "gaze_right.webp",
    "kind": "eyes",
    "box": [
     219,
-    184,
+    191,
     419,
-    246
+    249
    ],
    "gaze": [
-    6.5,
+    5.0,
     0.0
    ]
   },
   "gaze_up": {
-   "file": "gaze_up.png",
+   "file": "gaze_up.webp",
    "kind": "eyes",
    "box": [
     219,
-    184,
+    191,
     419,
-    246
+    249
    ],
    "gaze": [
     0.0,
-    -5.5
+    -2.5
    ]
   },
   "brows_up": {
-   "file": "brows_up.png",
+   "file": "brows_up.webp",
    "kind": "brows",
    "box": [
     219,
-    135,
+    144,
     420,
-    211
+    217
    ]
   },
   "brows_in": {
-   "file": "brows_in.png",
+   "file": "brows_in.webp",
    "kind": "brows",
    "box": [
     219,
-    135,
+    144,
     420,
-    211
+    217
    ]
   },
   "smile": {
-   "file": "../mouths/smile.png",
+   "file": "../mouths/smile.webp",
    "kind": "mouth",
    "note": "closed lips, corners lifted"
   },
   "head_tilt_l": {
-   "file": "head_tilt_l.png",
+   "file": "head_tilt_l.webp",
    "kind": "pose"
   },
   "head_tilt_r": {
-   "file": "head_tilt_r.png",
+   "file": "head_tilt_r.webp",
    "kind": "pose"
   },
   "head_down": {
-   "file": "head_down.png",
+   "file": "head_down.webp",
    "kind": "pose"
   },
   "head_up": {
-   "file": "head_up.png",
+   "file": "head_up.webp",
    "kind": "pose"
   },
   "lean_in": {
-   "file": "lean_in.png",
+   "file": "lean_in.webp",
    "kind": "pose"
   }
  },

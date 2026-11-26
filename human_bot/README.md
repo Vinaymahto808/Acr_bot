@@ -87,6 +87,29 @@ cd kb; npm start                                                   # knowledge A
 python human_bot\server\app.py --port 4003 --persona auto-car-repair   # Neha · Auto Car Repair
 ```
 
+## Meaning-based intent matcher (2026-11-25)
+
+The booking step machine reads a turn with word lists and regexes (`llm/pages.py`, `server/app.py`). Phrasings
+nobody wrote down ("road pe rukh gya h", "ac ki hawa garam aa rahi h") fell through to "didn't catch".
+`llm/intents.py` compares the message by meaning with the example phrases in `persona/acr_intents.json`
+(nearest neighbours on `intfloat/multilingual-e5-small`, MIT, int8 ONNX on the CPU via onnxruntime + tokenizers,
+~10-20 ms per message, no torch) and returns a service page path and/or an intent, or nothing below its thresholds.
+It is an extra signal only: its service is used when the rules named none, its intent when no rule regex fired.
+
+* Add phrases: edit `persona/acr_intents.json` (the service page path or intent the phrase belongs to); the running
+  bot re-reads it within seconds. Check with
+  `uv run --no-project --python 3.13 --with numpy --with onnxruntime --with tokenizers python human_bot/tools/eval_intents.py --misses`
+  (held-out set `tests/data/intent_heldout.json`: never copy its rows into the examples).
+* Model files: reused from `kb/data/models/Xenova/multilingual-e5-small` when present, else downloaded once into
+  `human_bot/data/models` (`HUMAN_BOT_INTENT_MODEL_DIR` overrides, `HUMAN_BOT_INTENT_DOWNLOAD=0` never downloads).
+  Example vectors are cached in `human_bot/data/intent_cache.npz`. `HUMAN_BOT_INTENTS=0` switches it off;
+  without the three packages the bot runs on the rules alone. `/health` (loopback) shows `intents`.
+* Start command (dev):
+
+```powershell
+uv run --no-project --python 3.13 --with edge-tts==7.3.1 --with numpy --with pillow --with onnxruntime --with tokenizers python human_bot\server\app.py --port 4001 --persona auto-car-repair
+```
+
 ## Why it sounds human (and where each piece is enforced)
 
 | # | Behaviour | Enforced in | Checkable signal |

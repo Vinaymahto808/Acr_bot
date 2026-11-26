@@ -1,0 +1,408 @@
+{
+  "_note": "Example phrases for Neha's meaning-based matcher (human_bot/llm/intents.py). A customer message is compared with these by meaning, so a new phrasing of a known request still finds the right service or intent when the word lists in llm/pages.py and the regexes in server/app.py miss it. TO ADD A PHRASE: put it, as a customer would type or say it (Hinglish, Devanagari or English, typos welcome), in the list of the service page path or intent it belongs to and save; the running bot re-reads this file within a few seconds (no restart). Rules: (1) one phrase = one meaning; a phrase under 'intents' or 'service_none' must NOT name a specific service (they teach 'no service named'); (2) never put the same phrase under two labels; (3) after adding phrases, run `python human_bot/tools/eval_intents.py` to check nothing got worse. The catalog 'words' of each service page in persona_auto_car_repair.json are added automatically. Thresholds: a result whose score or margin is below these is ignored and the old rules decide alone.",
+  "thresholds": {
+    "service": {"score": 0.88, "margin": 0.005, "top_k": 2},
+    "intent": {"score": 0.9, "margin": 0.005, "top_k": 2}
+  },
+  "services": {
+    "/insurance-claim": [
+      "accident ho gaya hai claim karna hai", "insurance claim karwana hai", "insurance se gaadi theek karwani hai",
+      "mera accident hua hai insurance wala kaam karwana hai", "cashless repair karte ho kya", "bima claim karna hai gaadi ka",
+      "beema ka claim lagwana hai", "insurance company se paisa claim karna hai", "gaadi thok di kisi ne, insurance mein karwani hai",
+      "peeche se kisi ne maar di, claim chahiye", "insurance pe repair hoga kya", "claim file karna hai", "insurence clame karna h",
+      "insurance surveyor kab aayega", "policy se repair karwana hai", "own damage claim karna hai",
+      "car ka accident hua, insurance claim process kya hai", "I want to file an insurance claim",
+      "my car met with an accident, need to claim insurance", "do you handle insurance claims", "can I get cashless repair through my insurance",
+      "accident repair under insurance", "need help with my car insurance claim", "इंश्योरेंस क्लेम करना है",
+      "एक्सीडेंट हो गया है बीमा क्लेम करवाना है", "गाड़ी का बीमा क्लेम", "कैशलेस रिपेयर होता है क्या", "insurance wala repair",
+      "takkar ho gayi gaadi ki, claim se banwani hai", "insurance claim book karna hai",
+      "gaadi ka accident hua hai, insurance mein repair karna hai", "kya aap insurance company se direct baat karte ho",
+      "claim ke liye kya documents chahiye", "maine policy li hui hai, uspe repair hoga", "truck ne takkar maar di gaadi ko",
+      "insurance claim settle karwana hai", "accident wali gaadi theek karni hai", "car crash repair with insurance", "insurance claim ka process",
+      "बीमा कंपनी से क्लेम"
+    ],
+    "/detailing": [
+      "car detailing karwani hai", "full detailing chahiye", "gaadi ko showroom jaisa chamkana hai", "poori gaadi ki deep cleaning aur detailing",
+      "engine bay cleaning karwani hai", "dry ice engine cleaning", "car ko naya jaisa bana do andar bahar se",
+      "complete car care package chahiye", "detaling karwani h", "car spa karwana hai", "gaadi ki complete safai aur shine",
+      "I want full car detailing", "do you do car detailing", "complete interior and exterior detailing", "engine detailing",
+      "make my car look brand new", "car detailing price", "कार डिटेलिंग करवानी है", "गाड़ी की पूरी डिटेलिंग", "detailing package kya hai",
+      "gaadi bechne se pehle poori chamka deni hai", "premium car care chahiye", "car ki full makeover karni hai",
+      "showroom finish chahiye gaadi pe", "gaadi ko polish wax aur interior sab karwana hai", "car ko andar bahar se chamkana hai",
+      "nayi jaisi chamak chahiye poori gaadi pe", "full car makeover", "deep detailing package", "car ka complete beauty treatment",
+      "डिटेलिंग पैकेज", "gaadi ki deep safai bahar andar dono"
+    ],
+    "/category/car-denting-painting": [
+      "gaadi pe dent pad gaya hai", "denting painting karwani hai", "bumper toot gaya hai", "door pe scratch aa gaye", "gaadi pichak gayi hai",
+      "bonnet pe dent hai", "body pe kharonch aa gayi", "paint utar gaya hai", "gaadi ka rang ud gaya hai, paint karwana hai",
+      "full body paint karwana hai", "side mein ghis gayi gaadi", "pillar se lag gayi gaadi, dent aa gaya", "bumper badalna hai",
+      "scratch hatwane hain", "dainting penting karni h", "ek panel paint karwana hai", "car got dented, need repair",
+      "there are scratches on my car door", "my bumper is broken", "I need body work and painting", "repaint my car", "fix a dent on the fender",
+      "डेंटिंग पेंटिंग करवानी है", "गाड़ी पर डेंट है", "बम्पर टूट गया है", "गाड़ी पर स्क्रैच आ गए हैं", "पेंट करवाना है",
+      "gaadi thuk gayi hai thodi, dent nikalwana hai", "body shop ka kaam hai", "fender theek karwana hai", "colour fade ho gaya hai roof ka",
+      "gaadi ke darwaze mein dent", "car pe kharoch lag gayi", "deewar se ragad gayi gaadi", "gaadi ka bumper latak gaya",
+      "peeche se thuk gayi hai", "body pe gaddhe pad gaye", "denting penting ka kaam", "car ki body bigad gayi"
+    ],
+    "/category/car-brake-wheel-maintenance": [
+      "brake se awaaz aa rahi hai", "brake lagane pe chee chee ki awaaz", "brake kam pakad rahe hain", "brake pad badalne hain",
+      "brake disc kharab hai", "brake dheele ho gaye", "brake pedal neeche tak jaata hai", "brakes check karwane hain",
+      "break nahi lag rahe theek se", "tyre ghis gaye hain", "naye tyre lagwane hain", "tyre change karwana hai", "tyre rotation karwana hai",
+      "tayar badalna hai", "brake lagate hi gaadi kaanpti hai", "brake oil leak ho raha hai", "brakes are squeaking", "my brakes feel soft",
+      "need new brake pads", "car takes long to stop", "grinding noise when braking", "replace my tyres", "tyres are worn out",
+      "ब्रेक से आवाज़ आ रही है", "ब्रेक ठीक से नहीं लग रहे", "ब्रेक पैड बदलने हैं", "टायर बदलने हैं", "brek ki sarvising", "brake shoe change",
+      "pahiye ka kaam hai", "brake lagane pe gaadi rukti nahi jaldi", "brake se ghisne ki awaaz", "brake fail jaisa lagta hai", "rim mud gaya hai",
+      "alloy wheel kharab", "chaar naye tyre chahiye", "tyre mein crack aa gaye", "ब्रेक कमज़ोर हैं"
+    ],
+    "/wheel-alignment-service": [
+      "wheel alignment karwana hai", "gaadi ek taraf kheench rahi hai", "steering seedha nahi rehta", "gaadi left ki taraf bhaag rahi hai",
+      "gaadi right side kheenchti hai", "wheel balancing karwani hai", "tez speed pe steering kaanpta hai", "alignment bigad gaya hai",
+      "allignment karwana h", "tyre ek side se ghis raha hai", "speed pe gaadi vibrate karti hai", "steering tedha hai", "car pulls to one side",
+      "steering wheel vibrates at high speed", "need wheel alignment and balancing", "steering is not straight", "uneven tyre wear",
+      "व्हील अलाइनमेंट करवाना है", "गाड़ी एक तरफ खींच रही है", "बैलेंसिंग करवानी है", "alignment aur balancing dono",
+      "gaddha lagne ke baad gaadi seedhi nahi chalti", "steering chhodo to gaadi side chali jaati hai", "wheel balancing price",
+      "gaadi left right bhaagti hai", "steering ghumane pe seedha nahi aata", "alignment check", "balancing karwani hai tyre ki",
+      "highway pe gaadi hilti hai", "naye tyre ke baad alignment", "car wanders on the road", "wheel balancing needed", "गाड़ी सीधी नहीं चलती"
+    ],
+    "/category/car-clutch-work": [
+      "clutch kharab ho gaya", "clutch hard ho gaya hai", "clutch plate badalni hai", "clutch slip kar raha hai",
+      "gear daalne mein dikkat clutch se", "clutch dabane pe awaaz aati hai", "clutch upar se pakadta hai", "clatch ka kaam hai",
+      "klach plate change", "clutch bearing kharab hai", "flywheel ka kaam", "pickup kam ho gaya clutch slip se", "clutch pedal bahut tight hai",
+      "clutch is slipping", "clutch pedal is hard", "replace clutch plate", "clutch makes noise", "need clutch repair", "क्लच खराब है",
+      "क्लच प्लेट बदलनी है", "क्लच हार्ड हो गया", "clutch assembly change karni hai", "chadhai pe gaadi nahi chadh rahi clutch jal gaya",
+      "clutch se jalne ki smell aa rahi hai", "gear badalte waqt clutch atakta hai", "clutch pedal wapas nahi aata",
+      "clutch bahut neeche se pakadta hai", "clutch jal gaya", "clutch cable toot gaya", "clutch overhaul", "clutch wear", "क्लच से आवाज़ आती है",
+      "slipping clutch replacement"
+    ],
+    "/category/car-suspension-work": [
+      "suspension ka kaam hai", "gaddhe pe chalti hai to khat khat awaaz aati hai", "speed breaker pe neeche se awaaz", "bumpy road pe gaadi thokti hai", "gaddhe mein khat khat ki awaaz", "shocker kharab ho gaye", "gaadi bahut uchhalti hai", "jhatke bahut lagte hain",
+      "neeche se thak thak ki awaaz aati hai", "shock absorber leak ho raha hai", "link rod ki awaaz", "tie rod badalna hai",
+      "steering rack se awaaz", "suspention check karna h", "speed breaker pe khad khad hoti hai", "gaadi ek taraf jhuki hui hai",
+      "ride bahut hard ho gayi hai", "suspension overhaul", "knocking noise over bumps", "car is very bouncy", "shock absorbers need replacing",
+      "rattling sound from the bottom on rough roads", "suspension repair", "सस्पेंशन का काम है", "शॉकर खराब है", "गड्ढे में खट खट की आवाज़",
+      "kat kat ki awaaz aati hai uneven road pe", "sadak kharab ho to gaadi bahut bajti hai", "aage ke pahiye se khat khat",
+      "shocker se tel nikal raha", "gaadi neeche baith gayi hai ek taraf", "steering se thak thak awaaz", "bumpy ride", "suspension noise",
+      "सस्पेंशन से आवाज़", "uneven road pe khadkhad"
+    ],
+    "/category/car-lights-and-glass-work": [
+      "headlight nahi jal rahi", "taillight toot gayi", "fog light lagwani hai", "side mirror toot gaya", "sheesha toot gaya side wala",
+      "back light nahi jalti", "indicator kaam nahi kar raha", "headlamp dhundhli ho gayi", "light ka kaam hai", "door ka glass toot gaya",
+      "khidki ka sheesha neeche nahi hota", "rear glass crack", "headlight bulb change", "headlight is not working", "broken tail light",
+      "side mirror is broken", "fog lamps installation", "window glass broken", "हेडलाइट खराब है", "शीशा टूट गया", "साइड मिरर टूट गया",
+      "led headlight lagwani hai", "parking light jal nahi rahi", "brake light kaam nahi kar rahi", "light dim ho gayi hai",
+      "headlight mein paani bhar gaya", "dippar kaam nahi karta", "fog lamp toot gaya", "back ka sheesha toot gaya", "power window ka glass",
+      "reverse light nahi jalti", "headlight peeli pad gayi", "tail lamp broken", "हेडलाइट नहीं जल रही"
+    ],
+    "/category/car-ac-service-repair": [
+      "ac thanda nahi kar raha", "AC kaam nahi kar raha", "ac se garam hawa aa rahi hai", "ac ki cooling kam hai", "ac gas khatam ho gayi",
+      "ac gas bharwani hai", "ac se smell aa rahi hai", "ac chalate hi awaaz aati hai", "ac compressor kharab", "ac service karwani hai",
+      "gaadi mein garmi lag rahi hai ac ke baad bhi", "blower se hawa kam aati hai", "ac se paani tapak raha hai", "ec kharab hai",
+      "a c ki servising", "ac thanda nhi krta", "AC is not cooling", "AC blowing hot air", "need ac gas refill", "air conditioner not working",
+      "bad smell from the AC vents", "my car AC is weak", "एसी ठंडा नहीं कर रहा", "एसी खराब है", "एसी सर्विस करवानी है", "एसी में गैस डलवानी है",
+      "cooling nahi ho rahi gaadi mein", "heater kaam nahi kar raha", "ac on karte hi gaadi band", "AC ki filter saaf karni hai",
+      "ac on karne pe bhi garmi", "ac ki cooling nahi aati", "ac ka compressor awaaz karta hai", "ac gas leak", "air conditioning service",
+      "ac thanda kam karta hai", "एसी काम नहीं कर रहा"
+    ],
+    "/category/car-battery": [
+      "battery down ho gayi", "battery kharab hai", "battery badalni hai", "nayi battery chahiye", "battery charge nahi rehti",
+      "battery jaldi discharge ho jaati hai", "self nahi le rahi battery weak hai", "battery check karwani hai", "batri change karni h",
+      "battary ka kaam", "battery ka terminal dhila hai", "battery mein paani dalwana hai", "subah gaadi self nahi leti battery ki wajah se",
+      "battery dead ho gayi parking mein", "jump start chahiye battery khatam", "battery is dead", "need a new car battery",
+      "battery keeps draining", "battery replacement", "battery warning light is on", "बैटरी खराब है", "बैटरी डाउन हो गई", "बैटरी बदलनी है",
+      "नई बैटरी चाहिए", "battery ki warranty khatam ho gayi nayi lagwani hai", "battery charging karwani hai", "battery weak ho gayi hai",
+      "self maarne pe tik tik hota hai", "battery fool gayi hai", "battery se acid nikal raha", "battery terminal pe safed powder",
+      "car battery check", "बैटरी चार्ज नहीं होती", "battery ki life khatam"
+    ],
+    "/category/car-emergency-services": [
+      "gaadi beech raste mein band ho gayi", "road pe ruk gayi gaadi", "gaadi start nahi ho rahi", "car start nahi ho rahi",
+      "gaadi chal nahi rahi help chahiye", "highway pe gaadi khadi hai", "breakdown ho gaya", "towing chahiye", "gaadi ko tow karwana hai",
+      "gaadi dhakka maar ke bhi start nahi ho rahi", "gaadi raste mein bandh ho gyi", "gadi band pad gayi h", "emergency hai gaadi ruk gayi",
+      "gaadi chalte chalte band ho gayi", "engine band ho gaya beech road pe", "gaadi se dhuan nikal raha hai, roki hai",
+      "gaadi garam ho ke band ho gayi", "my car broke down on the road", "car won't start", "I am stuck on the highway", "need towing urgently",
+      "car stopped in the middle of the road", "emergency help needed", "गाड़ी बीच रास्ते में बंद हो गई", "गाड़ी स्टार्ट नहीं हो रही",
+      "गाड़ी रुक गई है", "टोइंग चाहिए", "gaadi kahi atak gayi hai kisi ko bhejo", "mechanic bhejo gaadi band hai",
+      "jaldi help chahiye gaadi khadi ho gayi", "gaadi raste mein khadi hai chal nahi rahi", "gaadi beech mein bandh ho gayi",
+      "chalti gaadi band ho gayi", "car stalled on the road", "my car broke down", "stuck with a dead car on the road",
+      "gaadi sadak pe ruk gayi koi mechanic bhejo", "flyover pe gaadi band ho gayi", "गाड़ी रास्ते में खराब हो गई", "गाड़ी चल नहीं रही"
+    ],
+    "/car-roadside-assistance": [
+      "roadside assistance chahiye", "puncture ho gaya", "tyre flat ho gaya raste mein", "tayar pankchar ho gaya",
+      "stepney lagwani hai raste mein", "rsa service", "24 ghante wali road side help", "chaabi andar reh gayi gaadi lock ho gayi",
+      "petrol khatam ho gaya raste mein", "tyre phat gaya", "road side assistance milti hai kya", "flat tyre on the road", "I got a puncture",
+      "need roadside assistance", "ran out of fuel", "locked my keys in the car", "पंक्चर हो गया", "टायर फ्लैट हो गया", "रोडसाइड असिस्टेंस",
+      "puncture wala aa sakta hai kya", "hawa nikal gayi tyre ki raste mein", "raste mein pahiya pankchar", "highway pe tyre flat",
+      "tyre burst ho gaya", "fuel khatam ho gaya beech mein", "chabi gaadi mein band ho gayi", "spare tyre lagana hai raste mein",
+      "puncture repair on the spot", "roadside help for a flat tyre", "रास्ते में टायर पंक्चर", "puncture ho gaya koi aa sakta hai"
+    ],
+    "/category/regular-car-service": [
+      "regular service karwani hai", "periodic service due hai", "service due ho gayi hai", "10000 km wali service",
+      "saal bhar ki service karwani hai", "engine oil badalna hai", "oil change karwana hai", "oil filter aur air filter change",
+      "free service karwani hai", "general service karwani hai", "full service chahiye", "annual service", "scheduled maintenance",
+      "regulr servis", "routine service", "interim service", "comprehensive service", "standard service package", "need an oil change",
+      "periodic maintenance service", "my car is due for service", "annual maintenance service", "रेगुलर सर्विस करवानी है", "इंजन ऑयल बदलना है",
+      "सर्विस ड्यू है", "pichli service ko ek saal ho gaya", "km poore ho gaye service ke", "service ka time ho gaya", "oil change aur filter",
+      "gaadi ki periodic checkup", "har saal wali service", "5000 km service", "car servicing due", "periodic service karwani",
+      "km ho gaye service karwani hai", "service ka time aa gaya", "kilometre ke hisaab se service"
+    ],
+    "/category/car-repairs-inspection": [
+      "check engine light jal rahi hai", "power window kaam nahi kar rahi", "window ka sheesha upar neeche nahi ho raha", "power window not working", "gaadi ka mileage kam ho gaya hai", "average kam de rahi hai", "gaadi start karte waqt kharr kharr awaaz aati hai", "self lagane par awaaz aati hai", "starter se awaaz aa rahi hai", "gaadi ka horn kaam nahi kar raha", "horn nahi baj raha", "horn not working", "silencer se dhuan nikal raha hai", "exhaust se kala dhuan aa raha hai", "साइलेंसर से धुआँ निकल रहा है", "गाड़ी से धुआँ निकल रहा है", "इंजन से धुआँ आ रहा है", "साइलेंसर से काला धुआँ", "गाड़ी का हॉर्न नहीं बज रहा", "white smoke from exhaust", "gaadi mein se tel tapak raha hai", "neeche oil gir raha hai", "engine oil leak ho raha hai", "my car is leaking oil", "engine ki light aa gayi dashboard pe", "engine se awaaz aa rahi hai", "engine garam ho raha hai",
+      "gaadi ka pickup kam ho gaya", "mileage kam de rahi hai", "gaadi jhatke maar rahi hai", "engine misfire kar raha",
+      "gaadi se dhuan nikal raha hai", "gear nahi lag raha", "gearbox se awaaz", "engine scanning karwani hai", "gaadi ki checking karwani hai",
+      "full inspection karwana hai", "used car kharidne se pehle inspection", "alternator kharab hai", "engine mounting se vibration",
+      "wiring ka problem hai", "dashboard pe warning aa rahi hai", "gaadi idle pe kaanpti hai", "enjan me problem h",
+      "oil leak ho raha hai neeche se", "check engine light is on", "engine is overheating", "car is making a strange noise from the engine",
+      "low pickup and poor mileage", "gearbox problem", "need a full car inspection", "electrical problem in the car", "इंजन से आवाज़ आ रही है",
+      "इंजन गरम हो रहा है", "चेक इंजन लाइट जल रही है", "गाड़ी झटके मार रही है", "coolant leak ho raha hai", "silencer se kala dhuan",
+      "engine se kat kat ki awaaz", "gaadi bar bar band ho jaati hai idle pe", "gaadi ka average gir gaya", "engine check light",
+      "car overheating", "engine vibration", "gear box kharab", "engine kharab ho gaya", "इंजन खराब है", "pickup nahi hai gaadi mein"
+    ],
+    "/car-wash-service": [
+      "car wash karwana hai", "gaadi dhulwani hai", "gaadi bahut gandi ho gayi", "foam wash karwana hai", "gaadi ki dhulai",
+      "bahar se saaf karwani hai gaadi", "pressure wash", "carwash chahiye", "kaar wash", "keechad lag gaya gaadi pe saaf karna hai",
+      "gaadi pe dhool jam gayi hai", "need a car wash", "wash my car", "exterior wash", "foam wash price", "कार वॉश करवाना है", "गाड़ी धुलवानी है",
+      "गाड़ी की धुलाई", "body wash karwana hai", "underbody wash bhi", "gaadi saaf karwani hai bahar se", "dhool mitti saaf karni hai",
+      "gaadi chamkani hai dhulai se", "wash and vacuum", "car cleaning outside", "पानी से गाड़ी धोनी है", "gaadi nehlani hai",
+      "bird droppings saaf karni hain", "full car wash", "gaadi dhoni hai", "car dhulwa do", "gaadi pe dhool aur keechad", "car wash karwa do",
+      "gaadi ko paani se saaf karna", "dusty car wash", "car washing service"
+    ],
+    "/car-interior-cleaning": [
+      "interior cleaning karwani hai", "andar ki safai karwani hai", "seat saaf karwani hain", "seat pe daag lag gaye", "carpet ganda ho gaya",
+      "gaadi ke andar se badbu aa rahi hai", "roof ki lining saaf karni hai", "dashboard ki safai", "seat ki dhulai", "interior dry cleaning",
+      "vacuum cleaning andar se", "baccha ne seat pe ulti kar di saaf karni hai", "interiar cleaning", "clean the inside of my car",
+      "seats are stained", "spilled coffee on the seat", "seat pe coffee gir gayi", "seat par juice gir gaya daag pad gaya", "car interior smells bad", "deep clean the interior", "carpet shampooing", "इंटीरियर क्लीनिंग",
+      "अंदर की सफाई करवानी है", "सीट साफ करवानी है", "sanitization karwana hai gaadi ka andar se", "andar se gaadi gandi hai",
+      "seat cover saaf karne hain", "gaadi ke andar se smell", "andar ki dhulai", "car ke andar ka kachra", "interior shampoo",
+      "dashboard aur seat ki cleaning", "car interior detailing", "गाड़ी के अंदर से बदबू", "seat pe daag", "andar ki seat gandi",
+      "car ke andar safai"
+    ],
+    "/rubbing-polish": [
+      "rubbing polish karwani hai", "polish karwana hai", "gaadi ki chamak chali gayi", "shine wapas lani hai",
+      "halke scratch rubbing se nikal jayenge kya", "buffing karwani hai", "paint dull ho gaya hai", "wax polish", "gaadi pe swirl marks",
+      "rubing polis", "car polishing", "restore the shine of my car", "paint looks dull", "remove light swirl marks", "machine polish",
+      "रबिंग पॉलिश करवानी है", "पॉलिश करवाना है", "चमक चली गई", "teflon polish chahiye", "body polish", "gaadi ki shine wapas",
+      "rubbing karwani hai", "polishing chahiye", "paint pe chamak nahi", "halke scratch polish se", "gaadi phiki lag rahi hai", "car buffing",
+      "wax and polish", "car polish service", "chamak lani hai gaadi pe", "paint feeka pad gaya", "gaadi ki chamak wapas laani hai",
+      "shine nahi rahi gaadi pe"
+    ],
+    "/ceramic-coating-service": [
+      "ceramic coating karwani hai", "ceramic coating kitne saal chalti hai", "graphene coating", "nano coating karwana hai", "9h coating",
+      "teflon coating karwani hai", "paint pe ceramic layer", "seramic coting", "naye car pe ceramic coating", "what is ceramic coating",
+      "ceramic coating for my new car", "how long does ceramic coating last", "graphene coating price", "सिरेमिक कोटिंग करवानी है",
+      "सिरेमिक कोटिंग", "hydrophobic coating chahiye paani na tike", "ceramic aur graphene mein kaunsa", "coating jo saalon chale",
+      "paint pe glass jaisi coating", "ceramic karwana hai", "nano ceramic", "ceramic coating benefits", "car coating for shine and protection",
+      "ceramic coating warranty", "सिरेमिक", "graphene ceramic coating", "ceramic coating kya hoti hai", "coating karwani hai nayi gaadi pe",
+      "ceramic coating lagwani hai", "ceramic coating karte ho", "long lasting coating for paint shine"
+    ],
+    "/ppf-coating-service": [
+      "ppf karwana hai", "ppf coating", "paint protection film lagwani hai", "gaadi pe transparent film lagwani hai", "full body ppf",
+      "front bumper pe ppf", "self healing film", "pee pee ef", "ppf lagana hai nayi car pe", "PPF wrap for my car",
+      "paint protection film installation", "clear bra for the front", "full body PPF price", "पीपीएफ करवाना है", "पेंट प्रोटेक्शन फिल्म",
+      "tpu film lagwani hai", "stone chip se bachane wali film", "paint pe film chadhani hai", "patthar se paint bachane wali film",
+      "ppf kitne saal chalta hai", "ppf lagwana", "matte ppf", "transparent protection film", "ppf film for scratches", "पीपीएफ", "ppf wrap",
+      "ppf full body", "gaadi pe protective film", "self healing ppf", "ppf ka rate", "paint protection film kitne ki"
+    ],
+    "/paint-protection-service": [
+      "paint protection chahiye", "paint ko protect karna hai", "protection coating karwani hai", "paint ko dhoop se bachana hai",
+      "paint kharab na ho iske liye kuch", "paint sealant", "naye paint ki suraksha", "pent protecshan", "protect my car paint",
+      "paint protection service", "keep my paint from fading", "पेंट प्रोटेक्शन", "पेंट को बचाना है", "paint ki life badhani hai",
+      "bird dropping se paint kharab hota hai protection chahiye", "paint ka bachav", "paint ko safe rakhna hai", "paint fade na ho",
+      "sun damage se paint bachana", "paint protection karwani hai", "paint guard", "protection for paint from scratches and sun",
+      "paint sealant coating", "paint protection kya hota hai", "पेंट को सुरक्षित रखना है", "paint ki chamak bani rahe",
+      "paint protection package", "protect paint from bird droppings", "paint ko kharab hone se bachana", "dhoop se rang na ude",
+      "paint protect karwana hai"
+    ],
+    "/anti-rust-coating": [
+      "anti rust coating karwani hai", "neeche zang lag raha hai", "underbody coating karwani hai", "chassis pe jung lag gayi", "rust proofing",
+      "zang se bachana hai gaadi ko", "underchassis coating", "antirust", "baarish mein neeche zang na lage", "rubberised underbody coating",
+      "rust on the underbody", "anti rust treatment", "underbody rust protection", "जंग लग रहा है", "एंटी रस्ट कोटिंग",
+      "neeche ki body sad rahi hai", "silencer pe jung", "gaadi ke neeche jung", "zang lag raha hai", "underbody pe coating",
+      "rust ho gaya hai neeche", "chassis rust", "anti rust treatment karwana hai", "rust se gaadi khokhli", "rust protection coating",
+      "underbody anti-rust", "जंग से बचाना है", "sea side area mein rehte hain jung lagti hai", "floor pe zang", "jung lag gaya hai neeche",
+      "rust treatment", "underbody jung"
+    ],
+    "/windshield-repair": [
+      "windshield mein crack aa gaya", "aage ka sheesha toot gaya", "front glass pe crack", "windscreen badalni hai",
+      "patthar laga aage wale sheeshe pe", "front sheesha chatak gaya", "windshield replace karna hai", "aage ke glass pe chip pad gayi",
+      "windsheild crack", "crack on my windshield", "front windscreen is broken", "windshield chip repair", "replace the front glass",
+      "विंडशील्ड में क्रैक आ गया", "आगे का शीशा टूट गया", "front glass mein daraar aa gayi", "back windshield bhi badalte ho",
+      "windscreen toot gaya", "front shield pe crack", "aage ka glass chatak gaya", "windshield badalna", "sheeshe mein lakeer aa gayi aage",
+      "front glass replacement", "cracked windscreen", "विंडस्क्रीन टूट गई", "windshield ka chhota sa chip", "windscreen replacement",
+      "front glass toot gaya", "windshield repair karwana hai", "aage ke shishe mein crack", "windshield toot gayi", "front glass crack ho gaya"
+    ],
+    "/wiper-blade-replacement": [
+      "wiper blade change karwana hai", "wiper kharab ho gaye", "wiper se awaaz aati hai", "wiper theek se saaf nahi karta",
+      "wiper ki rubber ghis gayi", "naye wiper lagwane hain", "wiper kaam nahi kar raha", "vaipar badalna hai", "wipers are streaking",
+      "replace wiper blades", "wiper not working", "वाइपर बदलना है", "वाइपर खराब है", "baarish mein sheesha saaf nahi hota wiper se",
+      "wiper motor kharab", "wiper chalta hai par saaf nahi karta", "wiper ki rubber badalni", "wiper se lakeerein", "wiper ki awaaz",
+      "wiper atak jaata hai", "new wiper blades", "wiper blades worn out", "wiper squeaking", "wiper change", "वाइपर बदलना",
+      "wiper blade lagana hai", "rear wiper kharab", "wiper jhatke se chalta hai", "windshield wiper replacement", "wiper blades kharab",
+      "wiper badalwana hai"
+    ],
+    "/extended-warranty": [
+      "extended warranty chahiye", "warranty badhwani hai", "warranty khatam ho rahi hai extend karni hai",
+      "gaadi ki warranty aage badha sakte ho", "extended warranty plan", "out of warranty gaadi ke liye plan", "warranty extention",
+      "company warranty khatam ho gayi", "I want an extended warranty", "warranty extension plans", "my car warranty expired", "एक्सटेंडेड वारंटी",
+      "वारंटी बढ़वानी है", "purani gaadi ke liye warranty plan", "warranty extend karni hai", "extra warranty milegi",
+      "warranty khatam hone se pehle extend", "extended warranty kitne saal", "warranty plan for old car", "extended warranty cost",
+      "car warranty extension", "वारंटी खत्म हो गई", "extended warranty kya cover karti hai", "engine ki warranty chahiye",
+      "warranty ka plan lena hai", "saal do saal ki warranty aur", "extend car warranty", "nayi warranty chahiye gaadi pe", "warranty badhani hai",
+      "extended warranty lena hai"
+    ]
+  },
+  "service_none": [
+    "hello", "hi", "namaste", "hello neha", "good morning", "kaise ho", "aap kaun ho", "kya aap bot ho", "Swift DL3CAB1234",
+    "Honda City HR26DK5678", "meri car Creta hai", "wagonr DL3C1234", "Baleno", "9811223344", "mera number 9876543210 hai", "Rahul",
+    "mera naam Amit hai", "Sunil Kumar", "aapka workshop kahan hai", "timings kya hain", "sunday ko khula hai", "pickup drop milta hai kya",
+    "kitne centre hain aapke", "address bhejo", "okhla mein centre hai", "website dikhao", "offers kya hain", "koi discount hai kya",
+    "online payment hota hai", "genuine parts lagate ho", "kya aap sab brands karte ho", "acha", "hmm", "ok", "theek", "samjha",
+    "accha theek hai samajh gaya", "dekhta hoon", "sochta hoon", "main baad mein call karta hoon", "kal aata hoon", "mera ghar noida mein hai",
+    "car toyota ki hai", "where are you located", "what are your timings", "do you have pickup and drop", "who are you", "ok got it", "fine",
+    "nice", "great", "good", "मेरा नाम सुरेश है", "मेरी गाड़ी स्विफ्ट है", "आपका सेंटर कहाँ है", "नमस्ते", "ठीक है", "समझ गया",
+    "aapki company kitni purani hai", "registration number DL8CAF2345", "model 2018 hai", "petrol gaadi hai", "diesel hai", "automatic hai"
+  ],
+  "intents": {
+    "book": [
+      "book kar do", "booking kar do", "haan book karo", "appointment chahiye", "slot book karo", "kal ka slot de do", "booking karni hai",
+      "theek hai karwa do", "kara do", "kar dijiye booking", "aage badhte hain", "chalo book karte hain", "mujhe appointment leni hai",
+      "booking schedule kar do", "ok kardo booking", "bukking kar do", "booking krdo", "abhi book kar do", "haan karwa do", "yes please book it",
+      "book it", "go ahead and book", "schedule an appointment", "I want to book", "please book a slot", "let's do it", "proceed with the booking",
+      "sign me up", "बुक कर दो", "बुकिंग कर दो", "अपॉइंटमेंट चाहिए", "हाँ करवा दो", "करवा दो", "ठीक है बुक करो", "theek hai book karo",
+      "karwana hai mujhe", "haan mujhe karwana hai", "lagwa do", "fix kar do appointment", "haan kar do booking", "book karo please",
+      "theek hai lagwa do", "chalo theek hai karwa dete hain", "slot de do", "appointment le lo", "please book", "book for tomorrow",
+      "book it please", "बुक करो", "करवा दीजिए", "kal ke liye book karo", "haan ji karwa dijiye", "book karna hai"
+    ],
+    "not_interested": [
+      "nahi chahiye", "nahi karwana", "abhi zaroorat nahi hai", "mujhe nahi karwani", "bas itna hi jaanna tha", "sirf poochh raha tha",
+      "bas jaankari chahiye thi", "no thanks", "nahi thanks", "no I don't want it", "I'm not interested", "I was just asking",
+      "just checking the price", "maybe some other time", "zarurat nahi", "koi zaroorat nahi", "rehne do nahi chahiye", "mujhe nahi lena",
+      "iski zaroorat nahi hai", "नहीं चाहिए", "ज़रूरत नहीं है", "बस जानना था", "नहीं करवाना", "मुझे नहीं चाहिए", "nai chaiye", "nhi chahiye",
+      "skip karo", "nahi bas", "aur kuch nahi", "kuch nahi chahiye", "nahi bhai", "no need", "not now thanks", "I'll pass",
+      "mujhe abhi nahi karwana", "nahi bhai rehne do mujhe nahi chahiye", "I don't need it", "no not now", "abhi iski zaroorat nahi",
+      "bas poochna tha", "sirf jaankari ke liye poocha", "price jaanna tha bas", "nahi abhi koi plan nahi", "मुझे अभी नहीं करवाना",
+      "nahi abhi nahi chahiye", "abhi nahi karwana mujhe", "nahi mujhe nahi chahiye bas"
+    ],
+    "cancel": [
+      "cancel kar do", "booking cancel karo", "cancel karna hai", "rehne do", "chhodo", "mat karo booking", "booking hata do", "booking mat karo",
+      "request cancel kar do", "appointment cancel", "galti se book ho gaya cancel karo", "cancel it", "cancel my booking", "forget it",
+      "don't book it", "stop the booking", "please cancel the appointment", "कैंसल कर दो", "बुकिंग कैंसल करो", "रहने दो", "छोड़ो", "kensal kar do",
+      "cancle karo", "booking band karo", "mat bhejo request", "request mat bhejo", "nahi karwana cancel", "booking wapas le lo", "plan cancel",
+      "cancel kar dijiye", "booking nahi chahiye ab cancel", "request wapas lo", "booking radd karo", "cancel the request", "रद्द करो",
+      "booking nahi karni ab", "mat karo kuch", "sab cancel", "रद्द कर दो", "booking radd kar do", "बुकिंग कैंसल कर दो"
+    ],
+    "yes": [
+      "haan", "haan ji", "ha", "haa", "hnji", "ji haan", "ji", "theek hai", "thik h", "ok", "okay", "sahi hai", "haan sahi hai", "bilkul",
+      "zaroor", "done", "correct", "yes", "yeah", "yep", "sure", "right", "haan bhej do", "bhej do", "ho jayega", "chalega", "haan chalega", "हाँ",
+      "हां जी", "ठीक है", "सही है", "जी हाँ", "bilkul sahi", "yes correct", "that's right", "absolutely", "of course", "han ji bhejo",
+      "haan haan theek", "ji theek hai", "haan sahi", "ok ji", "okay done", "yess", "yup", "haa ji", "हाँ ठीक", "जी", "bilkul ji", "sahi bola",
+      "haan wahi", "hmm haan"
+    ],
+    "no": [
+      "nahi", "nahin", "na", "no", "galat hai", "sahi nahi hai", "nahi ji", "nai", "ji nahi", "not correct", "that's wrong", "no that's not right",
+      "नहीं", "नही", "गलत है", "jee nahi", "nahi yeh galat hai", "wrong", "nahi woh nahi", "nahi bhejna", "no don't send", "abhi mat bhejo", "naa",
+      "nahi woh galat", "no no", "nahi ji galat hai", "not right", "नहीं जी", "na ji", "nahi nahi", "galat", "ye sahi nahi"
+    ],
+    "price_question": [
+      "mera budget kam hai, sasta option hai kya", "kam paise mein ho jayega kya", "cheaper option available hai", "is there a budget option", "sasta wala karwa do",
+      "kitne ka padega", "kitna lagega", "price kya hai", "rate kya hai", "charges kitne hain", "kitne paise lagenge", "kitne ki hai",
+      "kitna loge", "estimate kitna hoga", "total kitna banega", "kharcha kitna hoga", "kitne rupaye", "seedha bolo kitna loge", "kimat kya hai",
+      "cost kitni hai", "how much will it cost", "what's the price", "how much do you charge", "what are the charges", "cost estimate", "price",
+      "price?", "rate batao", "कितने का पड़ेगा", "कितना लगेगा", "दाम क्या है", "कितने पैसे लगेंगे", "kitna kharch", "kitne ka hai",
+      "kitna padega total", "budget kitna rakhu", "sasta hai ya mehnga kitna", "kitne mein ho jayega", "paisa kitna lagega", "fees kitni hai",
+      "iska kitna lagega", "kitne paise", "paisa kitna", "kharcha batao", "kya rate hai", "price batao", "kitne mein karoge", "how much is it",
+      "what's the cost", "कितने में होगा", "दाम बताओ", "kitna charge karte ho", "rate list", "price kitna hai"
+    ],
+    "time_question": [
+      "kitni der lagegi", "kab tak ho jayega", "kitne din lagenge", "kitne ghante lagte hain", "same day mil jayegi", "aaj hi ho jayega kya",
+      "gaadi kab milegi", "kab tak wapas milegi", "time kitna lagta hai", "kitni jaldi ho jayega", "kitni der mein aayenge", "kab tak pahunchoge",
+      "how long will it take", "how much time does it take", "when will my car be ready", "same day delivery", "how long does it take",
+      "कितनी देर लगेगी", "कब तक हो जाएगा", "कितने दिन लगेंगे", "gaadi kab tak ready hogi", "time kitna", "kitna samay lagega",
+      "pehle batao kitna time lagega", "ek din mein ho jayega", "kitni der", "how soon can you do it", "how fast", "kitne baje tak ho jayega",
+      "gaadi kab tak de doge", "kitne din mein milegi", "time kitna lagega isme", "kitne ghante ka kaam hai", "jaldi ho jayega kya",
+      "same day ho jayega", "shaam tak milegi kya", "how many hours", "is it a same day job", "कितने घंटे लगेंगे", "कितनी जल्दी हो जाएगा",
+      "kab tak hoga", "kab aa jaoge", "kitni der mein pahunchoge", "gaadi kab ready hogi", "kitne time mein", "ek ghante mein ho jayega kya",
+      "kitna time", "kitna time lagta hai", "kitna waqt lagega", "kitna samay", "kitne ghante lagenge", "kitni der lagti hai",
+      "kab tak milegi gaadi", "how long", "कितना टाइम लगेगा", "waqt kitna lagega", "der kitni lagegi"
+    ],
+    "human_handoff": [
+      "kisi insaan se baat karni hai", "human se baat karao", "real person se baat karni hai", "manager se baat karao",
+      "kisi aadmi se baat karwao", "team se baat karni hai", "bot se nahi baat karni", "customer care se baat karao", "call karwa do kisi se",
+      "kisi executive se baat karao", "mujhe call back chahiye", "koi mujhe call kare", "aapke office mein kisi se baat karni hai",
+      "advisor se baat karni hai", "talk to a human", "connect me to a person", "I want to speak to someone", "let me talk to your manager",
+      "can a real person call me", "transfer me to an agent", "insaan se baat", "kisi se baat karao", "इंसान से बात करनी है", "किसी से बात करवाओ",
+      "मैनेजर से बात करनी है", "mechanic se seedha baat karni hai", "phone pe baat karni hai kisi se", "aap machine ho kisi asli se baat karao",
+      "kisi bande se baat karao", "asli aadmi se baat", "koi insaan hai wahan", "customer support", "manager ko bulao", "call back karwa do",
+      "mujhe koi call kare please", "speak to a human", "human agent please", "agent se baat karni hai", "मुझे कॉल करवा दो",
+      "किसी इंसान से बात करवाइए"
+    ],
+    "out_of_scope": [
+      "nayi gaadi kharidni hai", "konsi car loon", "car loan chahiye", "emi pe gaadi milegi", "gaadi bechni hai", "purani gaadi bechni hai",
+      "naukri chahiye", "job hai kya", "vacancy hai kya", "mechanic ki job", "car rent pe chahiye", "driver chahiye", "driving sikhni hai",
+      "licence banwana hai", "challan bharna hai", "pollution certificate banwana hai", "car finance", "buy a new car", "sell my car", "car loan",
+      "job openings", "I need a driver", "rent a car", "test drive karni hai", "showroom ka address", "नई गाड़ी खरीदनी है", "गाड़ी बेचनी है",
+      "नौकरी चाहिए", "कार लोन", "bike ki service", "scooty theek karni hai", "truck ka kaam", "flight book karni hai", "aaj mausam kaisa hai",
+      "cricket score kya hai", "recipe batao", "mobile recharge karna hai", "pizza order karna hai",
+      "gaadi ka insurance renew karna hai naya policy lena hai", "rc transfer karwani hai", "bike repair", "scooter ki service",
+      "activa theek karni hai", "motorcycle service", "car kiraye pe", "self drive car chahiye", "used car kharidni hai", "purani car lena hai",
+      "second hand car", "car bechna hai", "gaadi ka loan", "finance pe gaadi", "mechanic ki vacancy", "kaam chahiye aapke yahan",
+      "insurance policy kharidni hai", "fastag recharge", "driving licence", "बाइक की सर्विस", "स्कूटी खराब है", "gaadi kiraye pe chahiye",
+      "rent pe car", "taxi chahiye", "cab book karni hai", "bike theek karni hai", "two wheeler service", "nayi car leni hai",
+      "kaunsi gaadi kharidun", "new car lene ka soch raha hoon", "mujhe car kharidni hai", "nayi gaadi lena hai konsi achhi hai",
+      "car lene mein madad karo", "kaun si car best hai", "budget mein konsi car aayegi", "which car should I buy", "मुझे नई कार लेनी है",
+      "konsi suv loon", "showroom se nayi gaadi"
+    ],
+    "complaint": [
+      "loot macha rakhi hai", "bakwas service hai", "fraud ho tum log", "pichli baar ghatiya kaam kiya", "paise zyada le liye", "cheating hai yeh",
+      "bekaar service", "rip off hai", "bahut ganda experience tha", "meri shikayat hai", "complaint karni hai", "kaam theek nahi kiya tha",
+      "gaadi pehle se zyada kharab kar di", "staff ne badtameezi ki", "itna mehnga kyun", "this is too expensive", "you guys are cheating",
+      "terrible service", "I want to complain", "worst experience", "you overcharged me", "शिकायत करनी है", "बहुत महंगा है", "लूट रहे हो",
+      "बकवास सर्विस", "dhokha hai", "mehenga lagta hai bhai", "doosri jagah sasta hai", "service ke baad bhi problem wahi hai",
+      "wapas wahi dikkat aa gayi", "itna zyada paisa", "bahut zyada charge kar rahe ho", "overcharging kar rahe ho", "pichli service kharab thi",
+      "aapne loota mujhe", "kaam ghatiya tha", "service se khush nahi hoon", "bahut paisa le liya", "zyada bill bana diya", "बहुत ज़्यादा बिल",
+      "रिपेयर के बाद भी ठीक नहीं हुआ", "bahut zyada paisa le liya", "zyada paise le liye", "paise loot liye"
+    ],
+    "goodbye": [
+      "bye", "thank you bye", "thanks", "thank you", "shukriya", "dhanyavaad", "chalo bye", "alvida", "theek hai thank you", "bas itna hi thanks",
+      "thanks neha", "baad mein baat karte hain bye", "good night", "have a nice day", "ok thanks", "thanks a lot", "that's all thank you",
+      "bye bye", "see you", "धन्यवाद", "शुक्रिया", "बाय", "ठीक है धन्यवाद", "chalta hoon", "milte hain", "thnx", "ty", "tata", "ok ji thanks",
+      "thank you so much", "bahut shukriya", "dhanyawad ji", "thanks bye bye", "chalo theek hai thank you", "ok ji bye", "thank u",
+      "bas itna hi tha thank you", "phir milte hain", "goodbye", "thanks for the help", "मदद के लिए धन्यवाद", "अलविदा", "चलो बाय", "ok bye ji",
+      "thik hai bye", "theek hai bye", "ठीक है धन्यवाद बाय"
+    ],
+    "hold": [
+      "ek minute", "ruko", "rukiye", "baad mein", "abhi nahi baad mein", "later", "thoda ruko", "sochke batata hoon", "main sochta hoon",
+      "ghar pe poochh ke batata hoon", "kuch der mein batata hoon", "kal batata hoon", "abhi busy hoon", "hold on", "wait a minute",
+      "give me a moment", "let me think", "I'll get back to you", "एक मिनट", "रुको", "बाद में", "बाद में बताता हूँ", "sochna padega",
+      "wife se poochh ke", "abhi time nahi hai", "phir kabhi", "next week dekhte hain", "salary aane do phir", "thoda time do",
+      "abhi gaadi chala raha hoon", "office mein hoon baad mein", "ek min", "ruk jao", "thodi der baad", "baad me batata hu", "let me get back",
+      "wait", "abhi nahi baad mein karenge", "kal baat karte hain"
+    ],
+    "generic_service_wanted": [
+      "car ki servicing karani hai", "gaadi ki service karwani hai", "service karwani hai", "servicing chahiye", "repair karwana hai",
+      "gaadi theek karwani hai", "gaadi mein problem hai", "gaadi kharab hai", "car repair karni hai", "car mein kuch dikkat hai",
+      "mechanic chahiye", "gaadi dikhani hai", "gadi ki sarvis", "car service", "I need my car serviced", "I need a car service",
+      "my car needs repair", "something is wrong with my car", "get my car fixed", "car maintenance", "गाड़ी की सर्विस करवानी है", "गाड़ी खराब है",
+      "रिपेयर करवाना है", "servicing ke liye aana hai", "gaadi workshop mein deni hai", "gaadi check karwani hai", "car ka kaam karwana hai",
+      "kuch kaam hai gaadi ka", "service book karni hai", "maintenance karwana hai", "meri gaadi ko service chahiye", "gaadi service pe deni hai",
+      "car ki checking aur service", "gaadi mein kaam hai", "servicing karwani hai gaadi ki", "car service chahiye", "repair chahiye",
+      "car ki repairing", "मेरी गाड़ी में दिक्कत है", "kuch repair karwana hai", "my car has a problem", "car not working properly",
+      "need car repair", "service karani thi"
+    ],
+    "other": [
+      "hello", "hi", "namaste", "kaise ho", "aap kaun ho", "aap bot ho kya", "aapka naam kya hai", "aapka workshop kahan hai", "timings kya hain",
+      "sunday ko khula hai", "pickup drop milta hai kya", "warranty milti hai kya", "genuine parts lagate ho", "kya kya check karte ho",
+      "kaise hota hai", "Swift DL3CAB1234", "9811223344", "Rahul", "mera naam Amit hai", "meri gaadi Creta hai", "wagonr dl3c1234",
+      "number galat hai 9815006678 hai", "naam galat hai Sunil Kumar hai", "what do you include", "where are you located", "do you have pickup",
+      "what brands do you service", "is it covered", "acha", "hmm", "accha", "samjha", "मेरा नाम सुरेश है", "आपका सेंटर कहाँ है", "नमस्ते",
+      "pehle AC", "koi offer hai kya", "online payment hota hai", "mera ghar noida mein hai", "which centre is nearest", "aap kitne saal se ho",
+      "kya ye sach mein hota hai", "tell me more", "aur batao", "detail mein batao", "registration DL8CAF2345", "hey", "hii", "hello there",
+      "good afternoon", "namaskar", "hello kaun bol raha hai", "aap ai ho kya", "kya aap robot ho", "are you a bot", "main delhi se hoon",
+      "main noida mein rehta hoon", "mera ghar gurgaon mein hai", "kaise hain aap", "aapka din kaisa hai", "theek hoon", "bahut badhiya",
+      "awesome", "acha ji", "hmm theek", "ok samjha", "suno", "ek baat batao", "achha sunno", "kya chal raha hai", "aap log kitne baje khulte ho",
+      "parking hai kya", "card payment chalega", "UPI chalega", "aap kahan se ho", "yahan se kitni door hai", "Toyota Innova 2020",
+      "Hyundai Verna", "Maruti Swift VXI", "mera number 9811122233", "naam Rajesh", "Neha ji", "aapka naam acha hai", "doosra wala", "wahi",
+      "same", "kuch nahi bas aise hi", "ji samajh gaya", "good morning ji", "hello hello", "hi ji", "hello sir", "hello madam",
+      "pleased to meet you", "evening", "namaste ji", "hey there", "aapse mil ke acha laga", "subah subah", "kaun bol rahe ho",
+      "workshop kitne baje khulta hai", "kab tak khula rehta hai", "opening time kya hai", "band kab hota hai", "sunday open",
+      "what time do you open", "aap kitne baje band karte ho"
+    ]
+  }
+}

@@ -52,11 +52,14 @@ MOUTH_STRENGTH = 1.0  # alpha of a speech mouth shape over the resting mouth (ta
 class Kit:
     def __init__(self) -> None:
         self.base = Image.open(PORTRAIT).convert("RGBA")
-        ex = json.loads((PB / "expressions.json").read_text(encoding="utf-8"))
         self.expr = {}
-        for name, layer in ex["layers"].items():
-            frames = [Image.open(PB / "expressions" / f).convert("RGBA") for f in layer["frames"]]
-            self.expr[name] = {"box": layer["box"], "frames": frames, "region": layer["region"]}
+        if (PB / "expressions.json").exists():
+            ex = json.loads((PB / "expressions.json").read_text(encoding="utf-8"))
+            for name, layer in ex["layers"].items():
+                frames = [Image.open(PB / "expressions" / f).convert("RGBA") for f in layer["frames"]]
+                self.expr[name] = {"box": layer["box"], "frames": frames, "region": layer["region"]}
+        else:
+            self.expr = self._expr_from_reactions()
         re_ = json.loads((PB / "reactions.json").read_text(encoding="utf-8"))
         self.react = {n: Image.open(PB / "reactions" / l["file"]).convert("RGBA")
                       for n, l in re_["layers"].items() if l.get("kind") in ("brows",) and (PB / "reactions" / l["file"]).exists()}
@@ -70,6 +73,23 @@ class Kit:
         self.mouth["smile"] = Image.open(PB / "mouths" / "smile.png").convert("RGBA")
         self.rhubarb = {k: Path(f).stem for k, f in mo["rhubarb"].items()}   # Rhubarb letter -> shape file stem
         self.shape_by_stem = {Path(f).stem: k for k, f in mo["shapes"].items()}
+        self.shape_open = mo.get("open", {})                  # shape -> (open, width) point on the lip grid
+        self.shape_width = mo.get("width", {})
+        self.grid = None
+        g = mo.get("grid")
+        if g and (PB / "mouths" / g["file"]).exists():         # continuous lips, same atlas + mask as the card (embed.html drawGrid)
+            bx, by, bw, bh = g["box"]
+            atlas = np.asarray(Image.open(PB / "mouths" / g["file"]).convert("RGB"), dtype=np.float32)
+            cells = [[atlas[r * bh:(r + 1) * bh, c * bw:(c + 1) * bw] for c in range(len(g["opens"]))] for r in range(len(g["widths"]))]
+            yy, xx = np.mgrid[0:bh, 0:bw].astype(np.float32)
+            if mo.get("mouth_alpha_box"):
+                x0, y0, x1, y1 = mo["mouth_alpha_box"]
+                cx, cy, rx, ry = (x0 + x1) / 2 - bx, (y0 + y1) / 2 - by, (x1 - x0) * 0.40, (y1 - y0) * 0.42
+                d = np.sqrt(((xx - cx) / rx) ** 2 + ((yy - cy) / ry) ** 2)
+                mask = np.clip((1.0 - d) / 0.4, 0.0, 1.0)          # opaque to 0.6 of the radius, soft edge to 1.0
+            else:
+                mask = np.ones((bh, bw), np.float32)
+            self.grid = {"box": (bx, by, bw, bh), "opens": g["opens"], "widths": g["widths"], "cells": cells, "mask": mask[..., None]}
         # the portrait's photo area (white polaroid border dropped), same as synth_clips.base_canvas
         diff = ImageChops.difference(self.base.convert("RGB"), Image.new("RGB", self.base.size, (255, 255, 255))).convert("L").point(lambda v: 255 if v > 18 else 0)
         self.bbox = diff.getbbox()
@@ -79,6 +99,52 @@ class Kit:
         self.bgr = (bg[2], bg[1], bg[0])
         self.scale = (W * 1.06) / photo.width
         self.psize = (round(photo.width * self.scale), round(photo.height * self.scale))
+
+    @staticmethod
+    def _faded(layer: Image.Image, a: float) -> Image.Image:
+        out = layer.copy()
+        out.putalpha(layer.split()[3].point(lambda v: int(v * a)))
+        return out
+
+    def _expr_from_reactions(self) -> dict:
+        """No expression grid for this portrait (expressions_from_grid.py not run): build the morph sequences the
+        scripts ask for from the warp layers of generate_reactions.py, so blinks, glances and smiles still play."""
+        r = PB / "reactions"
+        load = lambda f: Image.open(f).convert("RGBA")  # noqa: E731
+        seq = lambda frames, region: {"box": [0, 0], "frames": frames, "region": region}  # noqa: E731
+        out = {}
+        if (r / "eyes_closed.png").exists():
+            half = load(r / "eyes_half.png") if (r / "eyes_half.png").exists() else self._faded(load(r / "eyes_closed.png"), 0.5)
+            closed = load(r / "eyes_closed.png")
+            out["eyes_closed"] = seq([half, closed], "eyes")
+            out["wink"] = seq([half, closed], "eyes")
+        if (r / "gaze_left.png").exists():
+            g = load(r / "gaze_left.png")
+            out["glance"] = seq([self._faded(g, 0.35), self._faded(g, 0.7), g], "eyes")
+        smile = PB / "mouths" / "smile.png"
+        if smile.exists():
+            s = load(smile)
+            for name, peak in (("smile_soft", 0.55), ("smile_warm", 0.8), ("smile_big", 1.0), ("surprised", 0.3)):
+                out[name] = seq([self._faded(s, peak * k / 3) for k in (1, 2, 3)], "mouth")
+        return out
+
+    def grid_patch(self, o: float, w: float) -> np.ndarray:
+        """The mouth at openness o (-1 sealed .. 0.92 wide open) and width w (-0.95 round .. 0.92 wide): a bilinear
+        blend of the 4 nearest atlas cells. Neighbouring cells differ by a few pixels, so no lip outline doubles."""
+        G = self.grid
+
+        def at(arr, v):
+            v = max(arr[0], min(arr[-1], v))
+            i = 0
+            while i < len(arr) - 2 and v > arr[i + 1]:
+                i += 1
+            return i, (v - arr[i]) / (arr[i + 1] - arr[i])
+        ci, ct = at(G["opens"], o)
+        ri, rt = at(G["widths"], w)
+        C = G["cells"]
+        top = C[ri][ci] * (1 - ct) + C[ri][ci + 1] * ct
+        bot = C[ri + 1][ci] * (1 - ct) + C[ri + 1][ci + 1] * ct
+        return top * (1 - rt) + bot * rt
 
     def compose(self, face: tuple[str, int] | None, brows: tuple[str, float] | None,
                 mouth: tuple[str, str | None, float], eyes: tuple[str, int] | None,
@@ -99,6 +165,16 @@ class Kit:
                 layer.putalpha(a)
             im.alpha_composite(layer)
         shape, prev, fade = mouth
+        if shape == "grid":                                   # continuous lips: ("grid", open, (width, alpha))
+            o, (w, a) = prev, fade
+            if a > 0.01 and self.grid:
+                bx, by, bw, bh = self.grid["box"]
+                region = np.asarray(im.crop((bx, by, bx + bw, by + bh)).convert("RGB"), dtype=np.float32)
+                m = self.grid["mask"] * a
+                out = region * (1 - m) + self.grid_patch(o, w) * m
+                im.paste(Image.fromarray(np.clip(out + 0.5, 0, 255).astype(np.uint8)).convert("RGBA"), (bx, by))
+            shape = "rest"
+            prev = None
         ms = MOUTH_STRENGTH                                   # speech shapes blend over the resting mouth, not a full patch swap
         if shape == "rest" and prev and prev != "rest" and fade < 0.99:   # closing: the last shape fades out
             pl = self.mouth[prev].copy()
@@ -173,6 +249,7 @@ class Script:
         self.nods = nods            # [(start_s, track_name[, amp[, slow]]), ...] head gestures inside the clip
         self.poses = ()             # [(pose_layer, start, hold)]: whole-frame head pose blended in/out (ramp = BROW_RAMP*2)
         self.gazes = ()             # [(gaze_layer, start, hold)]: eyes look left/right/up, ramped like brows
+        self.lips = None            # [(open, width, alpha)] per frame at FPS: continuous grid lips (overrides `mouth`)
 
     def pose_at(self, t: float):
         best = None
@@ -222,6 +299,9 @@ class Script:
         return best
 
     def mouth_at(self, kit: Kit, t: float):
+        if self.lips and kit.grid:
+            o, w, a = self.lips[min(len(self.lips) - 1, int(round(t * FPS)))]
+            return ("grid", round(o, 2), (round(w, 2), round(a, 2)))
         if not self.mouth:
             return (self.rest_mouth, None, 1.0)
         cues = self.mouth
@@ -255,10 +335,18 @@ def scripts(tracks: dict, cues: list) -> list[Script]:
         Script("both_hands", "both_hands", blinks=(R + 0.9,), expr=(("smile_big", R, g("both_hands")),)),
         Script("lean_in", "lean_in", blinks=(R + 0.7,), expr=(("smile_soft", R, g("lean_in")),), brows=(("brows_up", R + 0.2, 0.6),)),
         Script("surprised", "tilt_head__v2", blinks=(R + g("tilt_head__v2") + 0.3,), expr=(("surprised", R, 1.1),), brows=(("brows_up", R, 1.3),)),
+    ] + ([] if not cues else [
         Script("talking", "nod__v2", dur=cues[-1]["end"] + 0.4, blinks=(1.2, 4.0, 7.1), glances=((5.2, 0.4),),
                expr=(("smile_soft", 0.2, 8.6),), brows=(("brows_up", 0.4, 0.5), ("brows_up", 6.1, 0.4)), mouth=cues, pingpong=False),
-    ]
+    ])
     return out
+
+
+def load_sample_cues():
+    """Lip cues of the old 9 s `talking` demo (path_b/cache, git-ignored). Missing: that one clip is skipped;
+    synth_talk_clips.py makes the real speaking clips."""
+    f = PB / "cache" / "sample.visemes.json"
+    return json.loads(f.read_text(encoding="utf-8"))["mouthCues"] if f.exists() else None
 
 
 # ---------------------------------------------------------------- render
@@ -304,7 +392,7 @@ def render(script: Script, kit: Kit, tracks: dict, idle: dict, out: Path) -> int
 def main(argv: list[str]) -> int:
     only = set(argv[argv.index("--only") + 1:]) if "--only" in argv else None
     tracks, idle = sc.load_tracks()
-    cues = json.loads((PB / "cache" / "sample.visemes.json").read_text(encoding="utf-8"))["mouthCues"]
+    cues = load_sample_cues()
     kit = Kit()
     spec = importlib.util.spec_from_file_location("make_clips", ROOT / "make_clips.py")
     mk = importlib.util.module_from_spec(spec)

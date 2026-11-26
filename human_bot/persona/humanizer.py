@@ -154,6 +154,9 @@ def split_sentences(text: str) -> list[str]:
 _CLAUSE_JOINERS = ("aur", "to", "lekin", "magar", "kyunki", "isliye", "phir", "jab", "agar", "ya")
 
 
+LONG_FIRST_WORDS = 12   # a complete first sentence longer than this is still cut at its first clause
+
+
 def split_first_phrase(text: str, min_words: int = 3, max_words: int = 10) -> tuple[str, str] | None:
     """First speakable clause of the first sentence, for TTS to start before the reply is finished.
 
@@ -163,8 +166,19 @@ def split_first_phrase(text: str, min_words: int = 3, max_words: int = 10) -> tu
     and the normal sentence flush will handle it). Never cuts mid-phrase just to hit max_words: a
     wrong pause is worse than a later first clip.
     """
-    if not text or len(split_sentences(text)) > 1:
+    if not text:
         return None
+    sents = split_sentences(text)
+    if len(sents) > 1:
+        # A complete first sentence normally goes out whole, but a long one (a fast-path or cached answer
+        # arrives as one block) is one long fresh Edge clip: 3.0 s to the first byte for an 11 s sentence
+        # (2026-11-24, "Periodic service mein air filter, oil filter badalte hain, ..."). Cut its first clause.
+        if len(sents[0].split()) <= LONG_FIRST_WORDS:
+            return None
+        cut = split_first_phrase(sents[0], min_words, max_words)
+        if not cut:
+            return None
+        return cut[0], (cut[1] + " " + " ".join(sents[1:])).strip()
     # last punctuation break inside the window
     cut = None
     for m in re.finditer(r"[,;:]\s+", text):
@@ -229,6 +243,9 @@ def humanize(reply: str, max_words: int = 40, language: str = "hinglish", female
     if language == "hinglish":
         t = delhi_register(t)
     t = re.sub(r"\s+([,.!?])", r"\1", t)
+    # "confirm karegi.Har kaam" (2026-11-25 loop): a lost space between two sentences; lower-case before the dot
+    # so "3.5", "OEM/OES" and initials stay as they are
+    t = re.sub(r"(?<=[a-z])([.!?])(?=[A-Z][a-z])", r"\1 ", t)
     t = enforce_budget(t, max_words)
     # one question max: keep the first, demote the rest
     if t.count("?") > 1:
@@ -265,21 +282,46 @@ def pick_gesture(gestures: dict, emotion: str, index: int = 0) -> str:
     return opts[index % len(opts)]
 
 
-_E_REASSURE = ("koi dikkat nahi", "koi baat nahi", "tension mat", "no problem", "ho jayega", "fikar mat", "don't worry")
+_E_REASSURE = ("koi dikkat nahi", "koi baat nahi", "tension mat", "no problem", "ho jayega", "fikar mat", "don't worry",
+               "chinta mat", "chinta na")
 _E_THINK = ("ek second", "ek minute", "check karti", "dekhti hoon", "confirm karke", "let me check")
-_E_CONCERN = ("sorry", "problem", "issue", "delay", "nahi ho paya", "dikkat", "kharab", "awaaz", "noise", "leak",
-              "overheat", "garam", "accident", "complaint", "shikayat", "arre", "oh no", "maaf", "afsos", "band ho",
-              "start nahi", "nahi chal", "atak", "jhatka", "smoke", "dhuan", "warning light")
+_E_CONCERN = ("problem", "issue", "delay", "nahi ho paya", "dikkat", "kharab", "awaaz", "noise", "leak",
+              "overheat", "garam", "accident", "complaint", "shikayat", "arre", "oh no", "band ho",
+              "start nahi", "nahi chal", "atak", "jhatka", "smoke", "dhuan", "warning light", "chot", "injur")
+# Avatar face table (owner spec 2026-11-25): an apology / "I understand" line to an upset customer is EMPATHETIC (soft
+# concerned brows, gentle mouth), the accident / breakdown itself is CONCERNED. Concern cues win when both appear.
+_E_EMPATHY = ("sorry", "maaf", "afsos", "samajh sakti", "samajh sakta", "i understand", "i can understand", "apologi",
+              "pareshani ke liye", "bura laga", "chinta", "jayaz", "naraz", "naraaz", "frustrat", "galti", "regret")
+# booking / request confirmed (face: smile). Never with a negation ("booking confirm nahi hui").
+_E_BOOKED = ("booking ho gayi", "booking ho gaya", "booking confirm", "book ho gayi", "book ho gaya", "booking pakki",
+             "request file", "file kar di", "file ho gayi", "confirm ho gayi", "confirm ho gaya", "confirm kar di",
+             "booked", "is confirmed", "has been confirmed", "request note ho gayi", "registered")
+_E_NEG = ("nahi", "nahin", "not", "couldn't", "could not", "failed", "na ho")
+_E_PRICE = ("kharcha", "price", "prices", "cost", "costs", "rupaye", "rupees", "rs", "charges", "charge", "estimate",
+            "quotation", "rate", "rates", "fees")
 _E_ENTHUS = ("congrat", "great", "badhiya", "perfect", "best", "zaroor", "bilkul", "done", "book kar d", "mubarak",
              "wah", "mast", "shandaar", "excellent", "sahi")
 _E_WARM = ("welcome", "namaste", "dhanyavaad", "thank", "shukriya", "hello", "hi ", "haan ji", "ji haan", "acha",
-           "achha", "accha", "theek hai", "good", "nice")
+           "achha", "accha", "theek hai", "good", "nice",
+           # service / insurance enquiries get the friendly face
+           "insurance", "claim", "cashless", "service", "servicing", "pickup", "pick-up", "madad", "help")
 
 
 _E_WH = ("kaise", "kya", "kaun", "kab", "kitna", "kitni", "kahan", "kyun", "kaunsi", "how", "why", "which", "when", "where")
 
+# The CUSTOMER's situation in a turn (situation_of): an angry customer gets the empathetic face, an accident /
+# breakdown the concerned one, while she listens, thinks and answers, even when her answer itself is upbeat
+# ("Ji zaroor, insurance claim ..."). A plain service problem ("brake se awaaz") is an enquiry: no override.
+_S_ANGRY = ("bekaar", "bekar", "bakwas", "bakwaas", "ghatiya", "worst", "pathetic", "useless", "fraud", "cheat", "loot",
+            "chor", "gussa", "naraz", "naraaz", "angry", "frustrat", "disgust", "kharab kar d", "bigaad", "bigad",
+            "disappointed", "never again", "consumer court", "bewakoof", "pagal", "shame", "rubbish", "nonsense",
+            "kya mazaak", "dhokha", "terrible", "horrible")
+_S_CONCERN = ("accident", "takkar", "thok di", "thok diya", "crash", "collision", "breakdown", "break down",
+              "band pad", "beech raste", "smoke", "dhuan", "aag", "fire", "brake fail", "tow", "towing", "stuck",
+              "phas gay", "phans gay", "chot", "injur", "hurt", "complaint", "shikayat", "stolen", "chori")
 
-_PREFIX_CUES = {"book kar d"}   # stems that continue ("book kar deti / dungi"); everything else is a whole word
+
+_PREFIX_CUES = {"book kar d", "apologi", "frustrat", "kharab kar d", "injur", "phas gay", "phans gay", "disgust"}   # stems that continue ("book kar deti / dungi"); everything else is a whole word
 
 
 def _cue_re(cues: tuple[str, ...]) -> re.Pattern:
@@ -290,20 +332,31 @@ def _cue_re(cues: tuple[str, ...]) -> re.Pattern:
 
 _RE_REASSURE, _RE_THINK, _RE_CONCERN = _cue_re(_E_REASSURE), _cue_re(_E_THINK), _cue_re(_E_CONCERN)
 _RE_ENTHUS, _RE_WARM, _RE_WH = _cue_re(_E_ENTHUS), _cue_re(_E_WARM), _cue_re(_E_WH)
+_RE_EMPATHY, _RE_BOOKED, _RE_NEG, _RE_PRICE = _cue_re(_E_EMPATHY), _cue_re(_E_BOOKED), _cue_re(_E_NEG), _cue_re(_E_PRICE)
+_RE_S_ANGRY, _RE_S_CONCERN = _cue_re(_S_ANGRY), _cue_re(_S_CONCERN)
 
 
 def emotion_of(text: str) -> str:
-    """Emotion tag per sentence -> persona.avatar.gestures. Hinglish and English cues, reassurance before concern
-    so "koi dikkat nahi" reads as warm, not worried."""
+    """Emotion tag per sentence -> persona.avatar.gestures, TTS prosody and the card's face. Hinglish and English
+    cues, reassurance before concern so "koi dikkat nahi" reads as warm, not worried.
+
+    Face table (2026-11-25): booking confirmed -> enthusiastic (smile); accident / breakdown / complaint -> concerned;
+    an apology or "samajh sakti hoon" -> empathetic; a price line -> neutral; service / insurance -> warm (friendly)."""
     t = text.lower()
     if _RE_REASSURE.search(t):
         return "warm"
     if _RE_THINK.search(t):
         return "thinking"
+    if _RE_BOOKED.search(t) and not _RE_NEG.search(t):
+        return "enthusiastic"
     if "?" in t and _RE_WH.search(t):
         return "thinking"
     if _RE_CONCERN.search(t):
         return "concerned"
+    if _RE_EMPATHY.search(t):
+        return "empathetic"
+    if _RE_PRICE.search(t) or "₹" in t:
+        return "neutral"
     if _RE_ENTHUS.search(t):
         return "enthusiastic"
     if _RE_WARM.search(t):
@@ -311,6 +364,18 @@ def emotion_of(text: str) -> str:
     if "?" in t:
         return "warm"
     return "neutral"
+
+
+def situation_of(user_text: str) -> str | None:
+    """The customer's situation for one turn, for the card's face while she listens, thinks and answers:
+    "empathetic" for an angry / upset customer, "concerned" for an accident, breakdown or complaint, else None
+    (her own sentences then pick the face). Anger wins: "accident ke baad bhi bakwas service" is empathetic."""
+    t = (user_text or "").lower()
+    if _RE_S_ANGRY.search(t):
+        return "empathetic"
+    if _RE_S_CONCERN.search(t):
+        return "concerned"
+    return None
 
 
 def delivery_chunks(text: str, max_words: int = 14) -> list[str]:

@@ -21,6 +21,7 @@ from __future__ import annotations
 
 import json
 import os
+import re
 import time
 import urllib.error
 import urllib.parse
@@ -70,6 +71,10 @@ class Bitrix24Sink:
             f"Turns: {rec.get('turns')}   Started: {time.strftime('%Y-%m-%d %H:%M', time.localtime(rec.get('started') or time.time()))}",
             f"Consent to record: {'yes' if rec.get('consent') else 'no'}",
         ]
+        if rec.get("problem") or rec.get("car") or rec.get("registration"):   # the booking Neha took
+            comments.insert(0, "Booking: " + " | ".join(x for x in (
+                rec.get("problem") and f"service {rec['problem']}", rec.get("car") and f"car {rec['car']}",
+                rec.get("registration") and f"registration {rec['registration']}") if x))
         if PUBLIC_BASE and rec.get("audio_files"):
             merged = next((f for f in rec["audio_files"] if f.endswith(".m4a")), None)
             if merged:
@@ -100,16 +105,27 @@ class Bitrix24Sink:
     # ---------------------------------------------------------------- push
     def find_existing(self, rec: dict) -> str | None:
         try:
-            r = self.call("crm.lead.list", {"filter": {"UF_CRM_CONVERSATION_ID": rec["id"]}, "select": ["ID"]})
-            if r.get("result"):
-                return str(r["result"][0]["ID"])
+            # Bitrix24 IGNORES a filter on a field the portal does not have and returns every lead (2026-11-14: the
+            # first lead of the CRM, a real converted one, was overwritten by a test call). So the value is read
+            # back and compared: no field, no match.
+            r = self.call("crm.lead.list", {"filter": {"UF_CRM_CONVERSATION_ID": rec["id"]},
+                                            "select": ["ID", "UF_CRM_CONVERSATION_ID"]})
+            for lead in r.get("result") or []:
+                if str(lead.get("UF_CRM_CONVERSATION_ID") or "") == str(rec["id"]):
+                    return str(lead["ID"])
         except Bitrix24Error:
             pass  # field may not exist on this portal: fall through to the phone check
         if rec.get("phone"):
             since = time.strftime("%Y-%m-%dT00:00:00", time.localtime(rec.get("started") or time.time()))
-            r = self.call("crm.lead.list", {"filter": {"PHONE": rec["phone"], ">=DATE_CREATE": since, "SOURCE_ID": "WEB"}, "select": ["ID", "TITLE"]})
+            r = self.call("crm.lead.list", {"filter": {"PHONE": rec["phone"], ">=DATE_CREATE": since, "SOURCE_ID": "WEB"},
+                                            "select": ["ID", "TITLE", "PHONE"]})
+            want = re.sub(r"\D", "", str(rec["phone"]))[-10:]
             for lead in r.get("result") or []:
-                if rec["id"] in (lead.get("TITLE") or "") or True:
+                # only a lead Neha created herself, for this very phone: a website-form lead with the same phone must
+                # never be overwritten by the call summary (the check ended in "or True" until 2026-11-14), and the
+                # phone is compared here too because Bitrix24 ignores filters it cannot apply
+                phones = {re.sub(r"\D", "", p.get("VALUE") or "")[-10:] for p in lead.get("PHONE") or []}
+                if (lead.get("TITLE") or "").startswith("ACR web call") and want in phones:
                     return str(lead["ID"])
         return None
 
@@ -128,8 +144,9 @@ class Bitrix24Sink:
             if not lead_id:
                 raise Bitrix24Error("crm.lead.add returned no id")
             action = "created"
-        self.call("crm.timeline.comment.add", {"fields": {"ENTITY_ID": lead_id, "ENTITY_TYPE": "lead",
-                                                           "COMMENT": "Neha web call transcript\n\n" + self.transcript_text(rec)}})
+        if rec.get("transcript"):   # a booking-only lead (recording off) carries no transcript
+            self.call("crm.timeline.comment.add", {"fields": {"ENTITY_ID": lead_id, "ENTITY_TYPE": "lead",
+                                                               "COMMENT": "Neha web call transcript\n\n" + self.transcript_text(rec)}})
         return {"id": lead_id, "action": action}
 
 

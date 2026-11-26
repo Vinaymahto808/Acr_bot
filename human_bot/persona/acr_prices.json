@@ -1,0 +1,130 @@
+{
+ "note": "Neha's price lines, one per service page. 'hi' is spoken in Hindi/Hinglish, 'en' in English. Leave empty when there is no fixed price: Neha then says the exact estimate comes after inspection and never invents a number. Write it as she should say it, e.g. 'Periodic service 2,999 rupaye se shuru hoti hai'. Saved edits apply on the next answer, no restart. Prefilled only where autocarrepair.in itself states a price (2026-11-25).",
+ "prices": {
+  "/insurance-claim": {
+   "title": "Insurance Claim",
+   "hi": "",
+   "en": ""
+  },
+  "/car-service": {
+   "title": "Car Service",
+   "hi": "",
+   "en": ""
+  },
+  "/detailing": {
+   "title": "Detailing",
+   "hi": "",
+   "en": ""
+  },
+  "/category/car-denting-painting": {
+   "title": "Denting and Painting",
+   "hi": "",
+   "en": ""
+  },
+  "/category/car-brake-wheel-maintenance": {
+   "title": "Brake and Wheel Maintenance",
+   "hi": "",
+   "en": ""
+  },
+  "/wheel-alignment-service": {
+   "title": "Wheel Alignment",
+   "hi": "",
+   "en": ""
+  },
+  "/category/car-clutch-work": {
+   "title": "Clutch Work",
+   "hi": "",
+   "en": ""
+  },
+  "/category/car-suspension-work": {
+   "title": "Suspension Work",
+   "hi": "",
+   "en": ""
+  },
+  "/category/car-lights-and-glass-work": {
+   "title": "Glass and Lights",
+   "hi": "",
+   "en": ""
+  },
+  "/category/car-ac-service-repair": {
+   "title": "AC Service and Repair",
+   "hi": "",
+   "en": ""
+  },
+  "/category/car-battery": {
+   "title": "Car Battery",
+   "hi": "Battery charging lagbhag 300 se 500 rupaye mein ho jaati hai, replacement ka price battery par depend karta hai",
+   "en": "Battery charging costs around 300 to 500 rupees; a replacement depends on the battery"
+  },
+  "/category/car-emergency-services": {
+   "title": "Emergency Services",
+   "hi": "",
+   "en": ""
+  },
+  "/car-roadside-assistance": {
+   "title": "Roadside Assistance",
+   "hi": "",
+   "en": ""
+  },
+  "/category/regular-car-service": {
+   "title": "Regular Car Service",
+   "hi": "",
+   "en": ""
+  },
+  "/category/car-repairs-inspection": {
+   "title": "Repairs and Inspection",
+   "hi": "",
+   "en": ""
+  },
+  "/car-wash-service": {
+   "title": "Car Wash",
+   "hi": "",
+   "en": ""
+  },
+  "/car-interior-cleaning": {
+   "title": "Interior Cleaning",
+   "hi": "",
+   "en": ""
+  },
+  "/rubbing-polish": {
+   "title": "Rubbing and Polish",
+   "hi": "",
+   "en": ""
+  },
+  "/ceramic-coating-service": {
+   "title": "Ceramic Coating",
+   "hi": "",
+   "en": ""
+  },
+  "/ppf-coating-service": {
+   "title": "PPF Coating",
+   "hi": "",
+   "en": ""
+  },
+  "/paint-protection-service": {
+   "title": "Paint Protection",
+   "hi": "",
+   "en": ""
+  },
+  "/anti-rust-coating": {
+   "title": "Anti Rust Coating",
+   "hi": "",
+   "en": ""
+  },
+  "/windshield-repair": {
+   "title": "Windshield Repair",
+   "hi": "",
+   "en": ""
+  },
+  "/wiper-blade-replacement": {
+   "title": "Wiper Blades",
+   "hi": "",
+   "en": ""
+  },
+  "/extended-warranty": {
+   "title": "Extended Warranty",
+   "hi": "",
+   "en": ""
+  }
+ }
+}

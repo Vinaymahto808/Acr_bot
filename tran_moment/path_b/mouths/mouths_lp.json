@@ -1,0 +1,99 @@
+{
+ "canvas": {
+  "width": 640,
+  "height": 852
+ },
+ "mouth_alpha_box": [
+  189,
+  275,
+  445,
+  452
+ ],
+ "shapes": {
+  "rest": "X.png",
+  "closed": "closed.png",
+  "A": "A.png",
+  "E": "E.png",
+  "I": "I.png",
+  "O": "O.png",
+  "U": "U.png",
+  "FV": "FV.png",
+  "L": "L.png"
+ },
+ "rhubarb": {
+  "A": "closed.png",
+  "B": "E.png",
+  "C": "A.png",
+  "D": "I.png",
+  "E": "O.png",
+  "F": "U.png",
+  "G": "FV.png",
+  "H": "L.png",
+  "X": "X.png"
+ },
+ "open": {
+  "rest": 0.0,
+  "closed": -1.0,
+  "A": 0.9,
+  "E": 0.5,
+  "I": 0.38,
+  "O": 0.66,
+  "U": 0.46,
+  "FV": 0.18,
+  "L": 0.55
+ },
+ "width": {
+  "rest": 0.0,
+  "closed": 0.0,
+  "A": 0.05,
+  "E": 0.85,
+  "I": 0.92,
+  "O": -0.85,
+  "U": -0.95,
+  "FV": 0.22,
+  "L": 0.28
+ },
+ "note": "Photo-accurate warp of prepared/face.jpg. Replace PNGs with designer shapes; keep filenames and canvas size.",
+ "grid": {
+  "file": "grid_lp.jpg",
+  "box": [
+   180,
+   251,
+   274,
+   245
+  ],
+  "opens": [
+   -1.0,
+   -0.8,
+   -0.6,
+   -0.45,
+   -0.3,
+   -0.15,
+   0.0,
+   0.07,
+   0.14,
+   0.22,
+   0.3,
+   0.38,
+   0.47,
+   0.56,
+   0.66,
+   0.76,
+   0.88,
+   1.0
+  ],
+  "widths": [
+   -0.95,
+   -0.62,
+   -0.3,
+   0.0,
+   0.3,
+   0.62,
+   0.92
+  ],
+  "feather": 10,
+  "snap": true,
+  "note": "LivePortrait (tran_moment/liveportrait/scripts/lp_build.py): neural renders of the same photo, pasted back where they change"
+ },
+ "version": "lp0d8f2ca3a7"
+}

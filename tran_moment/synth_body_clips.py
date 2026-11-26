@@ -51,6 +51,15 @@ R = sc.REST_S
 
 # Landmarks on prepared/face.jpg (640x852); converted to canvas coordinates in Geometry.
 FACE_PTS = {"chin": (325.8, 450.8), "neck": (325.0, 486.0), "shoulder_l": (120.0, 522.0), "shoulder_r": (530.0, 522.0)}
+# The portrait changes (prepare_portrait.py): take the chin from its MediaPipe landmarks so the head/body seam
+# follows the face actually in the photo; the neck stays the same distance below it.
+try:
+    _chin = json.loads((ROOT / "prepared" / "face.json").read_text(encoding="utf-8"))["points"]["chin"]
+    _dy = FACE_PTS["neck"][1] - FACE_PTS["chin"][1]
+    FACE_PTS["chin"] = (float(_chin[0]), float(_chin[1]))
+    FACE_PTS["neck"] = (float(_chin[0]), float(_chin[1]) + _dy)
+except (OSError, KeyError, ValueError):
+    pass
 
 
 def smooth(u: float) -> float:
@@ -283,6 +292,11 @@ def preview(kit, geo: Geometry, out: Path) -> None:
 
 
 def main(argv: list[str]) -> int:
+    out_dir = None
+    if "--out" in argv:                        # render elsewhere, no manifest update (compare before installing)
+        i = argv.index("--out")
+        out_dir = argv[i + 1]
+        del argv[i:i + 2]
     only = set(a for a in argv[argv.index("--only") + 1:] if not a.startswith("--")) if "--only" in argv else None
     for k, v in CALM.items():
         setattr(sfc, k, v)
@@ -292,11 +306,13 @@ def main(argv: list[str]) -> int:
     spec = importlib.util.spec_from_file_location("make_clips", ROOT / "make_clips.py")
     mk = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(mk)
+    if out_dir:
+        mk.OUT = Path(out_dir).resolve()
     mk.OUT.mkdir(parents=True, exist_ok=True)
     if "--preview" in argv:
         p = mk.OUT / "demo" / "body_preview.png"
         preview(kit, geo, p)
-        print("preview:", p.relative_to(ROOT))
+        print("preview:", p)
     with tempfile.TemporaryDirectory() as td:
         for s in scripts():
             if only and s.name not in only:
@@ -309,7 +325,9 @@ def main(argv: list[str]) -> int:
             n = render(s, kit, tracks, idle, geo, raw)
             dst = mk.OUT / f"{s.name}.mp4"
             mk.normalise(raw, dst, pingpong=True)
-            print(f"{s.name:16s} {n:4d} frames -> {dst.relative_to(ROOT)} ({dst.stat().st_size // 1024} KB)")
+            print(f"{s.name:16s} {n:4d} frames -> {dst.name} ({dst.stat().st_size // 1024} KB)")
+    if out_dir:
+        return 0
     m = mk.write_manifest()
     print("manifest:", json.dumps({"states": {k: len(v) for k, v in m["states"].items()},
                                    "gestures": {k: len(v) for k, v in m["gestures"].items()}}))

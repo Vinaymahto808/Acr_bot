@@ -11,6 +11,7 @@ import { gunzipSync, gzipSync } from "node:zlib";
 import { settings, websites } from "./config.js";
 import { log } from "./log.js";
 import { KnowledgeStore } from "./store/sqlite.js";
+import { loadOverrides, suppressPages } from "./curate.js";
 
 export const DEFAULT_PATHS = [process.env.KB_QA_BUNDLE, "/etc/secrets/qa_pages.jsonl.gz.b64", "qa_pages.jsonl.gz.b64"].filter(Boolean);
 
@@ -43,7 +44,9 @@ export function importBundle(store, siteId, rows) {
   if (!site) throw new Error(`unknown website ${siteId}`);
   store.upsertWebsite(site);
   let imported = 0, unchanged = 0;
+  const ov = loadOverrides();
   for (const r of rows) {
+    if (ov.suppress[String(r.url).split("#")[1] ?? ""]) continue;   // curated out (src/curate.js): never re-activated
     const ex = store.getPage(siteId, r.url);
     if (ex && ex.status === "active" && ex.content_hash === r.page_hash) { unchanged++; continue; }
     store.assertModelCompatible(siteId, r.model, r.dim);
@@ -57,8 +60,9 @@ export function importBundle(store, siteId, rows) {
     }
     imported++;
   }
-  if (imported) store.checkpoint();
-  return { imported, unchanged, total: rows.length };
+  const suppressed = suppressPages(store, siteId, ov);
+  if (imported || suppressed) store.checkpoint();
+  return { imported, unchanged, suppressed, total: rows.length };
 }
 
 /** Boot hook (src/seed.js): import the first bundle file that exists; never throws. */

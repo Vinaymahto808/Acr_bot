@@ -76,3 +76,11 @@ training/acr_sft/
 # large ML weights (downloaded; see tran_moment/restore_face.py, upscale_photo.py)
 tran_moment/motion/models/*.onnx
 tran_moment/motion/models/*.pb
+
+# ---- local-only avatar work (2026-11-26): rollback copies, render cache, downloaded third-party code ----
+tran_moment/face_backup_*/
+tran_moment/qa_avatar_*/
+tran_moment/liveportrait/repo/
+tran_moment/liveportrait/cache/
+tran_moment/liveportrait/.venv/
+tran_moment/liveportrait/pretrained_weights/

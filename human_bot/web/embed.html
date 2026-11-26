@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content" />
 <title>Talk to sales</title>
 <style>
   :root {
@@ -59,7 +59,9 @@
   .stage .sway, .stage .breathe, .stage .nod { position:absolute; inset:0; }
   .stage .sway { animation:sway 9s ease-in-out infinite; transform-origin:50% 100%; }
   .stage .breathe { animation:breathe 4.6s ease-in-out infinite; transform-origin:50% 70%; }
-  .stage .nod { transform:translateY(calc(var(--nod,0) * 1px)) rotate(calc(var(--tilt,0) * 1deg)); transform-origin:50% 60%;
+  /* --px/--py/--roll: the rigid head pose (POSE in the script); --nod/--tilt: the voice-driven nod; --yaw: a real
+     head turn (rotateY in a soft perspective, <= ~2 deg) */
+  .stage .nod { transform:perspective(1100px) translate(var(--px,0%), calc(var(--py,0%) + var(--nod,0) * 1px)) rotateY(calc(var(--yaw,0) * 1deg)) rotate(calc((var(--tilt,0) + var(--roll,0)) * 1deg)); transform-origin:50% 60%;
                 transition:transform .12s ease-out; }
   .stage img, .stage video { width:100%; height:100%; object-fit:cover; object-position:center 15%; transform:scale(1.06); display:block; }
   /* two stacked loops; the .front one is visible, the other fades out — that is the "reaction" crossfade */
@@ -125,7 +127,9 @@
 
   /* captions: last few turns, floated over the lower part of the portrait */
   #log { position:absolute; left:10px; right:10px; bottom:calc(92px + env(safe-area-inset-bottom, 0px)); z-index:2; max-height:24%; overflow:hidden;
-         display:flex; flex-direction:column; justify-content:flex-end; gap:4px; pointer-events:none; }
+         display:flex; flex-direction:column; justify-content:flex-end; gap:4px; pointer-events:none;
+         /* the oldest line fades out at the top instead of being cut mid-word (2026-11-24 browser test) */
+         -webkit-mask-image:linear-gradient(to bottom, transparent 0, #000 16px); mask-image:linear-gradient(to bottom, transparent 0, #000 16px); }
   .msg { max-width:92%; padding:0; font-size:12.5px; line-height:1.4; white-space:pre-wrap; text-shadow:0 1px 4px rgba(0,0,0,.75); }
   .msg.bot { align-self:flex-start; color:#fff; }
   .msg.user { align-self:flex-end; color:#cfe0ff; font-size:11.5px; }
@@ -140,13 +144,12 @@
   /* padding-bottom grows by the phone's home-bar inset so the buttons are never under it */
   .composer { position:absolute; left:0; right:0; bottom:0; z-index:3; padding:8px 10px calc(12px + env(safe-area-inset-bottom, 0px)); display:flex; gap:clamp(8px,2.5vw,12px); align-items:center; justify-content:center; }
   .composer input {
-    display:none; flex:1; min-width:0; font:inherit; font-size:12.5px; color:#fff; background:rgba(255,255,255,.12);
+    display:block; flex:1; min-width:0; font:inherit; font-size:12.5px; color:#fff; background:rgba(255,255,255,.12);
     border:1px solid rgba(255,255,255,.22); border-radius:999px; padding:8px 12px; outline:none; backdrop-filter:blur(8px);
   }
   .composer input::placeholder { color:rgba(255,255,255,.6); }
   .composer input:focus { border-color:rgba(255,255,255,.6); }
   .composer.text input { display:block; }
-  .composer.text #mic { display:none; }
   /* round glass buttons; size follows the card width (clamp) so phones and the 320px card both fit */
   .icon {
     --s:clamp(38px,12vw,44px); flex:none; width:var(--s); height:var(--s); border-radius:50%; padding:0; position:relative;
@@ -230,8 +233,6 @@
   .note a { color:#9fc1ff; text-decoration:none; }
   /* before "Start conversation": only the portrait, the header and the pitch */
   body.pre .composer, body.pre .note, body.pre .chips, body.pre #log { display:none; }
-  /* voice mode shows keyboard · mic · end; send appears only with the text box */
-  .composer:not(.text) .send { display:none; }
   .who span { white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:170px; }
 
   /* Request form (insurance claim / booking): a glass sheet over the video, one field at a time.
@@ -286,10 +287,164 @@
     .lf-nav button { font-size:12px; padding:7px 10px; }
   }
   body.form-open #log, body.form-open .note, body.form-open .hint { display:none !important; }   /* captions and the footnote would sit under the sheet */
+  /* ===== Responsive shell (2026-11-25, "mobile UI like every other website"): app-style header with a
+     status pill, an always-visible composer (text box + Send, mic, end call), a subtitle over a scrim,
+     a loading veil and an offline banner. Phones (tall frames): header bar on top, Neha framed
+     head-and-shoulders below it, subtitle + composer on the dark area under her. Every face layer
+     (img, idle videos, puppet canvas, live video) keeps the same object-fit/position/scale, so the
+     mouth layer stays on the lips. ===== */
+  :root { --red:#e63946; --red-2:#f0525e; --panel:#050608; --hdr:56px; --cmp:64px; }
+  html, body, .stage { background:var(--panel); }
+  header { min-height:var(--hdr); gap:10px; padding:calc(6px + env(safe-area-inset-top, 0px)) 6px 6px 12px;
+           background:linear-gradient(180deg, rgba(5,6,8,.84) 0%, rgba(5,6,8,.5) 65%, rgba(5,6,8,0)); }
+  .ava { width:34px; height:34px; border-width:1.5px; flex:none; }
+  .who { flex:1 1 auto; }
+  .who b { font-size:15px; line-height:1.2; }
+  .who span { font-size:11px; color:rgba(255,255,255,.7); max-width:100%; }
+  /* status pill: the server-side status text by default, the live state from the body classes */
+  header .live { margin-left:auto; flex:none; display:inline-flex; align-items:center; gap:6px; padding:5px 10px 5px 8px; border-radius:999px;
+          background:rgba(255,255,255,.12); border:1px solid rgba(255,255,255,.14); color:#fff; font-size:11.5px; font-weight:600; line-height:1;
+          white-space:nowrap; -webkit-backdrop-filter:blur(8px); backdrop-filter:blur(8px); }
+  header .live i { width:8px; height:8px; border:0; border-radius:50%; background:#8d99a8; flex:none; transition:background .2s ease; }
+  header .live #status { text-transform:capitalize; }
+  header .live .st { display:none; }
+  body:is(.listening,.speaking,.thinking) header .live #status { display:none; }
+  body:is(.listening,.speaking,.thinking) header .live .st { display:inline; }
+  body.listening header .live .st:after { content:"Listening\2026"; }
+  body.thinking header .live .st:after { content:"Thinking\2026"; }
+  body.speaking header .live .st:after { content:"Speaking"; }
+  body.listening header .live i { background:#17d27e; box-shadow:0 0 0 3px rgba(23,210,126,.25); animation:dotPulse 1.4s ease-in-out infinite; }
+  body.thinking header .live i { background:#f4b740; box-shadow:0 0 0 3px rgba(244,183,64,.22); }
+  body.speaking header .live i { background:var(--red); box-shadow:0 0 0 3px rgba(230,57,70,.28); animation:none; }
+  body.offline header .live i { background:#8d99a8; box-shadow:none; animation:none; }
+  @keyframes dotPulse { 0%,100%{opacity:1} 50%{opacity:.45} }
+  .x { width:38px; height:38px; background:rgba(255,255,255,.1); font-size:15px; }
+  .x.sz svg { width:17px; height:17px; }
+  .x:focus-visible { outline:2px solid #fff; outline-offset:2px; }
+  body.mini header { min-height:0; }
+  body.mini header .live { padding:0; background:none; border:0; }
+  body.mini header .live .st, body.mini .net, body.mini .load { display:none !important; }
+  .chips { top:calc(var(--hdr) + 4px + env(safe-area-inset-top, 0px)); left:12px; }
+  .stage:after { height:42%; background:linear-gradient(180deg, rgba(5,6,8,0), rgba(5,6,8,.88)); }
+  /* edge glow: a thin, quiet line (the pill says the state) */
+  body.listening .stage:before { box-shadow:inset 0 0 0 2px rgba(23,210,126,.6); }
+  body.speaking .stage:before { box-shadow:inset 0 0 0 2px rgba(230,57,70,.45); }
+
+  /* composer: [ text box  (send) ] [mic] [end] */
+  #kbd { display:none !important; }   /* kept in the DOM (its handler still works), the box is always shown now */
+  .composer { justify-content:stretch; gap:8px; padding:10px 10px calc(10px + env(safe-area-inset-bottom, 0px));
+              background:linear-gradient(180deg, rgba(5,6,8,0), rgba(5,6,8,.7) 35%, rgba(5,6,8,.92)); }
+  .field { flex:1; min-width:0; height:44px; display:flex; align-items:center; gap:4px; padding:0 4px 0 14px;
+           background:rgba(255,255,255,.1); border:1px solid rgba(255,255,255,.2); border-radius:999px;
+           -webkit-backdrop-filter:blur(10px); backdrop-filter:blur(10px); transition:border-color .2s ease, background .2s ease; }
+  .field:focus-within { border-color:rgba(255,255,255,.55); background:rgba(255,255,255,.14); }
+  .composer .field input { display:block; flex:1; min-width:0; height:100%; padding:0; margin:0; border:0; border-radius:0; background:none;
+                           -webkit-backdrop-filter:none; backdrop-filter:none; font-size:15px; color:#fff; }
+  .composer .field input:focus { outline:none; border:0; }
+  .composer .field input::placeholder { color:rgba(255,255,255,.55); }
+  .icon, #mic { --s:44px; }
+  .field .icon.send { --s:36px; background:var(--red); border-color:var(--red); box-shadow:none; }
+  .field .icon.send svg { width:46%; height:46%; transform:translateX(-1px); }
+  .field input:placeholder-shown + .icon.send { background:rgba(255,255,255,.12); border-color:transparent; color:rgba(255,255,255,.55); }
+  #mic { background:rgba(255,255,255,.14); color:#fff; border-color:rgba(255,255,255,.22); box-shadow:0 4px 14px rgba(0,0,0,.28); }
+  #mic:not(.rec):not(.hold):not(.muted):hover { background:rgba(255,255,255,.26); box-shadow:0 4px 14px rgba(0,0,0,.28); }
+  #mic svg { width:46%; height:46%; }
+  .icon.end { background:var(--red); border-color:var(--red); box-shadow:0 4px 14px rgba(230,57,70,.4); }
+  .icon.end:hover { background:var(--red-2); }
+
+  /* subtitle (last exchange) above the composer; hint/footnote in the strip between them */
+  #log { left:12px; right:12px; bottom:calc(var(--cmp) + 30px + env(safe-area-inset-bottom, 0px)); max-height:26%; }
+  .msg.bot { background:rgba(5,6,8,.62); }
+  .hint, .note { bottom:calc(var(--cmp) + 3px + env(safe-area-inset-bottom, 0px)); }
+  .hint { font-size:11px; }
+  .note { font-size:9.5px; line-height:1.3; color:rgba(255,255,255,.55); transition:opacity .3s; }
+  .lf { bottom:calc(var(--cmp) + 8px + env(safe-area-inset-bottom, 0px)); }
+  .start button { background:var(--red); color:#fff; padding:12px 24px; min-height:44px; font-size:14px; }
+  .start button:focus-visible { outline:2px solid #fff; outline-offset:3px; }
+
+  /* loading veil while the face loads; offline banner */
+  .load { position:absolute; inset:0; z-index:2; display:none; place-items:center; align-content:center; gap:12px; pointer-events:none;
+          background:radial-gradient(ellipse 60% 42% at 50% 40%, #1b1f26, var(--panel) 72%); color:rgba(255,255,255,.7); font-size:12px; }
+  body.loading .load { display:grid; }
+  .load .spin { width:34px; height:34px; border-radius:50%; border:3px solid rgba(255,255,255,.14); border-top-color:var(--red); animation:spin .9s linear infinite; }
+  @keyframes spin { to { transform:rotate(360deg); } }
+  .net { position:absolute; left:50%; top:calc(var(--hdr) + 8px + env(safe-area-inset-top, 0px)); transform:translateX(-50%); z-index:7;
+         display:none; align-items:center; gap:8px; max-width:calc(100% - 24px); padding:7px 12px; border-radius:999px;
+         background:rgba(230,57,70,.94); color:#fff; font-size:12px; font-weight:600; white-space:nowrap; box-shadow:0 6px 18px rgba(0,0,0,.35); }
+  .net i { width:12px; height:12px; flex:none; border-radius:50%; border:2px solid rgba(255,255,255,.4); border-top-color:#fff; animation:spin .9s linear infinite; }
+  body.offline .net { display:flex; }
+
+  /* phones (a tall, narrow frame: the launcher's full-screen sheet, or /embed opened directly): solid header bar,
+     Neha head-and-shoulders under it, the dark area below holds subtitle + composer */
+  @media (max-aspect-ratio:3/5) and (min-height:480px) {
+    header { background:var(--panel); padding-bottom:6px; }
+    .stage { top:calc(var(--hdr) + env(safe-area-inset-top, 0px)); bottom:auto;
+             height:min(calc(100% - var(--hdr) - env(safe-area-inset-top, 0px) - 150px - env(safe-area-inset-bottom, 0px)), calc(100vw * 1.4)); }
+    .stage:before { display:none; }
+    .stage:after { height:34%; background:linear-gradient(180deg, rgba(5,6,8,0), rgba(5,6,8,.55) 55%, var(--panel)); }
+    body.mini .stage { top:0; height:100%; }
+    .x { width:44px; height:44px; }
+    .field { height:46px; }
+    .composer .field input { font-size:16px; }   /* iOS zooms into inputs under 16px */
+    .icon, #mic { --s:46px; }
+    .field .icon.send { --s:38px; }
+    #log { max-height:30%; }
+  }
+  /* narrow frames (320 px phones, the 320 px desktop card) */
+  @media (max-width:360px) {
+    header { gap:8px; padding-left:10px; }
+    .ava { width:30px; height:30px; }
+    header .live { padding:4px 8px 4px 7px; font-size:11px; }
+    .composer { gap:6px; padding-left:8px; padding-right:8px; }
+    .field { padding-left:12px; }
+  }
+  /* short frames (landscape phones, small embeds) */
+  @media (max-height:420px) {
+    :root { --hdr:44px; --cmp:54px; }
+    header { padding:calc(4px + env(safe-area-inset-top, 0px)) 4px 4px 8px; }
+    .ava { width:26px; height:26px; } .who b { font-size:13px; }
+    .x { width:36px; height:36px; }
+    header .live { padding:3px 8px 3px 7px; font-size:10.5px; }
+    .composer { gap:6px; padding:6px 8px calc(6px + env(safe-area-inset-bottom, 0px)); }
+    .field { height:40px; } .icon, #mic { --s:40px; } .field .icon.send { --s:32px; }
+    #log { max-height:32%; }
+    .note { display:none; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    #mic.rec, .icon.rec, .icon.rec:after, header .live i, .lf { animation:none !important; }
+    .load .spin, .net i { animation-duration:2.4s; }
+  }
+
+  /* 2026-11-26 owner: "voice catch ho raha hai, ye dikhna chahiye" - a blinking ear indicator with a live meter.
+     listening = green slow blink; hearing (voice above the gate) = red fast blink + moving bars; thinking = amber;
+     micoff = the browser blocked the mic: how to allow it. */
+  .ear { position:absolute; left:50%; transform:translateX(-50%); bottom:calc(var(--cmp) + 4px + env(safe-area-inset-bottom, 0px));
+         z-index:6; display:none; align-items:center; gap:10px; padding:7px 14px 7px 12px; border-radius:999px;
+         background:rgba(5,6,8,.78); border:1px solid rgba(255,255,255,.14); color:#fff; font-size:13px; font-weight:600;
+         white-space:nowrap; pointer-events:none; box-shadow:0 4px 18px rgba(0,0,0,.35); }
+  body.listening .ear, body.thinking .ear, body.micoff .ear { display:flex; }
+  body.listening .hint.l { opacity:0 !important; }
+  body.listening #log, body.thinking #log, body.micoff #log { bottom:calc(var(--cmp) + 52px + env(safe-area-inset-bottom, 0px)); transition:bottom .2s; }
+  body.micoff #log { bottom:calc(var(--cmp) + 76px + env(safe-area-inset-bottom, 0px)); }
+  .edot { width:12px; height:12px; border-radius:50%; background:#22c55e; flex:none; animation:earBlink 1.2s ease-in-out infinite; }
+  .ebars { display:flex; align-items:center; gap:2px; height:22px; }
+  .ebars i { display:block; width:3px; height:4px; border-radius:2px; background:#22c55e; transition:height .08s linear; }
+  body.listening.hearing .edot { background:#ef4444; animation:earBlink .45s ease-in-out infinite; box-shadow:0 0 0 0 rgba(239,68,68,.7); animation-name:earBlink, earRing; animation-duration:.45s, .9s; }
+  body.listening.hearing .ebars i { background:#ef4444; }
+  body.listening.hearing .ear { border-color:rgba(239,68,68,.65); }
+  body.thinking:not(.listening) .edot { background:#f59e0b; animation-duration:.8s; }
+  body.thinking:not(.listening) .ebars { display:none; }
+  body.micoff .ear { background:rgba(185,28,28,.94) !important; border-color:#fecaca !important; white-space:normal; width:max-content; max-width:86%; text-align:left; line-height:1.35; }
+  body.micoff .edot { background:#fff !important; animation:none !important; box-shadow:none !important; }
+  body.micoff .ebars { display:none !important; }
+  body.speaking .ear { display:none !important; }
+  @keyframes earBlink { 0%,100% { opacity:1; } 50% { opacity:.25; } }
+  @keyframes earRing { 0% { box-shadow:0 0 0 0 rgba(239,68,68,.7); } 100% { box-shadow:0 0 0 10px rgba(239,68,68,0); } }
+  @media (prefers-reduced-motion: reduce) { .edot { animation:none !important; } }
 </style>
 <link rel="stylesheet" href="/learned_gestures.css">  <!-- gesture curves learned from footage (tran_moment/motion/export_css.py); overrides the hand-written g-* keyframes above -->
 </head>
-<body class="pre">
+<body class="pre loading">
 <div class="stage" id="stage">
   <div class="sway"><div class="breathe"><div class="nod" id="nod"><div class="gest" id="gest">
     <video id="idle" muted loop playsinline preload="auto" aria-hidden="true"></video>
@@ -300,22 +455,26 @@
     <img src="/avatar.jpg" alt="sales consultant" onerror="this.style.visibility='hidden'" />
   </div></div></div></div>
 </div>
+<div class="load" aria-hidden="true"><i class="spin"></i><span>Loading video…</span></div>
 
 <header>
   <img class="ava" src="/avatar.jpg" alt="" onerror="this.style.display='none'" />
   <div class="who"><b id="agent">Sales consultant</b><span id="brand">starting…</span></div>
-  <div class="live" id="live"><span id="status">connecting</span><i></i></div>
+  <div class="live" id="live" role="status" aria-live="polite"><i></i><span id="status">connecting</span><span class="st"></span></div>
   <button class="x sz" id="sizebtn" title="Chhota karein (photo)" aria-label="minimize">
     <svg class="i-mini" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><rect x="12" y="11" width="7" height="5" rx="1" fill="currentColor" stroke="none"/></svg>
     <svg class="i-restore" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 4h6v6M20 4l-7 7M10 20H4v-6M4 20l7-7"/></svg>
   </button>
   <button class="x" id="closebtn" title="Close" aria-label="close">✕</button>
 </header>
+<div class="net" id="net" role="alert"><i></i>Network issue — reconnecting…</div>
 
 <div class="chips">
   <span id="emo">neutral</span>
   <div class="wave" id="wave"></div>
 </div>
+
+<div class="ear" id="ear" role="status" aria-live="polite"><span class="edot"></span><span class="elbl" id="earlbl">Neha sun rahi hai — boliye</span><span class="ebars" id="earbars"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span></div>
 
 <div class="start" id="start">
   <p id="pitch">Talk to a real sales consultant on video. Ask about price, offers or a test drive.</p>
@@ -343,12 +502,14 @@
   <button class="icon" id="kbd" title="Type instead" aria-label="Type instead">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2.5" y="6" width="19" height="12" rx="2.5"/><path d="M6.5 9.5h.01M10 9.5h.01M13.5 9.5h.01M17 9.5h.01M6.5 12.5h.01M10 12.5h.01M13.5 12.5h.01M17 12.5h.01M8 15.5h8"/></svg>
   </button>
+  <div class="field">
+    <input id="txt" placeholder="Type your message…" autocomplete="off" enterkeyhint="send" aria-label="Type your message" />
+    <button class="icon send" id="send" title="Send" aria-label="Send">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 3 10 14"/><path d="M21 3 14 21l-4-7-7-4z"/></svg>
+    </button>
+  </div>
   <button class="icon" id="mic" title="Speak" aria-label="Speak">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5.5 11.5a6.5 6.5 0 0 0 13 0M12 18v3M9 21h6"/></svg>
-  </button>
-  <input id="txt" placeholder="Type your question…" autocomplete="off" />
-  <button class="icon send" id="send" title="Send" aria-label="Send">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 3 10 14"/><path d="M21 3 14 21l-4-7-7-4z"/></svg>
   </button>
   <button class="icon end" id="endbtn" title="End" aria-label="End conversation">
     <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 9c-2.9 0-5.6.6-8 1.8-.6.3-1 .9-1 1.6v2.3c0 .8.7 1.4 1.5 1.3l3.2-.5c.6-.1 1-.6 1.1-1.2l.3-1.7c1-.3 1.9-.4 2.9-.4s2 .1 2.9.4l.3 1.7c.1.6.5 1.1 1.1 1.2l3.2.5c.8.1 1.5-.5 1.5-1.3v-2.3c0-.7-.4-1.3-1-1.6C17.6 9.6 14.9 9 12 9z"/></svg>
@@ -459,11 +620,15 @@
         an.getByteFrequencyData(buf);
         let s = 0; for (let i = 2; i < 40; i++) s += buf[i];      // voice band only
         const amp = Math.min(1, s / (38 * 140));
+        POSE.amp = amp;                                           // head pose: phrase boundaries + nod on stress
         if (PUP.on) {
           const cu = SPK.cues && SPK.cues.text === SPK.curText ? SPK.cues : null;
-          if (cu) {
-            // word-accurate lips: the cue under the audio clock (40 ms early, lips lead the sound), held ≥ MOUTH_HOLD_MS
-            const tc = audio.currentTime + 0.04;
+          if (AV2.on) av2Lips(audio, amp, buf);   // avatar v2: viseme frames (see AV2 below)
+          else if (cu) {
+            // word-accurate lips: the cue under the audio clock, held ≥ MOUTH_HOLD_MS. Lead LIP_LEAD_S (was 40 ms): measured
+            // 2026-11-24 in headless Chromium, the lips trailed the voice by ~100-150 ms at 40 ms (Edge cue offset +
+            // jaw easing + MOUTH_HOLD_MS); the lead covers that so the lips meet the sound.
+            const tc = audio.currentTime + LIP_LEAD_S;
             let c = cu.cues[cu.i]; while (c && tc >= c.e && cu.i < cu.cues.length - 1) c = cu.cues[++cu.i];
             // the audio is the truth: in real silence (word timing a little off, a breath) the lips rest
             SPK.quietMs = amp < 0.035 ? (SPK.quietMs || 0) + 16 : 0;
@@ -480,7 +645,7 @@
           }
         }
         env = sm(env, amp, amp > env ? 70 : 240, dt);
-        if (amp > 0.3 && prevAmp <= 0.3 && Math.random() < 0.5) tiltTo = (Math.random() * 2 - 1) * 0.9; // syllable onset
+        if (amp > 0.3 && prevAmp <= 0.3 && Math.random() < 0.5) tiltTo = (Math.random() * 2 - 1) * 0.5; // syllable onset (0.5 deg: the rigid pose adds the larger, slower moves)
         prevAmp = amp;
         tilt = sm(tilt, tiltTo * Math.min(1, env * 1.5), 260, dt);
         nod.style.setProperty("--nod", (env * 2.0).toFixed(2));                      // px down on stressed syllables (calm: was 3.2)
@@ -512,16 +677,31 @@
   const pt = (k) => { const v = PUP.pts?.[k]; return !v ? null : Array.isArray(v) ? { x: v[0], y: v[1] } : v; };
   async function puppetInit() {
     const get = (f) => fetch("/avatar_puppet/" + f).then((r) => (r.ok ? r.json() : null)).catch(() => null);
-    const [cfg, face, rx, ex] = await Promise.all([get("mouths.json"), get("face.json"), get("reactions.json"), get("expressions.json")]);
+    // ?avatar=lp (round 5, 2026-11-25): the LivePortrait set (tran_moment/liveportrait/scripts/lp_build.py) - neural
+    // renders of the same photo for the lips / jaw / cheeks, blinks and smiles, same atlas layout and boxes. Without
+    // its manifests (or without the flag) the current set loads, unchanged.
+    let sfx = q.get("avatar") === "lp" ? "_lp" : "";
+    if (sfx && !(await get("mouths_lp.json"))?.grid) sfx = "";
+    const [cfg, face, rx, ex] = await Promise.all([get("mouths" + sfx + ".json"), get("face.json"), get("reactions" + sfx + ".json"), get("expressions" + sfx + ".json")]);
+    PUP.set = sfx ? "lp" : "default";
     if (!cfg?.shapes) return false;
     // every image URL carries the asset version from the manifest: a rebuilt portrait is fetched fresh, never
     // mixed with images cached from the previous one
     const ver = cfg.version || ex?.version || Date.now().toString(36);
-    const load = (f) => new Promise((res, rej) => { const im = new Image(); im.onload = () => res(im); im.onerror = rej; im.src = "/avatar_puppet/" + f + "?v=" + encodeURIComponent(ver); });
+    // 2026-11-26 speed: img.decode() decodes off the main thread, so the host page keeps scrolling smoothly while
+    // the face loads (phone test: 32 janky frames with the card open)
+    const load = (f) => new Promise((res, rej) => { const im = new Image(); im.decoding = "async";
+      im.onload = () => (im.decode ? im.decode().catch(() => {}) : Promise.resolve()).then(() => res(im)); im.onerror = rej;
+      im.src = "/avatar_puppet/" + f + "?v=" + encodeURIComponent(ver); });
+    // a .webp beside a .png is the same layer at ~1-2% of the bytes (2026-11-26: 13.3 MB of layers -> 0.6 MB)
+    const loadW = (f) => load(f.replace(/\.png$/, ".webp")).catch(() => load(f));
+    const hasGrid = !!(cfg.grid?.file && Array.isArray(cfg.grid.box));
+    const loadShapes = () => Promise.all([...new Set(Object.values(cfg.shapes))].map(async (f) => { PUP.mouths[f] = await load(f); }));
     try {
-      PUP.base = await load("base.png");
-      await Promise.all([...new Set(Object.values(cfg.shapes))].map(async (f) => { PUP.mouths[f] = await load(f); }));
-      try { PUP.mouths["smile.png"] = await load("smile.png"); } catch (e) { /* no smile rest shape */ }
+      PUP.base = await loadW("base.png");
+      // the nine full-canvas shape PNGs (~7 MB) are drawn only when there is no lip grid: skip them when there is
+      if (!hasGrid) await loadShapes();
+      try { PUP.mouths["smile.png"] = await loadW("smile.png"); } catch (e) { /* no smile rest shape */ }
       // The shape layers carry a wide feathered alpha (nose to chin, cheek to cheek). Drawn half-transparent
       // that left the resting lips showing through every open shape: a double exposure that read as blur
       // while she spoke. Tighten each layer to a soft ellipse around the lips and draw it fully opaque: the
@@ -545,17 +725,27 @@
           const atlas = await load(cfg.grid.file), [bx, by, bw, bh] = cfg.grid.box;
           const mk = () => { const cv = document.createElement("canvas"); cv.width = bw; cv.height = bh; return cv; };
           const mask = mk(), m = mask.getContext("2d");
-          if (Array.isArray(cfg.mouth_alpha_box)) {
+          if (cfg.grid.feather > 0) {
+            // atlas v2 (generate_grid_v2.py): every cell equals base.png within `feather` px of its border (the
+            // warp fades out inside the core), so a feathered rectangle only ever blends identical pixels: no
+            // doubled lip / chin contour at the patch edge (the old ellipse cut through the moving chin)
+            const f = cfg.grid.feather;
+            const gx = m.createLinearGradient(0, 0, bw, 0); gx.addColorStop(0, "rgba(0,0,0,0)"); gx.addColorStop(f / bw, "rgba(0,0,0,1)"); gx.addColorStop(1 - f / bw, "rgba(0,0,0,1)"); gx.addColorStop(1, "rgba(0,0,0,0)");
+            m.fillStyle = gx; m.fillRect(0, 0, bw, bh);
+            const gy = m.createLinearGradient(0, 0, 0, bh); gy.addColorStop(0, "rgba(0,0,0,0)"); gy.addColorStop(f / bh, "rgba(0,0,0,1)"); gy.addColorStop(1 - f / bh, "rgba(0,0,0,1)"); gy.addColorStop(1, "rgba(0,0,0,0)");
+            m.globalCompositeOperation = "destination-in"; m.fillStyle = gy; m.fillRect(0, 0, bw, bh); m.globalCompositeOperation = "source-over";
+          } else if (Array.isArray(cfg.mouth_alpha_box)) {
             const [x0, y0, x1, y1] = cfg.mouth_alpha_box;
             m.save(); m.translate((x0 + x1) / 2 - bx, (y0 + y1) / 2 - by); m.scale((x1 - x0) * 0.40, (y1 - y0) * 0.42);
             const g = m.createRadialGradient(0, 0, 0, 0, 0, 1); g.addColorStop(0.6, "rgba(0,0,0,1)"); g.addColorStop(1, "rgba(0,0,0,0)");
             m.fillStyle = g; m.fillRect(-1, -1, 2, 2); m.restore();
           } else { m.fillRect(0, 0, bw, bh); }
-          PUP.grid = { atlas, bx, by, bw, bh, opens: cfg.grid.opens, widths: cfg.grid.widths, mask, a: mk(), b: mk() };
+          PUP.grid = { atlas, bx, by, bw, bh, opens: cfg.grid.opens, widths: cfg.grid.widths, mask, a: mk(), b: mk(), snap: !!cfg.grid.snap,
+                       tuckW: cfg.grid.tuck_w ?? null };   // F/V row (lower lip under the teeth), selected explicitly, never by easing
           // shape file -> its (open, width) point on the grid, from the same table the shapes were cut with
           PUP.shapeOW = {};
           for (const [name, f] of Object.entries(cfg.shapes)) PUP.shapeOW[f] = { o: cfg.open?.[name] ?? 0, w: cfg.width?.[name] ?? 0 };
-        } catch (e) { PUP.grid = null; }
+        } catch (e) { PUP.grid = null; try { await loadShapes(); } catch (e2) { /* no mouth shapes either */ } }
       }
       // reaction layers (generate_reactions.py): eyes (blink frames, gaze), brows. Optional.
       PUP.layers = {};
@@ -590,6 +780,7 @@
       })();
     } catch (e) { return false; }
     PUP.cfg = cfg; PUP.pts = face?.points || null;
+    if (AV2.want && await av2Init() && AV2.pts) PUP.pts = AV2.pts;   // a v2 pack for another portrait brings its landmarks
     PUP.cvs.width = cfg.canvas?.width || PUP.base.naturalWidth; PUP.cvs.height = cfg.canvas?.height || PUP.base.naturalHeight;
     PUP.ctx = PUP.cvs.getContext("2d");
     // eyelid colour: skin just under each eye
@@ -627,24 +818,122 @@
     o.globalCompositeOperation = "source-over";
     c.drawImage(OFF.cvs, LIVE_FIT.dx, LIVE_FIT.dy, w * LIVE_FIT.scale / k, h * LIVE_FIT.scale / k);
   }
+  /* ---------------- head pose: small RIGID moves of the whole portrait ----------------
+     A person on a video call shifts and tilts a little now and then. From one photo, any non-rigid face warp
+     (tried 2026-11-24: a depth-mesh yaw) bends features and was seen as a skewed face ("shakal tedha"), so the
+     head moves only as one rigid piece: a small sideways shift, a slight rise/settle and a roll of at most ~1 deg,
+     applied to the #nod layer that carries the canvas. The mouth is drawn into the same canvas, so it can never
+     drift off the face. Timing: a new pose at phrase boundaries (her voice pauses >= 140 ms, 60%), now and then
+     on a stressed syllable after a long hold, every 2.5-6.5 s while she listens; each move is a critically
+     damped spring (~0.7 s, no overshoot), amplitude and direction vary, a third of the moves return to centre. */
+  const POSE = { x: 0, y: 0, roll: 0, v: [0, 0, 0], to: [0, 0, 0], at: 0, holdMs: 3000, amp: 0, prevAmp: 0,
+                 quiet: 0, lastT: 0, shown: "", reduce: false, pauseFired: false };
+  try { POSE.reduce = matchMedia("(prefers-reduced-motion: reduce)").matches; } catch (e) { /* old browser */ }
+  /* next pose: x / y in % of the stage, roll in degrees; `kind`: talk | listen | think | centre */
+  function poseNext(kind) {
+    const r = Math.random, sgn = (Math.abs(POSE.to[0]) > 0.3 && r() < 0.7) ? -Math.sign(POSE.to[0]) : (r() < 0.5 ? -1 : 1);
+    let x, y, roll;
+    if (kind === "centre" || (kind !== "think" && Math.abs(POSE.to[0]) > 0.5 && r() < 0.33)) { x = (r() * 2 - 1) * 0.15; y = 0; roll = (r() * 2 - 1) * 0.2; }
+    else if (kind === "think") { x = sgn * (0.5 + r() * 0.4); y = -0.35; roll = -sgn * 0.6; }
+    else {
+      const hi = kind === "talk" ? 1.0 : 0.7;                    // <= 1% of the stage width: a small lean, never a slide
+      x = sgn * (0.35 + r() * (hi - 0.35));
+      y = (r() * 2 - 1) * 0.25;
+      roll = sgn * (0.3 + r() * 0.6) * (r() < 0.8 ? 1 : -1);    // usually tilts the way she leans, <= 0.9 deg
+    }
+    POSE.to = [x, y, roll]; POSE.at = performance.now();
+    POSE.holdMs = kind === "talk" ? 2600 + r() * 3200 : 2500 + r() * 4000;
+  }
+  /* one look-away turn while she speaks (see poseStep): head to one side, eyes lead there briefly and come back */
+  function poseTurn(now) {
+    const r = Math.random, side = Math.abs(POSE.to[0]) > 0.4 && r() < 0.75 ? -Math.sign(POSE.to[0]) : (r() < 0.5 ? -1 : 1);
+    POSE.to = [side * (1.0 + r() * 0.5), 0.1 + r() * 0.15, side * (0.4 + r() * 0.4)];
+    POSE.at = now; POSE.holdMs = 1800 + r() * 1200;                    // hold the turn before the normal sway resumes
+    POSE.turnAt = now + 3000 + r() * 3000;
+    const g = side < 0 ? "gaze_left" : "gaze_right", L = PUP.layers || {};
+    if (L[g] && !PUP.gaze) {
+      PUP.gaze = g;
+      setTimeout(() => { if (PUP.gaze === g) PUP.gaze = null; }, 450 + r() * 250);
+    }
+  }
+  function poseStep(now) {
+    const dt = Math.min(50, Math.max(0, now - (POSE.lastT || now))) / 1000; POSE.lastT = now;
+    const speaking = document.body.classList.contains("speaking"), stage = $("stage");
+    if (stage.classList.contains("composite")) { POSE.to = [0, 0, 0]; }   // the live face moves on its own
+    else if (speaking) {
+      POSE.quiet = POSE.amp < 0.035 ? POSE.quiet + dt * 1000 : 0;
+      const since = now - POSE.at, onset = POSE.amp > 0.3 && POSE.prevAmp <= 0.3;
+      if (POSE.quiet >= 140 && !POSE.pauseFired) { POSE.pauseFired = true; if (since > 1300 && Math.random() < 0.6) poseNext("talk"); }
+      if (POSE.quiet < 140) POSE.pauseFired = false;
+      if (onset && since > POSE.holdMs) poseNext("talk");
+      // Look-away turns (round 3, owner: "left / right like other websites"): every 3-6 s of speech the head turns a
+      // little to one side (yaw read as a slow sideways move + a slight roll, ~1.3 % of the stage: the CSS pose is a
+      // 2D translate + rotate) and the eyes lead to the same side for ~0.5 s, then come back to the customer while the
+      // head settles. Calm: the same critically damped spring, no overshoot. Off with prefers-reduced-motion.
+      if (!POSE.turnAt || now - POSE.turnAt > 12000) POSE.turnAt = now + 1500 + Math.random() * 2000;   // a fresh reply
+      if (now >= POSE.turnAt && !POSE.reduce) poseTurn(now);
+    } else if (AV.state === "thinking") { if (now - POSE.at > 1600) poseNext("think"); }
+    else if (now - POSE.at > POSE.holdMs) poseNext(Math.random() < 0.3 ? "centre" : "listen");
+    POSE.prevAmp = POSE.amp;
+    const om = 2 * Math.PI * 0.8, cur = [POSE.x, POSE.y, POSE.roll];   // critically damped spring per axis
+    for (let a = 0; a < 3; a++) { const acc = om * om * (POSE.to[a] - cur[a]) - 2 * om * POSE.v[a]; POSE.v[a] += acc * dt; cur[a] += POSE.v[a] * dt; }
+    [POSE.x, POSE.y, POSE.roll] = cur;
+  }
+  function posePresent(now) {
+    if (!PUP.on) return;
+    poseStep(now);
+    const k = POSE.reduce ? 0 : 1;
+    const sig = `${(POSE.x * k).toFixed(3)},${(POSE.y * k).toFixed(3)},${(POSE.roll * k).toFixed(3)}`;
+    if (sig === POSE.shown) return;
+    POSE.shown = sig;
+    const nod = $("nod");
+    nod.style.setProperty("--px", (POSE.x * k).toFixed(3) + "%");
+    nod.style.setProperty("--py", (POSE.y * k).toFixed(3) + "%");
+    nod.style.setProperty("--roll", (POSE.roll * k).toFixed(3));
+    // round 4: the sideways move is also a real yaw (rotateY, CSS .stage .nod): 1.4 deg per % of shift, <= 2 deg, so a
+    // look-away turn foreshortens the far side of the face a little instead of only sliding it
+    nod.style.setProperty("--yaw", Math.max(-2, Math.min(2, POSE.x * 1.4 * k)).toFixed(3));
+  }
   /* The 640x852 canvas is only repainted when something visible changed (mouth shape, blink step, live
      frame); on an idle face that is a blink every few seconds instead of 60 full redraws a second. */
   const BLINK_STEPS = 12;
+  /* Eyelid closure 0..1 over one blink (2026-11-25): the lid falls fast (65 ms), rests (35 ms) and rises slower
+     (115 ms), as a real blink does; was a 150 ms sine. */
+  function blinkClosure(dt) {
+    if (!(dt >= 0) || dt >= 215) return 0;
+    const ss = (t) => (t <= 0 ? 0 : t >= 1 ? 1 : t * t * (3 - 2 * t));
+    return dt < 65 ? ss(dt / 65) : dt < 100 ? 1 : 1 - ss((dt - 100) / 115);
+  }
+  /* blink layer for a closure (generate_reactions.py lid model): half -> low -> closed; none below 0.25 */
+  function blinkLayer(L, f) {
+    if (f >= 0.9) return L.eyes_closed ? "eyes_closed" : null;
+    if (f >= 0.66) return L.eyes_low ? "eyes_low" : L.eyes_closed ? "eyes_closed" : null;
+    if (f >= 0.25) return L.eyes_half ? "eyes_half" : null;
+    return null;
+  }
   function puppetDraw(now) {
     if (!PUP.on) return;
     if (document.hidden) { requestAnimationFrame(puppetDraw); return; }   // nothing to see; rAF is throttled anyway
+    // 2026-11-26 speed: on a touch phone the face is drawn at 30 fps (film rate) instead of 60, halving the canvas
+    // work so the dealer page keeps scrolling smoothly; lips still follow the audio clock, desktops keep 60 fps
+    if (PUP.fpsCap === undefined) { try { PUP.fpsCap = matchMedia("(pointer: coarse)").matches ? 30 : 0; } catch (e) { PUP.fpsCap = 0; } }
+    if (PUP.fpsCap && now - (PUP.lastFrame || 0) < 1000 / PUP.fpsCap - 2) { requestAnimationFrame(puppetDraw); return; }
+    PUP.lastFrame = now;
     const c = PUP.ctx;
     const lv = $("live"), stage = $("stage");
     if (LIVE.on && LIVE.id === "simli" && lv.videoWidth > 0 && stage.classList.contains("live")) {
       stage.classList.add("composite");           // live face inside the portrait; Simli does lips and blinks
       if (lv.currentTime !== PUP.liveT) { PUP.liveT = lv.currentTime; PUP.drawn = ""; c.clearRect(0, 0, c.canvas.width, c.canvas.height); c.drawImage(PUP.base, 0, 0); drawLiveFace(c, lv); }
+      posePresent(now);
       requestAnimationFrame(puppetDraw);
       return;
     }
     stage.classList.remove("composite");
-    if (now >= PUP.nextBlink) { PUP.blinkT = now; PUP.nextBlink = now + 3200 + Math.random() * 2400; if (Math.random() < 0.08) PUP.nextBlink = now + 300 + Math.random() * 160; }   // calm: a blink every 3-5.6 s, rare double
+    const glancing = !!(PUP.gaze && (PUP.layers || {})[PUP.gaze] && !(PUP.expr || {})[PUP.gaze]);
+    // natural blinks (owner spec 2026-11-25): every 2-6 s, about one in eight a double blink; never mid-glance
+    if (now >= PUP.nextBlink && !glancing) { PUP.blinkT = now; PUP.nextBlink = now + 2000 + Math.random() * 4000; if (!PUP.dbl && Math.random() < 0.12) { PUP.nextBlink = now + 280 + Math.random() * 140; PUP.dbl = true; } else PUP.dbl = false; }
     const dt = now - PUP.blinkT;
-    const lid = dt >= 0 && dt < 150 && PUP.pts ? Math.round(Math.sin(Math.PI * dt / 150) * BLINK_STEPS) : 0;
+    const lid = PUP.pts ? Math.round(blinkClosure(dt) * BLINK_STEPS) : 0;
     // Layers, bottom to top: base -> face expression (morph sequence, played as motion) -> brows warp (fades)
     // -> eyes expression (morph sequence: blink, glance) -> speech mouth (previous shape fades out ~60 ms).
     const L = PUP.layers || {}, X = PUP.expr || {};
@@ -656,22 +945,30 @@
     if (lid && X.eyes_closed) want.eyes = (dt < 70) ? "eyes_closed" : (want.eyes === "eyes_closed" ? null : want.eyes);
     else if (!lid && PUP.gaze && X[PUP.gaze]) want.eyes = PUP.gaze;
     else if (!lid && !PUP.gaze && want.eyes !== "eyes_closed") want.eyes = null;
-    want.face = PUP.exprName && X[PUP.exprName] && PUP.exprMeta[PUP.exprName]?.region === "face" ? PUP.exprName : null;
-    // brows as motion when the morph sequence exists (brows_up / brows_in from morph_frames.py), else the alpha fade below
+    // Face channel (smile morphs, generate_expressions.py): only while the lips are at rest. The speech lips (grid)
+    // are rendered from the neutral mouth, so a smile under them would not match at the patch edge; she smiles in
+    // the pauses (>= 300 ms without voice) and between turns instead, as people do.
+    if (speaking || LIP.ta || LIP.a > 0) PUP.voiceAt = now;
+    const atRest = now - (PUP.voiceAt || 0) > 300;
+    const faceName = PUP.exprName || (atRest ? PUP.restExpr : null);
+    want.face = atRest && faceName && X[faceName] && PUP.exprMeta[faceName]?.region === "face" ? faceName : null;
+    // brows as motion when the morph sequence exists (brows_concern / brows_up from generate_expressions.py), else the alpha fade below
     want.brows = PUP.brows && X[PUP.brows] ? PUP.brows : null;
-    // one channel = one expression at a time: relax the current one (play backward) before the next plays forward
+    // one channel = one expression at a time: relax the current one (play backward) before the next plays forward;
+    // PUP.amt[channel] (0..1) stops a sequence part way (empathetic = the concerned brows at ~60 %)
+    const amtOf = (ch, n) => Math.max(1, Math.round(n * Math.max(0, Math.min(1, PUP.amt?.[ch] ?? 1))));
     const advance = (ch, w, fwdMs, backMs) => {
       const a = anim[ch];
       if (a.name && a.name !== w) a.target = 0;
-      else if (a.name && a.name === w) a.target = X[a.name].frames.length;
-      if (!a.name && w && X[w]) { a.name = w; a.pos = 0; a.target = X[w].frames.length; }
+      else if (a.name && a.name === w) a.target = amtOf(ch, X[a.name].frames.length);
+      if (!a.name && w && X[w]) { a.name = w; a.pos = 0; a.target = amtOf(ch, X[w].frames.length); }
       if (!a.name) return;
       const n = X[a.name].frames.length;
       const rate = n / (a.target > a.pos ? fwdMs : backMs);           // frames per ms
       a.pos = a.target > a.pos ? Math.min(a.target, a.pos + rate * dtF) : Math.max(a.target, a.pos - rate * dtF);
       if (a.pos === 0 && a.target === 0) a.name = null;
     };
-    advance("face", want.face, 420, 360);   // calm: an expression takes ~0.4 s to arrive and to relax (was 260/180)
+    advance("face", want.face, 420, atRest ? 360 : 160);   // calm: ~0.4 s to arrive and to relax; out of the way fast when she speaks
     advance("eyes", want.eyes, want.eyes === "eyes_closed" ? 70 : 220, want.eyes === null && anim.eyes.name === "eyes_closed" ? 90 : 260);
     advance("brows", want.brows, 320, 300);
     const frameOf = (ch) => { const a = anim[ch]; if (!a.name) return null; const i = Math.min(X[a.name].frames.length, Math.max(1, Math.round(a.pos))); return a.pos <= 0.01 ? null : { x: X[a.name], i }; };
@@ -686,17 +983,21 @@
     // speech mouth: the shape before the current one fades out over 60 ms so a viseme change is not a pop
     if (PUP.mouth !== fade.mouthCur) { fade.mouthPrev = fade.mouthCur; fade.mouthA = fade.mouthCur ? 1 : 0; fade.mouthCur = PUP.mouth; }
     fade.mouthA = Math.max(0, fade.mouthA - dtF / 60);
-    const restSmile = !speaking && !want.face && PUP.restShape === "smile.png" && PUP.mouths["smile.png"];
+    const restSmile = !speaking && !want.face && !anim.face.name && PUP.restShape === "smile.png" && PUP.mouths["smile.png"];
     fade.smile.a = Math.max(0, Math.min(1, fade.smile.a + (restSmile ? step : -step)));
     // continuous lips: ease toward the target (critically damped first order, frame-rate independent)
     const ease = (tau) => 1 - Math.exp(-dtF / tau);
     LIP.o += (LIP.to - LIP.o) * ease(LIP.to > LIP.o ? 45 : 70);
+    if (LIP.w > 1.2 && LIP.tw <= 1.2) LIP.w = LIP.tw;   // out of the F/V row: a cut (see lipTarget)
     LIP.w += (LIP.tw - LIP.w) * ease(70);
     LIP.a += (LIP.ta - LIP.a) * ease(LIP.ta > LIP.a ? 40 : 110);
     if (!LIP.ta && LIP.a < 0.01) LIP.a = 0;
+    // dense atlas: the cell nearest open 0 IS the portrait's mouth, so the layer is drawn opaque and simply stops
+    // once the jaw is back at rest (a fade would mix two different mouths for ~0.1 s)
+    if (PUP.grid?.snap) { if (!LIP.ta && Math.abs(LIP.o) < 0.035) LIP.a = 0; else if (LIP.ta || LIP.a > 0) LIP.a = 1; }
     const gridOn = !!PUP.grid && LIP.a > 0;
     const q = (v) => Math.round(v * 20);
-    const key = [PUP.grid ? `g${Math.round(LIP.o * 80)},${Math.round(LIP.w * 40)},${Math.round(LIP.a * 30)}` : "", PUP.mouth, fade.mouthPrev, q(fade.mouthA), fF ? anim.face.name + fF.i : "", fE ? anim.eyes.name + fE.i : (lid && !X.eyes_closed ? "lid" + lid : ""), fB ? anim.brows.name + fB.i : "", fade.brows.name, q(fade.brows.a), q(fade.smile.a)].join("|");
+    const key = [AV2.on ? av2Key(dtF) : "", PUP.grid ? (PUP.grid.snap ? `g${gridCell(LIP.o, LIP.w)},${LIP.a > 0}` : `g${Math.round(LIP.o * 80)},${Math.round(LIP.w * 40)},${Math.round(LIP.a * 30)}`) : "", PUP.mouth, fade.mouthPrev, q(fade.mouthA), fF ? anim.face.name + fF.i : "", fE ? anim.eyes.name + fE.i : (lid && !X.eyes_closed ? "lid" + lid : (glancing ? "gz" + PUP.gaze : "")), fB ? anim.brows.name + fB.i : "", fade.brows.name, q(fade.brows.a), q(fade.smile.a)].join("|");
     if (key !== PUP.drawn) {
       PUP.drawn = key;
       c.clearRect(0, 0, c.canvas.width, c.canvas.height);   // the base is cut out: last frame's pixels would stay around her
@@ -705,8 +1006,12 @@
       if (fB) c.drawImage(fB.x.frames[fB.i - 1], fB.x.box[0], fB.x.box[1]);
       else if (fade.brows.name && fade.brows.a > 0) { c.globalAlpha = fade.brows.a; c.drawImage(L[fade.brows.name], 0, 0); c.globalAlpha = 1; }
       if (fE) c.drawImage(fE.x.frames[fE.i - 1], fE.x.box[0], fE.x.box[1]);
-      else if (lid && !X.eyes_closed) { if (L.eyes_closed) c.drawImage(L[lid >= BLINK_STEPS * 0.7 ? "eyes_closed" : "eyes_half"] || L.eyes_closed, 0, 0); else drawLids(c, lid / BLINK_STEPS); }
-      if (PUP.grid) {
+      else if (lid && !X.eyes_closed) { const n = blinkLayer(L, lid / BLINK_STEPS); if (n) c.drawImage(L[n], 0, 0); else if (!L.eyes_closed) drawLids(c, lid / BLINK_STEPS); }
+      else if (glancing) c.drawImage(L[PUP.gaze], 0, 0);   // rigid-iris glance (generate_reactions.py gaze_frame): a saccade, so a cut, not a fade
+      if (AV2.on) {
+        if (!want.face && fade.smile.a > 0 && !AV2.cur) { c.globalAlpha = fade.smile.a; c.drawImage(PUP.mouths["smile.png"], 0, 0); c.globalAlpha = 1; }
+        av2Draw(c);
+      } else if (PUP.grid) {
         if (!want.face && fade.smile.a > 0) { c.globalAlpha = fade.smile.a; c.drawImage(PUP.mouths["smile.png"], 0, 0); c.globalAlpha = 1; }
         if (gridOn) drawGrid(c, LIP.o, LIP.w, LIP.a);
       } else if (speaking || fade.mouthA > 0) {
@@ -720,6 +1025,7 @@
         c.globalAlpha = fade.smile.a; c.drawImage(PUP.mouths["smile.png"], 0, 0); c.globalAlpha = 1;
       }
     }
+    posePresent(now);
     requestAnimationFrame(puppetDraw);
   }
   /* Reaction moments on top of speech: which eyes / brows / resting mouth the puppet shows.
@@ -727,46 +1033,102 @@
        thinking   gaze up, brows a touch raised
        talking    brows follow the sentence: raised for an enthusiastic line or a question, drawn in for a concern
        warm mood  the resting mouth is the smile frame instead of neutral lips */
+  /* Emotion table (owner spec 2026-11-25). Every move is subtle and is a warp of the photo's own pixels
+     (tran_moment/path_b/generate_expressions.py); mouth, blink, expression and head pose are independent channels.
+       situation              tag (humanizer.emotion_of / situation_of)   face
+       greeting               greeting state + warm                         gentle smile (smile_warm) at rest
+       listening / waiting    listening, idle                               neutral attentive: no smile, glances, micro nods,
+                                                                            blinks every 2-6 s (+ an occasional double)
+       service / insurance    warm                                          friendly: soft smile in the pauses
+       price                  neutral                                       neutral
+       accident / complaint   concerned                                     inner brows up (brows_concern), no smile
+       angry customer         empathetic                                    the same brows at ~60 % + a faint soft mouth
+       booking confirmed      enthusiastic                                  smile (smile_warm) in the pauses / after the line
+     PUP.turnMood: the CUSTOMER's situation for this turn (SSE "mood": accident -> concerned, angry -> empathetic). It
+     wins over a cheerful sentence tag ("Ji zaroor, insurance claim..." after "accident ho gaya" must not smile). */
+  const FACE = {
+    warm:         { rest: "smile_soft", restK: 1 },
+    enthusiastic: { rest: "smile_warm", restK: 1 },
+    concerned:    { brows: "brows_concern", browsK: 1 },
+    empathetic:   { brows: "brows_concern", browsK: 0.6, rest: "smile_soft", restK: 0.4 },
+  };
+  function faceEmotion(emotion) {
+    const tm = PUP.turnMood;
+    return tm && emotion !== "thinking" ? tm : emotion;
+  }
+  /* rest face + brows for an emotion; `talk`: brows only follow while she speaks (the smile waits for a pause) */
+  function applyFace(emotion) {
+    const X = PUP.expr || {}, f = FACE[emotion] || {};
+    PUP.restExpr = f.rest && X[f.rest] ? f.rest : null;
+    PUP.browsMood = f.brows && X[f.brows] ? f.brows : null;
+    (PUP.amt ||= {}).face = f.restK ?? 1;
+    PUP.amt.brows = f.browsK ?? 1;
+  }
+  function setTurnMood(emotion) {
+    PUP.turnMood = emotion === "concerned" || emotion === "empathetic" ? emotion : null;
+    if (!PUP.turnMood) return;
+    // she reacts to the news at once, while the answer is still being prepared: brows, no smile
+    applyFace(PUP.turnMood); PUP.brows = PUP.browsMood; PUP.exprName = null; PUP.mood = PUP.turnMood;
+  }
   function setReaction(state, emotion, text) {
     const L = PUP.layers || {}, X = PUP.expr || {}, M = PUP.moods || {};
     const pick = (...names) => names.find((n) => n && X[n]) || null;
-    clearTimeout(PUP.glanceT);
+    clearTimeout(PUP.glanceT); clearTimeout(PUP.relaxT);
     const question = /\?\s*$/.test(text || "");
+    const emo = faceEmotion(emotion);
     if (state === "thinking") {
-      // a short look up while she recalls (~0.9 s), then the eyes come back to the customer with a soft face:
+      // a short look up while she recalls (~0.9 s), then the eyes come back to the customer:
       // staring at the ceiling for the whole wait read as "frozen" rather than "thinking"
-      PUP.gaze = X.gaze_up ? "gaze_up" : (X.glance ? "glance" : "gaze_up"); PUP.brows = (X.brows_up || L.brows_up) ? "brows_up" : null; PUP.exprName = null;
+      PUP.gaze = X.gaze_up ? "gaze_up" : (X.glance ? "glance" : "gaze_up"); PUP.exprName = null;
+      PUP.brows = PUP.turnMood ? PUP.browsMood : ((X.brows_up || L.brows_up) ? "brows_up" : null);
+      if (!PUP.turnMood) { (PUP.amt ||= {}).brows = 0.7; PUP.restExpr = null; }
       PUP.glanceT = setTimeout(() => {
         if (AV.state !== "thinking") return;
-        PUP.gaze = null; PUP.brows = null; PUP.exprName = pick(M.listening, "smile_soft");
+        PUP.gaze = null; if (!PUP.turnMood) PUP.brows = null; PUP.exprName = pick(M.thinking);
       }, 850 + Math.random() * 250);
     } else if (state === "listening" || state === "idle") {
-      PUP.gaze = null; PUP.brows = null;
-      PUP.exprName = pick(M.listening, "smile_soft");
-      const glance = () => {                       // a short look aside every 4-8 s while listening (people do not stare)
+      // neutral attentive: the last line's face (a smile after a warm line, concern after bad news) eases back to
+      // neutral after ~1.5 s, then eyes on the customer with a glance aside now and then; blinks run on their own
+      PUP.gaze = null; PUP.exprName = pick(M.listening);
+      if (!PUP.turnMood) PUP.brows = null;
+      PUP.relaxT = setTimeout(() => {
+        if ((AV.state !== "listening" && AV.state !== "idle") || turnBusy()) return;   // busy: her answer is still coming
+        PUP.restExpr = null; PUP.brows = null; PUP.browsMood = null; PUP.turnMood = null;
+      }, 1500);
+      // listening: eyes mostly on the customer (round 3: "like other websites"), a short, rare glance aside every 7-12 s
+      const glance = () => {
         if (!PUP.on || (AV.state !== "listening" && AV.state !== "idle")) return;
-        PUP.gaze = X.glance ? "glance" : (Math.random() < 0.5 ? "gaze_left" : "gaze_right");
-        setTimeout(() => { if (PUP.gaze !== "gaze_up") PUP.gaze = null; }, 450 + Math.random() * 250);
-        PUP.glanceT = setTimeout(glance, 4000 + Math.random() * 4000);
+        if (!POSE.reduce) PUP.gaze = X.glance ? "glance" : (Math.random() < 0.5 ? "gaze_left" : "gaze_right");
+        setTimeout(() => { if (PUP.gaze !== "gaze_up") PUP.gaze = null; }, 400 + Math.random() * 200);
+        PUP.glanceT = setTimeout(glance, 7000 + Math.random() * 5000);
       };
-      PUP.glanceT = setTimeout(glance, 2500 + Math.random() * 3000);
+      PUP.glanceT = setTimeout(glance, 5000 + Math.random() * 4000);
     } else if (state === "greeting") {
-      PUP.gaze = null; PUP.brows = null; PUP.exprName = pick(M.greeting, "smile_warm");
+      PUP.gaze = null; PUP.brows = null; PUP.turnMood = null;
+      applyFace("enthusiastic"); PUP.exprName = pick(M.greeting, "smile_warm"); (PUP.amt ||= {}).face = 0.85;
     } else if (state === "backchannel") {
-      PUP.gaze = null; PUP.exprName = pick(M.backchannel, "smile_soft");
+      // "haan ji" / "hmm": a soft smile, or the concerned face when the customer is telling bad news
+      PUP.gaze = null; PUP.exprName = PUP.turnMood ? null : pick(M.backchannel, "smile_soft");
+      if (!PUP.turnMood) (PUP.amt ||= {}).face = 0.6;
     } else if (state === "talking") {
-      PUP.gaze = null;
-      // the sentence's emotion picks the face; a question gets the surprised brows, a concern draws them in
-      // While she talks only the soft smile is allowed (a natural advisor does not grin or gape mid-sentence):
-      // the warm / big smiles and the surprised face moved the cheeks on top of the lips. They still play
-      // between sentences (greeting, backchannel, listening) where the mouth is at rest.
-      PUP.exprName = (emotion === "enthusiastic" || emotion === "warm") && X.smile_soft ? "smile_soft" : null;
-      PUP.brows = emotion === "concerned" ? ((X.brows_in || L.brows_in) ? "brows_in" : null) : (question && !PUP.exprName && (X.brows_up || L.brows_up)) ? "brows_up" : null;
+      PUP.gaze = null; PUP.exprName = null;
+      // which mouth corner leads (drawGrid asymmetry): ~15-25 %, kept for a sentence or two, then maybe the other side
+      if (!PUP.asym || Math.random() < 0.45) PUP.asym = (Math.random() < 0.5 ? -1 : 1) * (0.15 + Math.random() * 0.10);
+      // the sentence's emotion (or the customer's situation) picks the face. While she speaks: the brows (concern /
+      // a raised question) follow at once; the smile comes in her pauses and after the line (see puppetDraw atRest)
+      applyFace(emo);
+      PUP.brows = PUP.browsMood || (question && (X.brows_up || L.brows_up) ? "brows_up" : null);
+      if (PUP.brows === "brows_up") PUP.amt.brows = 0.7;
       // a "thinking" sentence (estimating, checking) opens with a brief look up, then back to the customer
-      if (emotion === "thinking" && X.gaze_up) { PUP.gaze = "gaze_up"; PUP.glanceT = setTimeout(() => { if (PUP.gaze === "gaze_up") PUP.gaze = null; }, 520); }
+      if (emo === "thinking" && X.gaze_up) { PUP.gaze = "gaze_up"; PUP.glanceT = setTimeout(() => { if (PUP.gaze === "gaze_up") PUP.gaze = null; }, 520); }
     }
-    if (emotion) PUP.mood = emotion;
-    PUP.restShape = (PUP.mood === "warm" || PUP.mood === "enthusiastic") && PUP.mouths["smile.png"] ? "smile.png" : "X.png";
+    // The OLD brow raise/furrow layers (reactions/brows_*.png, alpha-faded) drew a hard second arch above the real brows
+    // (2026-11-24, owner: "shakal tedha"): they stay off unless ?brows=1. The morph sequences above are played frame by
+    // frame (never two brows at once) and stop above the blink layers, so they are on by default.
+    if (!BROWS_ON && PUP.brows && !X[PUP.brows]) PUP.brows = null;
+    if (emotion) PUP.mood = emo;
+    // fallback without expression morphs (older asset set): the alpha-faded smile.png as the warm resting mouth
+    PUP.restShape = !X.smile_soft && (PUP.mood === "warm" || PUP.mood === "enthusiastic") && PUP.mouths["smile.png"] ? "smile.png" : "X.png";
   }
   function drawLids(c, amt) {
     ["l", "r"].forEach((s, k) => {
@@ -787,6 +1149,13 @@
     if (open < 0.62) return width < -0.3 ? "U.png" : "E.png";
     return width < -0.3 ? "O.png" : "A.png";
   }
+  // lips read the cue this far ahead of the audio clock. Sweep 2026-11-24 (headless Chromium, 10 clips each, lips vs
+  // voice): 0.04 -> -102 ms, 0.10 -> -82, 0.14 -> -67, 0.18 -> -21, 0.22 -> ~-30 median / best correlation, 0.26 no gain.
+  const BROWS_ON = new URLSearchParams(location.search).get("brows") === "1";   // brow warp layers: off by default (see setReaction)
+  const LIP_LEAD_S = (() => {   // ?lip_lead= for A/B tests, clamped (a huge or negative value froze the lips)
+    const v = parseFloat(new URLSearchParams(location.search).get("lip_lead"));
+    return Number.isFinite(v) ? Math.max(-0.2, Math.min(0.5, v)) : 0.22;
+  })();
   const MOUTH_HOLD_MS = 90;   // hysteresis: a shape stays at least this long, so the lips do not flicker between frames
   const MOUTH_STRENGTH = 1.0;  // a speech shape replaces the lips fully (the layers are lip-tight, see load); < 1 ghosts the resting mouth
   const SOFT_SHAPE = { "A.png": "E.png", "O.png": "U.png" };   // wide-open shapes only on loud syllables
@@ -803,17 +1172,67 @@
      round O/U, closed M/B/P); the voice's loudness scales how far the jaw drops on this syllable, so stressed
      syllables open wider and quiet ones barely part. puppetDraw eases toward it (jaw ~38 ms up, ~65 ms down). */
   const LIP = { o: 0, w: 0, a: 0, to: 0, tw: 0, ta: 0 };
+  // pause inside a sentence: lips nearly together (atlas v2 shades the teeth in the narrow gap); max jaw on loud vowels
+  const LIP_PAUSE = -0.6, LIP_MAX = 1.0;
   function lipTarget(file, amp, inSpeech) {
     const p = PUP.shapeOW?.[file];
+    // F/V (round 3): the lower lip tucked under the upper teeth is its own atlas row; it is entered and left by a cut
+    // (easing the width from 1.6 back to 0 would flash the spread E/I cells in between)
+    const tw = PUP.grid?.tuckW;
+    if (tw && file === "FV.png") { LIP.ta = 1; LIP.to = 0.1; LIP.tw = LIP.w = tw; return; }
     // a pause inside a sentence: lips relax almost shut (the photo's own mouth is parted, teeth showing; real
     // lips meet between words). Only when the clip ends do they return to the portrait's resting mouth.
-    if (!p || file === "X.png") { if (inSpeech) { LIP.ta = 1; LIP.to = -0.45; LIP.tw = 0; } else { LIP.ta = 0; LIP.to = 0; } return; }
+    if (!p || file === "X.png") { if (inSpeech) { LIP.ta = 1; LIP.to = LIP_PAUSE; LIP.tw = 0; } else { LIP.ta = 0; LIP.to = 0; } return; }
     LIP.ta = 1; LIP.tw = p.w;
-    LIP.to = p.o < 0 ? -1 : Math.max(0.05, Math.min(0.88, p.o * (0.42 + 0.62 * Math.min(1, amp * 1.6))));   // M/B/P close fully; full gape only on loud stressed vowels
+    // M/B/P close fully. Vowels: the upper teeth show and the jaw drops with the syllable's loudness (atlas v2: a real
+    // oral cavity opens under rigid teeth, ~16 px at 1.0), so stressed vowels visibly open and quiet ones barely part.
+    // LivePortrait set: its atlas opens a real jaw (open 1.0 = a full "ah"), so speech peaks at ~78 % of it
+    const jaw = PUP.set === "lp" ? 0.78 : 1;
+    LIP.to = p.o < 0 ? -1 : Math.max(0.05, Math.min(LIP_MAX, jaw * p.o * (0.5 + 0.6 * Math.min(1, amp * 1.5))));
   }
+  const nearestIdx = (arr, v) => { let b = 0; for (let i = 1; i < arr.length; i++) if (Math.abs(arr[i] - v) < Math.abs(arr[b] - v)) b = i; return b; };
+  const gridCell = (o, w) => [nearestIdx(PUP.grid.opens, o), nearestIdx(PUP.grid.widths, w)];
   function drawGrid(c, o, w, alpha) {
     const G = PUP.grid;
-    const at = (arr, v) => { v = Math.max(arr[0], Math.min(arr[arr.length - 1], v)); let i = 0; while (i < arr.length - 2 && v > arr[i + 1]) i++; return [i, (v - arr[i]) / (arr[i + 1] - arr[i])]; };
+    if (G.snap) {
+      // dense atlas (<= 2 px of jaw between neighbouring cells): draw the NEAREST cell, never a mix of two. The
+      // old 4-cell blend double-exposed a closed cell (no teeth) with an open one (teeth): the grey ghost line
+      // between the lips the owner called blur (2026-11-24). Measured: lip-region sharpness 52 -> see report.
+      const [ci, ri] = gridCell(o, w);
+      const A = (G.ax ||= G.a.getContext("2d"));
+      A.globalCompositeOperation = "source-over"; A.globalAlpha = 1; A.clearRect(0, 0, G.bw, G.bh);
+      A.drawImage(G.atlas, ci * G.bw, ri * G.bh, G.bw, G.bh, 0, 0, G.bw, G.bh);
+      A.globalCompositeOperation = "destination-in"; A.drawImage(G.mask, 0, 0); A.globalCompositeOperation = "source-over";
+      c.globalAlpha = alpha; c.drawImage(G.a, G.bx, G.by); c.globalAlpha = 1;
+      // Natural asymmetry (round 3, owner: "left / right of the lips"): the atlas is symmetric, so one corner is made
+      // to travel ~15-25 % more than the other by drawing the same cell again shifted sideways by that share of the
+      // corner's own move (<= 1.5 px), through a soft ellipse around the lips only. The ellipse edge lies on smooth
+      // cheek / chin skin where a 1.5 px offset of identical pixels is invisible; the jaw and face contour (in the
+      // patch's own feather) are never shifted. The side and share change per sentence (setReaction), not per frame.
+      const side = PUP.asym || 0, tuck = G.tuckW && w > 1.2;
+      if (side && !tuck && PUP.pts) {
+        const d = w > 0 ? 5.8 * w : 14 * -w * Math.min(1, Math.max(0.25, (o + 0.1) / 0.45));   // corner travel, px
+        const s = Math.max(-1.5, Math.min(1.5, side * d));
+        if (Math.abs(s) > 0.15) {
+          if (!G.ell) {
+            const ml = pt("mouth_left"), mr = pt("mouth_right"), lt = pt("lip_top"), lb = pt("lip_bottom");
+            G.ell = document.createElement("canvas"); G.ell.width = G.bw; G.ell.height = G.bh;
+            // centre a little below the lips, top edge under the nostrils (the nose never moves), sides inside the cheeks
+            const e = G.ell.getContext("2d"), cx = (ml.x + mr.x) / 2 - G.bx, cy = (lt.y + lb.y) / 2 + 8 - G.by;
+            e.save(); e.translate(cx, cy); e.scale((mr.x - ml.x) * 0.82, (lb.y - lt.y) * 1.12);
+            const g = e.createRadialGradient(0, 0, 0, 0, 0, 1); g.addColorStop(0.55, "rgba(0,0,0,1)"); g.addColorStop(1, "rgba(0,0,0,0)");
+            e.fillStyle = g; e.fillRect(-1, -1, 2, 2); e.restore();
+          }
+          const B = (G.bxc ||= G.b.getContext("2d"));
+          B.globalCompositeOperation = "source-over"; B.globalAlpha = 1; B.clearRect(0, 0, G.bw, G.bh);
+          B.drawImage(G.atlas, ci * G.bw, ri * G.bh, G.bw, G.bh, 0, 0, G.bw, G.bh);
+          B.globalCompositeOperation = "destination-in"; B.drawImage(G.ell, 0, 0); B.globalCompositeOperation = "source-over";
+          c.globalAlpha = alpha; c.drawImage(G.b, G.bx + s, G.by); c.globalAlpha = 1;
+        }
+      }
+      return;
+    }
+    const at =(arr, v) => { v = Math.max(arr[0], Math.min(arr[arr.length - 1], v)); let i = 0; while (i < arr.length - 2 && v > arr[i + 1]) i++; return [i, (v - arr[i]) / (arr[i + 1] - arr[i])]; };
     const [ci, ct] = at(G.opens, o), [ri, rt] = at(G.widths, w);
     const A = (G.ax ||= G.a.getContext("2d")), B = (G.bxc ||= G.b.getContext("2d"));
     const row = (ctx, r) => {
@@ -827,13 +1246,136 @@
     A.globalCompositeOperation = "destination-in"; A.drawImage(G.mask, 0, 0); A.globalCompositeOperation = "source-over";
     c.globalAlpha = alpha; c.drawImage(G.a, G.bx, G.by); c.globalAlpha = 1;
   }
-  function mouthRest() { PUP.open = 0; PUP.mouth = "X.png"; PUP.mouthAt = 0; clearInterval(PUP.fake); PUP.fake = 0; LIP.ta = 0; LIP.to = 0; }
+  // the lip width is reset too (round 2, 2026-11-25): it kept the last clip's "oo" (-0.95), so the next clip's first
+  // frames and the close-down after a clip showed a pout at an almost closed jaw
+  function mouthRest() { PUP.open = 0; PUP.width = 0; PUP.mouth = "X.png"; PUP.mouthAt = 0; clearInterval(PUP.fake); PUP.fake = 0; LIP.ta = 0; LIP.to = 0; LIP.tw = 0; if (AV2.on) av2Show(null, true); }
+  /* ---------------- avatar v2: viseme reference pack + crossfading runtime ----------------
+     On with ?avatar=v2 (or server env HUMAN_BOT_AVATAR_V2=1; ?avatar=v1 opts out). Without the pack (or on an older
+     server) everything below stays off and the v1 lips above run unchanged.
+       timeline  /tts_cues&v2=1 -> [{s, e, v, w}] in 15 visemes (human_bot/llm/visemes_v2.py, from Edge word timing)
+       frames    tran_moment/avatar_v2/pack: one rendered mouth per viseme and intensity (build_reference_pack.py)
+       play      the cue under audio.currentTime + lead; intensity = cue weight x live loudness (3 levels); a new
+                 frame holds >= hold_ms (a closure always gets through); for crossfade_ms the in-between geometry
+                 from the lip grid is drawn (av2Between), never two frames blended
+       rest      quiet audio (a breath, word timing a little off) relaxes to "sil"; the clip's end fades back to
+                 the portrait's own mouth. Head pose and blinks are the v1 ones (rigid, no face warp). */
+  const AV2 = { want: q.get("avatar") === "v2" || (q.get("avatar") !== "v1" && /*AV2_DEFAULT*/false), on: false, pack: null,
+                cells: {}, cur: null, prev: null, xf: 0, at: 0, amp: 0, lvl: 0.7, lead: 0.08, xfMs: 45, holdMs: 55, pts: null,
+                log: q.get("debug_lips") === "1" ? (window.__LIPLOG = []) : null };
+  const AV2_SINGLE = new Set(["sil", "PP", "FF"]);
+  const AV2_FROM_V1 = { A: "PP", B: "DD", C: "aa", D: "I", E: "O", F: "U", G: "FF", H: "nn", X: "sil" };
+  const AV2_FROM_FILE = { "A.png": "aa", "E.png": "E", "I.png": "I", "O.png": "O", "U.png": "U", "FV.png": "FF", "L.png": "nn", "closed.png": "PP", "X.png": "sil" };
+  async function av2Init() {
+    try {
+      const pk = await fetch("/avatar_v2/pack.json").then((r) => (r.ok ? r.json() : null)).catch(() => null);
+      if (!pk?.frames || !Array.isArray(pk.box)) return false;
+      const ld = (f) => new Promise((res, rej) => { const im = new Image(); im.onload = () => res(im); im.onerror = rej; im.src = "/avatar_v2/" + f + "?v=" + encodeURIComponent(pk.version || "0"); });
+      const atlas = await ld(pk.atlas);
+      if (pk.base) {   // pack built from another portrait: its own base + landmarks
+        const fj = await fetch("/avatar_v2/face.json").then((r) => (r.ok ? r.json() : null)).catch(() => null);
+        PUP.base = await ld(pk.base); AV2.pts = fj?.points || null;
+      }
+      const [, , bw, bh] = pk.box, f = pk.feather || 10, cols = pk.cols || 8;
+      // feathered rectangle: every cell equals the portrait within `feather` px of its border, so the mask only
+      // ever blends identical pixels (no second chin or lip contour at the patch edge)
+      const mask = document.createElement("canvas"); mask.width = bw; mask.height = bh;
+      const m = mask.getContext("2d");
+      const gx = m.createLinearGradient(0, 0, bw, 0); gx.addColorStop(0, "rgba(0,0,0,0)"); gx.addColorStop(f / bw, "rgba(0,0,0,1)"); gx.addColorStop(1 - f / bw, "rgba(0,0,0,1)"); gx.addColorStop(1, "rgba(0,0,0,0)");
+      m.fillStyle = gx; m.fillRect(0, 0, bw, bh);
+      const gy = m.createLinearGradient(0, 0, 0, bh); gy.addColorStop(0, "rgba(0,0,0,0)"); gy.addColorStop(f / bh, "rgba(0,0,0,1)"); gy.addColorStop(1 - f / bh, "rgba(0,0,0,1)"); gy.addColorStop(1, "rgba(0,0,0,0)");
+      m.globalCompositeOperation = "destination-in"; m.fillStyle = gy; m.fillRect(0, 0, bw, bh);
+      for (const [name, i] of Object.entries(pk.frames)) {
+        const cv = document.createElement("canvas"); cv.width = bw; cv.height = bh;
+        const c = cv.getContext("2d");
+        c.drawImage(atlas, (i % cols) * bw, Math.floor(i / cols) * bh, bw, bh, 0, 0, bw, bh);
+        c.globalCompositeOperation = "destination-in"; c.drawImage(mask, 0, 0);
+        AV2.cells[name] = cv;
+      }
+      const rt = pk.runtime || {};
+      const lead = parseFloat(q.get("lip_lead"));
+      AV2.lead = Number.isFinite(lead) ? Math.max(-0.2, Math.min(0.5, lead)) : (rt.lead_s ?? 0.08);
+      AV2.xfMs = rt.crossfade_ms ?? 45; AV2.holdMs = rt.hold_ms ?? 55;
+      AV2.pack = pk; AV2.on = true;
+      $("stage").classList.add("avatar-v2");
+      return true;
+    } catch (e) { AV2.on = false; return false; }
+  }
+  /* viseme + cue weight -> frame name; intensity from the live loudness, with a little hysteresis */
+  function av2Frame(vis, w) {
+    const V = AV2.pack.visemes?.[vis];
+    if (!V) return AV2.cells.sil ? "sil" : null;
+    if (AV2_SINGLE.has(vis) || V.frames.length === 1) return V.frames[0];
+    const want = Math.max(0, Math.min(1, (w || 0.7) * (0.35 + 0.75 * Math.min(1, AV2.amp * 1.5))));
+    if (Math.abs(want - AV2.lvl) > 0.12) AV2.lvl = want;
+    let best = 0; V.levels.forEach((l, k) => { if (Math.abs(l - AV2.lvl) < Math.abs(V.levels[best] - AV2.lvl)) best = k; });
+    return V.frames[best];
+  }
+  function av2Show(name, force) {
+    const now = performance.now();
+    if (name === AV2.cur) return;
+    if (!force && AV2.cur && now - AV2.at < AV2.holdMs) return;   // hold: no flicker between frames
+    // a closure (m/b/p, f/v) cuts in: a crossfade would show the open mouth through the pressed lips; releases fade
+    AV2.prev = AV2.cur; AV2.xf = force && name ? 0 : 1; AV2.cur = name; AV2.at = now;
+    PUP.mouth = name ? "v2" : "X.png";
+  }
+  function av2Lips(audio, amp, buf) {
+    AV2.amp += (amp - AV2.amp) * (amp > AV2.amp ? 0.5 : 0.18);
+    SPK.quietMs = amp < 0.035 ? (SPK.quietMs || 0) + 16 : 0;
+    const cu = SPK.cues && SPK.cues.text === SPK.curText ? SPK.cues : null;
+    let vis = "sil", w = 0;
+    if (cu && cu.v2?.length) {
+      const L = cu.v2, tc = audio.currentTime + AV2.lead;
+      let i = cu.j || 0; if (i > 0 && tc < L[i].s) i = 0;
+      while (i < L.length - 1 && tc >= L[i].e) i++;
+      cu.j = i;
+      const c = L[i];
+      if (c && tc >= c.s && tc < c.e) { vis = c.v; w = c.w; }
+      if (SPK.quietMs >= 90 && vis !== "PP" && vis !== "FF") vis = "sil";   // the audio is the truth: silence rests the lips
+    } else if (amp > 0.06) {
+      // no timeline (non-Edge voice): loudness -> openness, brightness (1-3 kHz vs 200-800 Hz) -> spread / round
+      let lo = 0, hi = 0; for (let i = 2; i < 10; i++) lo += buf[i]; for (let i = 12; i < 36; i++) hi += buf[i];
+      const bright = (hi / 24) / ((lo / 8) + 1), open = Math.min(1, amp * 1.5);
+      vis = bright > 0.6 ? (open > 0.5 ? "E" : "I") : bright < 0.3 ? (open > 0.5 ? "O" : "U") : (open > 0.35 ? "aa" : "DD");
+      w = open;
+    }
+    const name = av2Frame(vis, w);
+    // a closure (m/b/p, f/v) must be seen even right after a change; everything else respects the hold
+    av2Show(name, vis === "PP" || vis === "FF");
+    if (AV2.log) AV2.log.push({ t: +audio.currentTime.toFixed(3), amp: +amp.toFixed(3), vis, f: AV2.cur, a: AV2.pack.frame_a?.[AV2.cur] ?? 0 });
+  }
+  /* redraw key for puppetDraw; also advances the crossfade */
+  function av2Key(dtF) {
+    AV2.xf = Math.max(0, AV2.xf - dtF / Math.max(1, AV2.xfMs));
+    if (AV2.xf === 0) AV2.prev = null;
+    return `v2:${AV2.cur}|${AV2.prev}|${Math.round(AV2.xf * 12)}`;
+  }
+  /* The in-between of a frame change (2026-11-25): an alpha crossfade of two open mouths showed both lower lips and
+     both openings for 2-3 frames (a double exposure). Instead, while the change runs (crossfade_ms), draw the lip-grid
+     cell (path_b/mouths/grid2.jpg: the same renderer and the same box as the pack) at the aperture / lip width part
+     way from the old frame to the new one: one clean geometry per frame. The portrait's own mouth is (a 0, k 0).
+     Without a matching grid (a pack for another portrait, an older pack without frame_k): a straight cut. */
+  function av2Between() {
+    const G = PUP.grid, pk = AV2.pack, fa = pk.frame_a, fk = pk.frame_k;
+    if (!G || !G.snap || pk.base || !fa || !fk || !(AV2.xf > 0) || (!AV2.cur && !AV2.prev)) return null;
+    if (G.bx !== pk.box[0] || G.by !== pk.box[1] || G.bw !== pk.box[2] || G.bh !== pk.box[3]) return null;
+    const ak = (n) => (n ? [fa[n], fk[n]] : [0, 0]);
+    const [a0, k0] = ak(AV2.prev), [a1, k1] = ak(AV2.cur);
+    if (a0 == null || a1 == null || k0 == null || k1 == null) return null;
+    const t = 1 - AV2.xf;
+    return [a0 + (a1 - a0) * t, k0 + (k1 - k0) * t];
+  }
+  function av2Draw(c) {
+    const [bx, by] = AV2.pack.box, cur = AV2.cur && AV2.cells[AV2.cur];
+    const mid = av2Between();
+    if (mid) { drawGrid(c, mid[0], mid[1], 1); return; }
+    if (cur) c.drawImage(cur, bx, by);     // never two mouths at once: no alpha blend of frames
+  }
   /* browser-TTS fallback has no audio stream: plausible syllable rhythm instead */
   function mouthFake(on) {
     clearInterval(PUP.fake); PUP.fake = 0;
     if (!on) return mouthRest();
     const seq = ["A.png", "E.png", "X.png", "O.png", "I.png", "closed.png", "A.png", "U.png", "L.png", "E.png"];
-    let i = 0; PUP.fake = setInterval(() => { PUP.mouth = seq[i++ % seq.length]; lipTarget(PUP.mouth, 0.6, true); }, 110);
+    let i = 0; PUP.fake = setInterval(() => { const f = seq[i++ % seq.length]; if (AV2.on) { av2Show(av2Frame(AV2_FROM_FILE[f] || "sil", 0.7)); return; } PUP.mouth = f; lipTarget(PUP.mouth, 0.6, true); }, 110);
   }
   /* which "takes" the learned stylesheet defines (.gest.g-nod.v2 ...), read once from its rules */
   const LEARNED_TAKES = new Set();
@@ -907,7 +1449,11 @@
   microMotionStart();   // stopped while the card is closed or the tab is hidden (see pauseCard / visibilitychange)
 
   const AV = { manifest: null, cur: null, curName: "", last: {}, vids: [$("idle"), $("idle2")], front: 0, timer: 0, req: 0 };
-  window.__hhAV = AV; window.__hhPUP = PUP; window.__hhSPK = SPK; window.__hhLIP = LIP; window.__hhMIC = () => MIC.dbg; // dev/test handles: inspect state/clip/mouth from the console
+  window.__hhPOSE = POSE;   // dev/test handle: rigid head pose (x/y in % of the stage, roll in degrees)
+  const turnBusy = () => state.busy;   // setReaction's own `state` parameter shadows the card state
+  // dev/test handles for the face audit (tran_moment QA contact sheets): fire a reaction / a customer situation
+  window.__hhReact = (st, gesture, opts) => react(st, gesture || null, opts || {}); window.__hhMood = (e) => setTurnMood(e);
+  window.__hhAV = AV; window.__hhPUP = PUP; window.__hhSPK = SPK; window.__hhLIP = LIP; window.__hhMIC = () => MIC.dbg; window.__hhBarge = () => MIC.bdbg || null;// dev/test handles: inspect state/clip/mouth from the console
   // trainer page (/clips) fires reactions into the card and listens for the resulting state
   window.addEventListener("message", (e) => {
     if (!fromTrustedOrigin(e) || e.data?.type !== "hhbot:react") return;
@@ -980,8 +1526,10 @@
       return true;
     } catch (e) { console.warn("simli init failed:", String(e?.message || e).slice(0, 160)); LIVE.simli = null; return false; }
   }
-  async function liveSaySimli(text) {
-    const r = await fetch("/tts?text=" + encodeURIComponent(text));
+  async function liveSaySimli(text, emo, voice) {
+    // same clip as the server prefetched (emotion + voice in the key): English customers hear the en-IN voice and
+    // every sentence keeps its emotion prosody on the live face too (2026-11-14: both were dropped on this path)
+    const r = await fetch(ttsUrl(text, emo, voice));
     if (!r.ok) return false;
     actx = actx || new (window.AudioContext || window.webkitAudioContext)();
     const buf = await actx.decodeAudioData(await r.arrayBuffer());
@@ -1047,8 +1595,8 @@
     return true;
   }
   /** speak one sentence on the stream; resolves when D-ID reports the clip done (or after a time estimate) */
-  function liveSay(text) {
-    if (LIVE.simli) return liveSaySimli(text);
+  function liveSay(text, emo, voice) {
+    if (LIVE.simli) return liveSaySimli(text, emo, voice);
     return new Promise(async (res) => {
       const est = 900 + Math.min(12000, text.split(/\s+/).length * 420);
       const timer = setTimeout(() => { if (LIVE.waiting) { LIVE.waiting = null; res(); } }, est + 2500);
@@ -1137,7 +1685,7 @@
       const u = new SpeechSynthesisUtterance(c.text);
       if (voice) u.voice = voice;
       u.lang = voice && voice.lang ? voice.lang : (isHi ? "hi-IN" : "en-IN");
-      react("talking", c.gesture, { emotion: c.emotion, text: c.text });
+      react("talking", c.gesture, { emotion: c.face || c.emotion, text: c.text });
       if (PUP.on) { mouthFake(true); const done = res; res = () => { mouthFake(false); done(); }; }
       u.rate = 1.0; u.pitch = c.emotion === "enthusiastic" ? 1.08 : 1.0;
       $("emo").textContent = c.emotion || "neutral";
@@ -1154,16 +1702,18 @@
   const TTS_PREFETCH_MAX = 200;                      // bounded: the oldest entries drop out of a long session
   /* `emo` is the sentence's emotion tag: the server shifts rate/pitch per emotion, so the prefetch and the
      playback must name the same one or the clip is synthesized twice. */
-  const ttsUrl = (text, emo) => "/tts?text=" + encodeURIComponent(text) + (emo ? "&emo=" + encodeURIComponent(emo) : "");
-  function prefetchClip(text, emo) {
+  // voice: the server names it per sentence (en-IN for a customer speaking English, llm/language.py); none = default
+  const ttsQ = (emo, voice) => (emo ? "&emo=" + encodeURIComponent(emo) : "") + (voice ? "&voice=" + encodeURIComponent(voice) : "");
+  const ttsUrl = (text, emo, voice) => "/tts?text=" + encodeURIComponent(text) + ttsQ(emo, voice);
+  function prefetchClip(text, emo, voice) {
     if (!ttsAvailable() || LIVE.on || !text || TTS_PREFETCH.has(text)) return;
     while (TTS_PREFETCH.size >= TTS_PREFETCH_MAX) TTS_PREFETCH.delete(TTS_PREFETCH.values().next().value);
     TTS_PREFETCH.add(text);
-    fetch(ttsUrl(text, emo) + "&prefetch=1").catch(() => {});
+    fetch(ttsUrl(text, emo, voice) + "&prefetch=1").catch(() => {});
   }
   /* Plays a streamed clip on the shared element; resolves true when it ended (or was cut by the user / by the
      next clip), false when the element failed (server 503 / no audio / autoplay blocked). */
-  function playClip(text, emo) {
+  function playClip(text, emo, voice) {
     return new Promise((res) => {
       const a = speakerEl(); state.audio = a;
       if (SPK.pending) SPK.pending(true);           // a clip still in flight (a backchannel) yields to this one
@@ -1175,9 +1725,14 @@
       // Lip timeline for this clip (word boundaries from the server's TTS): fetched alongside the audio so the
       // mouth forms the words instead of just opening with the loudness. Falls back to the analyser if absent.
       SPK.curText = text; SPK.cues = null;
-      if (PUP.on) fetch("/tts_cues?text=" + encodeURIComponent(text) + (emo ? "&emo=" + encodeURIComponent(emo) : ""))
-        .then((r) => r.ok ? r.json() : null).then((j) => { if (j && SPK.curText === text && j.cues?.length) SPK.cues = { text, cues: j.cues, map: j.map, i: 0 }; }).catch(() => {});
-      a.src = ttsUrl(text, emo);                     // (a src swap queues "emptied" for the old clip; nothing here listens to it)
+      if (PUP.on) fetch("/tts_cues?text=" + encodeURIComponent(text) + ttsQ(emo, voice) + (AV2.on ? "&v2=1" : ""))
+        .then((r) => r.ok ? r.json() : null).then((j) => {
+          if (!j || SPK.curText !== text || !j.cues?.length) return;
+          // v2 timeline from the server; an older server only has the v1 letters: map them
+          const v2 = AV2.on ? (j.v2?.length ? j.v2 : j.cues.map((c) => ({ s: c.s, e: c.e, v: AV2_FROM_V1[c.v] || "DD", w: c.v === "X" ? 0 : 0.8 }))) : null;
+          SPK.cues = { text, cues: j.cues, map: j.map, i: 0, v2, j: 0 };
+        }).catch(() => {});
+      a.src = ttsUrl(text, emo, voice);              // (a src swap queues "emptied" for the old clip; nothing here listens to it)
       a.addEventListener("ended", onEnded); a.addEventListener("error", onError); a.addEventListener("pause", onPause);
       nodFrom(a);
       try { if (actx && actx.state === "suspended") actx.resume().catch(() => {}); } catch (e) {}
@@ -1197,33 +1752,39 @@
     if (speechMs < 2500 || words < 5 || inTurn >= 2 || now - CUE.lastAt < 4000) return false;
     CUE.lastAt = now;
     const concern = /(problem|issue|dikkat|kharab|awaaz|noise|leak|mehnga|mehenga|expensive|accident|claim|damage)/i.test(text);
-    const w = concern && CUE.list.includes("hmm") ? "hmm" : CUE.list[CUE.i++ % CUE.list.length];
+    // a customer speaking English hears only "hmm" (works in every language), not "haan ji" / "acha"
+    const w = (concern || state.voice) && CUE.list.includes("hmm") ? "hmm" : CUE.list[CUE.i++ % CUE.list.length];
     try {
       const a = (CUE.el ||= new Audio()); a.volume = 0.55; a.src = ttsUrl(w); a.play().catch(() => {});
       react("backchannel");
       return true;
     } catch (e) { return false; }
   }
-  async function sayBackchannel(text) {
+  async function sayBackchannel(text, voice) {
     if (!ttsAvailable() || LIVE.on || !text || state.closed || SPK.pending) return;   // never over a sentence
     if (state.interrupt || !state.busy) return;
-    try { await playClip(text); } catch (e) { /* a missed backchannel is not an error */ }
+    // The first sentence waits for this (at most BC_WAIT_MS) instead of cutting it: with the old yield the
+    // card cut "samajh gayi" at ~0.78 s, mid-"gayi", on 3 of 3 turns (2026-11-24 trace).
+    const p = playClip(text, undefined, voice).catch(() => {});
+    state.bcPlay = Promise.race([p, new Promise((r) => setTimeout(r, BC_WAIT_MS))]);
+    await p;
   }
+  const BC_WAIT_MS = 900;   // a trimmed backchannel is 0.6-1.0 s; never hold the answer longer than this
   async function say(c) {
     if (state.closed) return;                        // card hidden by the host: captions only, no sound
     if (LIVE.on) {                                   // neural stream speaks and moves; captions still ours
       $("emo").textContent = (c.emotion || "neutral") + (c.gesture ? " · " + c.gesture : "");
-      react("talking", c.gesture, { emotion: c.emotion, text: c.text });                   // body gesture layer runs over the live face too
-      const ok = await liveSay(c.text);
+      react("talking", c.gesture, { emotion: c.face || c.emotion, text: c.text });                   // body gesture layer runs over the live face too
+      const ok = await liveSay(c.text, c.emotion, c.voice);
       if (ok !== false) return;
     }
     if (ttsAvailable()) {
       try {
-        react("talking", c.gesture, { emotion: c.emotion, text: c.text });                 // gesture starts as the sentence begins
+        react("talking", c.gesture, { emotion: c.face || c.emotion, text: c.text });                 // gesture starts as the sentence begins
         TTS_PREFETCH.delete(c.text);
         if (state.interrupt) return;                 // user cut in before the clip started
         $("emo").textContent = (c.emotion || "neutral") + (c.gesture ? " · " + c.gesture : "");
-        const ok = await playClip(c.text, c.emotion); // streams from the server; interrupt() pauses it
+        const ok = await playClip(c.text, c.emotion, c.voice); // streams from the server; interrupt() pauses it
         if (ok || state.interrupt) { ttsOk = true; ttsDownUntil = 0; return; }
         throw new Error("tts");
       } catch (e) { ttsFailed(); }                   // browser voice for this sentence; the server voice is retried after the cooldown
@@ -1233,8 +1794,10 @@
   async function speak(chunks) {
     if (!chunks || !chunks.length) return;
     wave(true); stopMic();                                  // mic off while she talks: no self-echo
+    const unwatch = bargeWatch();                           // ...but a customer talking over her still stops her
     document.body.classList.add("speaking"); $("mic").classList.add("hold");
     for (const c of chunks) { if (state.interrupt) break; await say(c); }
+    unwatch();
     document.body.classList.remove("speaking"); $("mic").classList.remove("hold");
     wave(false); $("emo").textContent = "neutral";
     react("idle");
@@ -1249,7 +1812,7 @@
   const MIC = { stream: null, actx: null, an: null, ok: null, stop: null, raf: 0, noise: 0.01 };
   async function micStream() {
     if (MIC.stream && MIC.stream.active) return MIC.stream;
-    MIC.stream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: true, noiseSuppression: true, autoGainControl: false, voiceIsolation: true } });
+    MIC.stream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: true, noiseSuppression: true, autoGainControl: true, voiceIsolation: true } });
     MIC.actx = MIC.actx || new (window.AudioContext || window.webkitAudioContext)();
     if (MIC.actx.state === "suspended") await MIC.actx.resume();
     MIC.an = MIC.actx.createAnalyser(); MIC.an.fftSize = 1024; MIC.an.smoothingTimeConstant = 0.4;
@@ -1263,6 +1826,25 @@
     return Math.sqrt(s / micBuf.length);
   }
   /* mic level -> the small wave in the corner, so the customer sees she is hearing them */
+  /* the ear indicator: bars follow the voice level; "hearing" holds 350 ms after the voice drops so it reads steady */
+  const EAR = { until: 0, bars: null };
+  function earLevel(lvl, gate) {
+    const now = performance.now(), on = lvl > gate;
+    if (on) EAR.until = now + 350;
+    document.body.classList.toggle("hearing", on || EAR.until > now);
+    EAR.bars = EAR.bars || [...document.querySelectorAll("#earbars i")];
+    const v = Math.min(1, lvl / Math.max(0.004, gate * 2.5));
+    EAR.bars.forEach((b, i) => { b.style.height = (4 + v * 18 * (0.55 + 0.45 * Math.abs(Math.sin(now / 90 + i * 1.7)))).toFixed(0) + "px"; });
+    const l = document.getElementById("earlbl");
+    if (l) l.textContent = document.body.classList.contains("hearing") ? "Aawaz aa rahi hai…" : "Neha sun rahi hai — boliye";
+  }
+  function earMicOff() {
+    document.body.classList.add("micoff"); document.body.classList.remove("hearing");
+    const l = document.getElementById("earlbl");
+    if (l) l.textContent = (MIC.err === "NotAllowedError" || MIC.err === "SecurityError")
+      ? "Mic band hai — address bar mein 🔒 dabaiye → Microphone → Allow, phir page reload kijiye"
+      : "Mic nahi mil raha — mic lagaiye ya neeche type kijiye";
+  }
   function meter(v) {
     const w = $("wave");
     if (!v) { if (!document.body.classList.contains("speaking")) w.innerHTML = ""; return; }
@@ -1285,7 +1867,14 @@
   // turn-taking (2026-11-06 "background voice sun ke galat reply"): see listenVad
   const MIN_SPEECH_MS = 400;     // voiced time before a sound can be a turn (a cough, a door, a TV word is shorter)
   const END_MS = 800, END_MAX_MS = 1600;
+  // A thought that is plainly unfinished ("Meri Creta ka AC…", the end-of-turn model at 0.04, or a dangling
+  // "aur"/"ki") gets a person's patience: up to 2.6 s. 2026-11-14 voice test: a 2.3 s pause there split one
+  // sentence into two turns and Neha answered the first half while the customer was still talking.
+  const END_LONG_MS = 2600;
   const NEAR_GATE = 0.3, NEAR_REJECT = 0.4;   // x this customer's own speech level: below = someone in the background
+  // a thought trailing off in a filler ("umm...", "matlab...", "woh...", "ek minute") is not finished: wait for the rest
+  const FILLER_END = /(?:^|[\s,])(?:u+m+|h+m+|u+h+|e+r+|a{2,}|o+h+|woh?|matlab|basically|actually|yaani|dekho|dekhiye|suno|suniye|arre|haan\s+toh|ek\s+(?:minute|second|sec)|ruko|rukiye|wait|hold\s+on|you\s+know|i\s+mean|well)\s*[,.…-]*\s*$/i;
+  const CONFIDENT_END_MS = 450;
   const INCOMPLETE = /(?:^|[\s,])(?:aur|ki|ke|ka|ko|se|mein|me|par|toh|to|ya|lekin|magar|matlab|jaise|mera|meri|mere|apna|apni|jo|ek|and|or|but|the|a|an|my|for|so|because|um|uh|like|और|कि|की|के|का|को|से|में|पर|तो|या|लेकिन|मतलब|जैसे|मेरा|मेरी|मेरे|एक|जो)\s*[,…-]*\s*$|[,…-]\s*$/i;
   /* "Meri Creta ka AC…" (pause) "…thanda nahi kar raha": a 3-6 word phrase with no verb / question word yet is the
      start of a sentence, not a turn (2026-11-13 mic test: Neha answered the first half, the rest was lost). Short
@@ -1297,12 +1886,13 @@
     try {
       await micStream();
       mime = ["audio/webm;codecs=opus", "audio/webm", "audio/mp4"].find((m) => window.MediaRecorder && MediaRecorder.isTypeSupported(m));
-    } catch (e) { mime = null; }
+      MIC.err = null; document.body.classList.remove("micoff");
+    } catch (e) { mime = null; MIC.err = (e && e.name) || "error"; earMicOff(); }
     if (!mime) return false;
     $("mic").classList.add("rec"); $("mic").classList.remove("hold"); document.body.classList.add("listening");
     setStatus("listening", true); react("listening");
     let rec = null, chunks = [], speechMs = 0, silenceMs = 0, segStart = 0, last = performance.now(), done = false, acked = false;
-    let turnSum = 0, turnN = 0, earlyText = null, earlyDone = false, earlyMid = false, cuesInTurn = 0;
+    let turnSum = 0, turnN = 0, earlyText = null, earlyDone = false, earlyMid = false, earlyLong = false, earlyEot = null, earlyThr = 0.5, cuesInTurn = 0;
     const newSeg = () => {                                   // fresh recorder = fresh WebM header (pre-roll of <4 s)
       if (rec && rec.state !== "inactive") { const old = rec; old.ondataavailable = null; old.stop(); }
       rec = new MediaRecorder(MIC.stream, { mimeType: mime }); chunks = [];
@@ -1321,7 +1911,8 @@
     const finish = async (blob) => {
       if (done) return; done = true;
       cancelAnimationFrame(MIC.raf); MIC.raf = 0; MIC.stop = null;
-      state.listening = false; $("mic").classList.remove("rec"); document.body.classList.remove("listening"); meter(0);
+      state.listening = false; $("mic").classList.remove("rec"); document.body.classList.remove("listening", "hearing"); meter(0);
+      { const l = document.getElementById("earlbl"); if (l) l.textContent = "Samajh rahi hoon…"; }
       const pre = early; early = null;
       if (!state.active) return;
       if (blob && blob.size > 1500) {
@@ -1356,30 +1947,36 @@
       // device (auto-gain is off, so distance shows in the level); they count as silence, neither starting a turn
       // nor holding one open.
       const speechGate = Math.max(gate, MIC.voice ? MIC.voice * NEAR_GATE : 0);
+      earLevel(lvl, speechGate);
       MIC.dbg = { s: speechMs | 0, q: silenceMs | 0, l: +lvl.toFixed(3), g: +speechGate.toFixed(3), e: !!early, ed: earlyDone, em: earlyMid, et: earlyText };   // dev/test: turn-taking state
       if (lvl > speechGate) {
         if (silenceMs > 200 && speechMs > 300) listenAck("resume");
-        speechMs += dt; silenceMs = 0; early = null; earlyText = null; earlyDone = false; earlyMid = false; acked = false;
+        speechMs += dt; silenceMs = 0; early = null; earlyText = null; earlyDone = false; earlyMid = false; earlyLong = false; earlyEot = null; acked = false;
         turnSum += lvl; turnN++;
       } else { silenceMs += dt; if (speechMs < 250 && silenceMs > 400) { speechMs = 0; turnSum = 0; turnN = 0; } }
       if (!acked && speechMs > 1200 && silenceMs > 280 && silenceMs < 600) { acked = true; listenAck("pause"); }   // mid-sentence pause: tiny nod
       if (!speechMs && now - segStart > 4000) newSeg();                        // nobody talking yet: trim the pre-roll
       const len = now - segStart;
-      if (speechMs > MIN_SPEECH_MS && silenceMs > 350 && !early && chunks.length) {
+      if (speechMs > MIN_SPEECH_MS && silenceMs > 250 && !early && chunks.length) {   // early STT (was 350 ms; 2026-11-25 latency)
         const e = sttUpload(new Blob(chunks, { type: mime }), true); early = e;
         e.then(({ text: t, eot, thr }) => {
           if (early !== e) return;                                  // the customer already went on talking
-          earlyText = t; earlyDone = true;
+          earlyText = t; earlyDone = true; earlyEot = eot; earlyThr = thr;
           // Mid-thought: the regex (a dangling "aur", "ki") or the end-of-turn Transformer being confident the
           // thought goes on (below half its threshold). Either keeps the turn open longer and may get a "hmm".
-          earlyMid = INCOMPLETE.test(t || "") || noVerbYet(t) || (eot != null && eot < thr / 2);
+          earlyMid = INCOMPLETE.test(t || "") || FILLER_END.test(t || "") || noVerbYet(t) || (eot != null && eot < thr / 2);
+          earlyLong = INCOMPLETE.test(t || "") || FILLER_END.test(t || "") || (eot != null && eot < thr / 4);
           if (earlyMid) listenerCue(t, speechMs, cuesInTurn) && cuesInTurn++;
         }, () => { if (early === e) earlyDone = true; });
       }
       // End of turn, like a person: 0.8 s of quiet; if the words so far stop mid-thought ("mera...", "aur...",
       // "ki...") or are not back yet, wait up to 1.6 s for the rest instead of answering half a sentence.
-      if (speechMs > MIN_SPEECH_MS && silenceMs > END_MS) {
-        const waitMore = silenceMs < END_MAX_MS && (!earlyDone || earlyMid);
+      // 2026-11-25 owner "respond in milliseconds": when the words are already back, the end-of-turn model is sure
+      // the thought is complete and nothing dangles ("umm", "aur", "matlab"), answer after 0.45 s of quiet, not 0.8 s
+      const sureEnd = earlyDone && !earlyMid && !earlyLong && earlyEot != null && earlyEot >= earlyThr
+        && !!earlyText && !FILLER_END.test(earlyText) && silenceMs > CONFIDENT_END_MS;
+      if (speechMs > MIN_SPEECH_MS && (silenceMs > END_MS || sureEnd)) {
+        const waitMore = (silenceMs < END_MAX_MS && (!earlyDone || earlyMid)) || (silenceMs < END_LONG_MS && earlyLong);
         if (!waitMore) return finish(await stopRec(true));
       }
       if (len > 20000 && speechMs > MIN_SPEECH_MS) return finish(await stopRec(true));   // very long turn: cut and send
@@ -1390,7 +1987,9 @@
   }
 
   async function listen() {
-    if (!state.active || state.closed || state.muted || state.busy || state.listening || state.formOpen) return;
+    // the request form does NOT close the mic: Neha says "details bhar dijiye, ya mujhe bol kar bata dijiye" and the
+    // server takes spoken details while it is open (2026-11-14 voice test: a question after the form opened went unheard)
+    if (!state.active || state.closed || state.muted || state.busy || state.listening) return;
     if ($("composer").classList.contains("text")) return;            // keyboard mode: no open mic
     if (document.hidden) { state.rearm = true; return; }              // background tab: no open mic; re-armed on visibilitychange
     if (MIC.ok !== false) {
@@ -1434,6 +2033,29 @@
     try { rec.start(); } catch (e) { state.listening = false; }
   }
   function stopMic() { try { state.rec && state.rec.stop(); } catch (e) {} if (MIC.stop) MIC.stop(); }
+  /* Voice barge-in, like a person who stops when the other one starts talking (2026-11-14 test: "ruko ruko" over
+     her answer was transcribed and then dropped, she talked on for 9 s). While she speaks nothing is recorded or
+     sent; only the level is watched. Her own voice from a speaker is held off three ways: the browser's echo
+     cancellation, a gate 2.5x the room floor (same rule as avatar_widget/src/audio.js createGate speakingMul),
+     and at least 60 % of this customer's own measured speech level, for 220 ms of speech. ?barge=0 switches it off. */
+  const BARGE_ON = (new URLSearchParams(location.search).get("barge") ?? "1") !== "0";
+  function bargeWatch() {
+    if (!BARGE_ON || state.muted || !MIC.an || !MIC.stream || !MIC.stream.active) return () => {};
+    let loudMs = 0, last = performance.now(), raf = 0, stopped = false;
+    const tick = () => {
+      if (stopped) return;
+      const now = performance.now(), dt = Math.min(100, now - last); last = now;
+      const lvl = micLevel();
+      const gate = Math.max(0.03, MIC.noise * 3 * 2.5, MIC.voice ? MIC.voice * 0.6 : 0);
+      // speech dips between syllables, so the count drains slower than it fills; a lone cough or click still dies away
+      loudMs = lvl > gate ? loudMs + dt : Math.max(0, loudMs - dt * 0.5);
+      MIC.bdbg = { l: +lvl.toFixed(3), g: +gate.toFixed(3), ms: loudMs | 0, v: +(MIC.voice || 0).toFixed(3) };   // dev/test
+      if (loudMs >= 220 && !state.interrupt) { MIC.bargeAt = Date.now(); interrupt(); return; }
+      raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+    return () => { stopped = true; cancelAnimationFrame(raf); };
+  }
   /* user taps the avatar while she talks: cut the current clip (local, Simli or browser voice) and listen */
   function interrupt() {
     state.interrupt = true;
@@ -1586,7 +2208,8 @@
     if (r.data.site_form) siteFill(r.data.site_form);
     const line = r.data.say || "Aapki request note ho gayi, team aapko jaldi call karegi.";
     add(line, "bot");
-    await speak([{ text: line, emotion: "warm" }]);
+    // booking confirmed: the face smiles (face: enthusiastic); the voice keeps the "warm" clip the server prewarmed
+    await speak([{ text: line, emotion: "warm", face: "enthusiastic", voice: r.data.voice || state.voice || undefined }]);
     if (state.active && !state.busy) listen();
   }
   $("lf-next").addEventListener("click", lfNext);
@@ -1596,17 +2219,22 @@
   async function send(text) {
     if (!state.sid || state.busy || !text) return;
     state.busy = true; stopMic();
+    if (PUP.on) PUP.turnMood = null;   // the customer's situation is re-read for every turn (SSE "mood")
     add(text, "user");
     typing(true); setStatus("thinking", true);
 
-    const pending = []; let speaking = false; const turnAt = Date.now();
+    const pending = []; let playing = null; const turnAt = Date.now();
     // a tap on the portrait (interrupt) drops the rest of this reply, not just the sentence that was playing
     const cut = () => state.interrupt || (state.cutAt || 0) >= turnAt;
-    async function drain() {
-      if (speaking) return;
-      speaking = true;
-      while (pending.length) { if (cut()) { pending.length = 0; break; } await speak([pending.shift()]); }
-      speaking = false;
+    // One playback loop per turn; every caller gets the SAME promise, so the final `await drain()` waits for the
+    // last sentence to finish. (It used to return at once while a loop was running: the text stream ends ~1.5 s in,
+    // a spoken answer lasts ~10 s, so the mic re-opened mid-answer and flapped between her sentences.)
+    function drain() {
+      if (!playing) playing = (async () => {
+        if (state.bcPlay) { const w = state.bcPlay; state.bcPlay = null; await w; }   // let "haan ji" finish its word
+        while (pending.length) { if (cut()) { pending.length = 0; break; } await speak([pending.shift()]); }
+      })().finally(() => { playing = null; });
+      return playing;
     }
 
     // Watchdog: a reply that produces nothing for CHAT_STALL_MS (host restarting, proxy holding a dead
@@ -1638,12 +2266,21 @@
           if (ev === "form") openForm(d);              // insurance claim / booking: the request form slides up
           if (ev === "navigate") showPage(d);           // "insurance page dikhao": the host page changes, the call goes on
           if (ev === "site_form") siteFill(d);          // confirmed request: the launcher fills + submits the website's own form
-          if (ev === "backchannel" && d.text) { add(d.text, "bc"); react("backchannel"); sayBackchannel(d.text); }  // "haan ji" → head wobble + spoken at once
+          if (ev === "site_form_open") postToHost({ type: "hhbot:siteform_open", data: d });   // "book karna hai": open the website's booking form, pre-filled
+          if (ev === "mood" && PUP.on) setTurnMood(d.emotion);   // accident -> concerned, angry customer -> empathetic face
+          if (ev === "backchannel" && d.text) {   // "haan ji" → head wobble + spoken at once
+            state.voice = d.voice || null;
+            add(d.text, "bc"); react("backchannel"); sayBackchannel(d.text, d.voice);
+            // ...then back to a thinking face while the answer is prepared (2026-11-14 trace: the wobble fell back to
+            // the listening loop and "thinking" showed for 0.1 s of a 3 s wait)
+            setTimeout(() => { if (!bot && state.busy && !document.body.classList.contains("speaking")) react("thinking"); }, 900);
+          }
           if (ev === "sentence") {
             typing(false);
             if (!bot) bot = add("", "bot");
             bot.textContent += (bot.textContent ? " " : "") + d.text;
-            prefetchClip(d.text, d.emotion);         // download starts now, playback when its turn comes
+            state.voice = d.voice || null;
+            prefetchClip(d.text, d.emotion, d.voice); // download starts now, playback when its turn comes
             pending.push(d); drain();
           }
           if (ev === "final") {
@@ -1655,12 +2292,13 @@
         }
       }
       clearTimeout(stall);
-      await drain();
+      while (playing || (pending.length && !cut())) await drain();
     } catch (e) {
       clearTimeout(stall);
       typing(false); add("Connection slow hai, ek baar phir bhejiye.", "bot"); setStatus("ready", true);
     }
     state.busy = false;
+    if (state.queued) { const q = state.queued; state.queued = null; send(q); return; }   // typed while she spoke
     if (state.active) listen();
   }
 
@@ -1716,7 +2354,7 @@
       const p = (d.personas || []).find((x) => x.id === (q.get("persona") || d.default));
       if (!p) return;
       const service = p.business_type === "service";
-      $("agent").textContent = service ? "Service advisor" : "Sales consultant";
+      if (!state.sid) $("agent").textContent = service ? "Service advisor" : "Sales consultant";   // a late reply must not overwrite "Neha"
       $("brand").textContent = p.company;
       $("pitch").textContent = service
         ? "Talk to a service advisor on video. Ask about car service, repair costs, pickup or a workshop near you."
@@ -1756,7 +2394,9 @@
       setStatus("live", true);
       react("greeting", null, { once: true });       // plays through once, then idle
       add(s.greeting, "bot");
-      await speak(s.chunks);
+      // greeting = gentle smile (face table): her opening question is tagged thinking / neutral for the VOICE, the
+      // face stays warm (smile in the pauses, brows up on the question)
+      await speak((s.chunks || []).map((c) => ({ ...c, face: c.emotion === "neutral" || c.emotion === "thinking" ? "warm" : c.emotion })));
       setStatus("ready", true);
       listen();
     } catch (e) {
@@ -1780,10 +2420,21 @@
   $("send").onclick = () => {
     const t = $("txt").value.trim();
     if (!t) return;
-    $("txt").value = ""; send(t);
+    $("txt").value = "";
+    if (state.busy) {            // she is still answering: cut her off (like a tap on her face) and send this next
+      state.queued = t;
+      if (document.body.classList.contains("speaking")) interrupt();
+      return;
+    }
+    send(t);
   };
   $("txt").addEventListener("keydown", (e) => {
     if (e.key === "Enter") $("send").click();
+  });
+  document.addEventListener("keydown", (e) => {
+    if (e.key !== "Escape") return;
+    if (state.formOpen) return closeForm();
+    if (window.parent !== window) closeCard();
   });
   window.addEventListener("message", (e) => {
     if (!fromTrustedOrigin(e)) return;                       // only the host page (and same-origin pages) may drive the card
@@ -1805,6 +2456,38 @@
       if (state.rearm) { state.rearm = false; if (state.active && !state.closed && !state.busy) setTimeout(listen, 300); }
     }
   });
+})();
+</script>
+<script>
+/* UI shell state, layout only (no call logic): the loading veil, the "Thinking…" pill state and the offline
+   banner. It only reads the card's DOM and watches fetch results; the call script above is untouched. */
+(() => {
+  const b = document.body, stage = document.getElementById("stage"), st = document.getElementById("status");
+  const img = stage && stage.querySelector("img");
+  let veil = setTimeout(done, 8000);
+  function done() { clearTimeout(veil); b.classList.remove("loading"); }
+  if (img) { if (img.complete && img.naturalWidth) done(); else { img.addEventListener("load", done, { once: true }); img.addEventListener("error", done, { once: true }); } }
+  if (stage) new MutationObserver(() => { if (/\b(puppet|video|live)\b/.test(stage.className)) done(); }).observe(stage, { attributes: true, attributeFilter: ["class"] });
+  if (st) {
+    const sync = () => b.classList.toggle("thinking", /^thinking/i.test(st.textContent.trim()));
+    new MutationObserver(sync).observe(st, { childList: true, characterData: true, subtree: true }); sync();
+  }
+  let probe = null;
+  function net(ok) {
+    b.classList.toggle("offline", !ok);
+    if (ok) { clearInterval(probe); probe = null; return; }
+    if (!probe) probe = setInterval(() => { if (navigator.onLine) f0("/health", { cache: "no-store" }).then((r) => { if (r.ok) net(true); }).catch(() => {}); }, 4000);
+  }
+  const f0 = window.fetch.bind(window);
+  window.fetch = function (input, init) {
+    const url = typeof input === "string" ? input : (input && input.url) || "";
+    const p = f0(input, init);
+    if (/^\/(chat|session)\b/.test(url)) p.then((r) => { if (r.status < 500) net(true); else net(false); }, () => net(false));
+    return p;
+  };
+  window.addEventListener("offline", () => net(false));
+  window.addEventListener("online", () => setTimeout(() => net(true), 300));
+  if (navigator.onLine === false) net(false);
 })();
 </script>
 </body>

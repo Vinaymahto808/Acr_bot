@@ -1,0 +1,1342 @@
+{
+ "_note": "Per-service knowledge built only from autocarrepair.in's own text (crawl of 2026-11-25). Review file: edit freely. 'time', 'warranty', 'parts' are null where the website is silent. 'faq' rows with fast_path=true are also served by the bot's fast path (kb/seed/qa_overrides.json 'add'). 'about_suggested' is only a suggestion for the persona owner; the persona JSON was not edited. Prices are deliberately absent: they come from acr_prices.json.",
+ "generated": "2026-11-25",
+ "services": {
+  "/insurance-claim": {
+   "title": "Insurance Claim",
+   "included": [
+    "Claim filing and claim intimation",
+    "Coordination with the insurance company and the surveyor",
+    "Policy check and claim advice",
+    "Approval of the surveyor's estimate",
+    "Car body damage inspection",
+    "Accidental claim repair (dent-paint, body work)",
+    "Windshield replacement under insurance"
+   ],
+   "process": "Bring the car (or use the free pickup) with policy and photos; ACR inspects and intimates the claim, coordinates the surveyor, submits estimate and documents and manages approvals, then repairs and delivers. Cashless where eligible. Website's 4 steps: 1) Inspection - multi-point check and computerised diagnostics; 2) Estimate - transparent, itemised quote with only the required repairs, approved by you before work starts; 3) Repair - by trained, brand-experienced technicians with genuine OEM/OES parts; 4) Delivery - washed, quality-checked and ready for the road, with a written warranty card.",
+   "time": "Most claims are processed within 4-7 working days (site FAQ). After approval: minor accident jobs 3-5 working days, major structural/multi-panel repairs 1-2 weeks subject to parts (Accidental Claim page).",
+   "warranty": "Written warranty card with every job; the exact warranty depends on the work and the part and is confirmed by the team (the site's '1 Year Service Warranty' badge differs from per-service cards such as 1 month / 1000 km).",
+   "parts": "100% genuine OEM/OES parts with manufacturer warranty (site badge and 'Services included').",
+   "faq": [
+    {
+     "q_hi": "Kya insurance claim cashless hota hai?",
+     "a_hi": "Haan, hum sabhi major insurance companies ke saath cashless claim directly coordinate karte hain. Paperwork, surveyor aur approval hamari team handle karti hai.",
+     "q_en": "Is the insurance claim cashless?",
+     "a_en": "Yes, we coordinate cashless claims directly with all major insurance providers; our team handles the paperwork, surveyor and approvals.",
+     "source_url": "https://autocarrepair.in/faq",
+     "fast_path": true
+    },
+    {
+     "q_hi": "Insurance claim mein kitna time lagta hai?",
+     "a_hi": "Zyadatar claims 4 se 7 working days mein process ho jaate hain. Approval ke baad chhota accident kaam 3 se 5 working days, bada structural kaam parts ke hisaab se 1 se 2 hafte.",
+     "q_en": "How long does an insurance claim take?",
+     "a_en": "Most claims are processed within 4 to 7 working days. After approval, minor accident jobs take 3 to 5 working days and major structural repairs 1 to 2 weeks, subject to parts.",
+     "source_url": "https://autocarrepair.in/faq",
+     "fast_path": true
+    },
+    {
+     "q_hi": "Insurance claim ke liye kaun se documents chahiye?",
+     "a_hi": "Aam taur par insurance policy ki details, damage ki photos, police report agar zaroori ho, aur repair ke bills ya receipts chahiye hote hain.",
+     "q_en": "What documents do I need for an insurance claim?",
+     "a_en": "Usually your insurance policy details, photos of the damage, a police report if applicable, and any repair invoices or receipts.",
+     "source_url": "https://autocarrepair.in/insurance-claim",
+     "fast_path": true
+    },
+    {
+     "q_hi": "Cashless claim mein mujhe kuch pay karna padega?",
+     "a_hi": "Cashless claim mein aapko policy ka deductible, depreciation (plastic, rubber, paint parts par) aur jo cover nahi hai wo dena hota hai. Hum ye sab pehle hi itemise karke bata dete hain.",
+     "q_en": "Will I have to pay anything on a cashless claim?",
+     "a_en": "You pay the policy deductible plus depreciation on plastic, rubber and paint parts, and anything not covered. We itemise it all upfront.",
+     "source_url": "https://autocarrepair.in/services/car-insurance-claim/accidental-claim",
+     "fast_path": true
+    },
+    {
+     "q_hi": "Chhote damage ke liye claim karna chahiye kya?",
+     "a_hi": "Hamesha nahi. Chhota claim aapka No-Claim Bonus reset kar deta hai, jo repair se mehnga pad sakta hai. Hum claim aur cash dono ka honest comparison dete hain, phir aap decide karte hain.",
+     "q_en": "Is it worth claiming for minor accident damage?",
+     "a_en": "Not always: a small claim resets your No-Claim Bonus, which can cost more over time than the repair. We give you an honest claim-versus-pay comparison first.",
+     "source_url": "https://autocarrepair.in/services/car-insurance-claim/accidental-claim",
+     "fast_path": true
+    },
+    {
+     "q_hi": "Accident ke turant baad kya karna chahiye?",
+     "a_hi": "Pehle safe jagah par jaiye, damage aur jagah ki photos lijiye, doosri gaadi ki details note kijiye aur policy window mein insurer ko inform kijiye, aksar 24 se 48 ghante. Bade damage ya injury par FIR kijiye, phir ACR ko call kijiye.",
+     "q_en": "What should I do right after an accident?",
+     "a_en": "Move to safety, photograph the damage and the scene, note the other vehicle's details and inform your insurer within the policy window, often 24 to 48 hours. For major damage or injury file an FIR, then call ACR.",
+     "source_url": "https://autocarrepair.in/services/car-insurance-claim/accidental-claim",
+     "fast_path": true
+    },
+    {
+     "q_hi": "Insurance claim ke liye pickup milega?",
+     "a_hi": "Haan, pickup aur drop complimentary hai, poore Delhi NCR mein. Team aapke ghar ya office se gaadi le jaati hai aur kaam ke baad wapas chhod deti hai.",
+     "q_en": "Is pickup available for an insurance claim?",
+     "a_en": "Yes, pickup and drop is complimentary across Delhi NCR. The team collects the car from your home or office and returns it after the work.",
+     "source_url": "https://autocarrepair.in/faq",
+     "fast_path": true
+    }
+   ],
+   "site_issues": [
+    "Template FAQ 'How long does Insurance Claim take?' has no real answer (template line 'service guide jobs are completed the same day' on sibling pages) while /faq says 4-7 working days."
+   ],
+   "source_url": "https://autocarrepair.in/insurance-claim",
+   "search_words": "insurance claim cashless bima beema claim accident accidental damage surveyor policy zero dep इंश्योरेंस क्लेम बीमा कैशलेस एक्सीडेंट",
+   "conflict_note": null
+  },
+  "/car-service": {
+   "title": "Car Service",
+   "included": [
+    "Regular car service (primary, standard, comprehensive)",
+    "Car AC service & repair",
+    "Brake and wheel maintenance",
+    "Denting & painting",
+    "Car care & detailing",
+    "Lights & glass work",
+    "Clutch work",
+    "Suspension work",
+    "Repairs & inspection",
+    "Insurance claim",
+    "Emergency service",
+    "Car battery"
+   ],
+   "process": "Engine inspection, fluid checks, tune-ups and brake servicing by skilled technicians (page text). Website's 4 steps: 1) Inspection - multi-point check and computerised diagnostics; 2) Estimate - transparent, itemised quote with only the required repairs, approved by you before work starts; 3) Repair - by trained, brand-experienced technicians with genuine OEM/OES parts; 4) Delivery - washed, quality-checked and ready for the road, with a written warranty card.",
+   "time": "Routine work like an oil change or battery replacement 2-3 hours; a general service same day; major repairs or full detailing 1-3 days (site FAQ).",
+   "warranty": "Written warranty card with every job; the exact warranty depends on the work and the part and is confirmed by the team (the site's '1 Year Service Warranty' badge differs from per-service cards such as 1 month / 1000 km).",
+   "parts": "Only genuine, manufacturer-approved parts so the vehicle stays in warranty (page FAQ); OEM parts and manufacturer-approved synthetic oils (site FAQ).",
+   "faq": [
+    {
+     "q_hi": "Service mein kitna time lagta hai?",
+     "a_hi": "Oil change ya battery replacement jaisa routine kaam 2 se 3 ghante mein ho jata hai, general service usi din. Major repair ya full detailing mein 1 se 3 din lagte hain.",
+     "q_en": "How long does a car service take?",
+     "a_en": "Routine work like an oil change or battery replacement takes 2 to 3 hours and a general service is done the same day. Major repairs or full detailing take 1 to 3 days.",
+     "source_url": "https://autocarrepair.in/faq",
+     "fast_path": true
+    },
+    {
+     "q_hi": "Yahan service karwane se company warranty chali jayegi kya?",
+     "a_hi": "Nahi, manufacturer warranty valid rehti hai. Hum genuine OEM parts aur manufacturer-approved oils use karte hain, aur har visit ka service record warranty book mein add karte hain.",
+     "q_en": "Will servicing here void my manufacturer warranty?",
+     "a_en": "No, your manufacturer warranty stays valid. We use genuine OEM parts and manufacturer-approved oils and add the service record to your warranty book on every visit.",
+     "source_url": "https://autocarrepair.in/faq",
+     "fast_path": true
+    },
+    {
+     "q_hi": "Aap kaun kaun si car brands ki service karte ho?",
+     "a_hi": "Sabhi major brands: Maruti Suzuki, Hyundai, Honda, Toyota, Tata, Mahindra, Kia, aur premium cars jaise BMW, Mercedes-Benz, Audi, Volvo, Jeep aur Land Rover.",
+     "q_en": "Which car brands do you service?",
+     "a_en": "All major brands: Maruti Suzuki, Hyundai, Honda, Toyota, Tata, Mahindra and Kia, plus premium marques such as BMW, Mercedes-Benz, Audi, Volvo, Jeep and Land Rover.",
+     "source_url": "https://autocarrepair.in/faq",
+     "fast_path": true
+    },
+    {
+     "q_hi": "Kya estimate pehle milta hai, koi hidden charge to nahi?",
+     "a_hi": "Har estimate itemised hota hai: labour, parts aur tax alag dikhte hain. Kaam aapke approval ke baad hi shuru hota hai, koi hidden charge nahi, aur final bill quoted estimate jaisa hi hota hai.",
+     "q_en": "Do I get an estimate first? Any hidden charges?",
+     "a_en": "Every estimate is itemised with labour, parts and taxes shown separately. Work starts only after you approve, there are no hidden charges and the final invoice matches the quoted estimate.",
+     "source_url": "https://autocarrepair.in/faq",
+     "fast_path": true
+    },
+    {
+     "q_hi": "Service ke liye pickup milega?",
+     "a_hi": "Haan, pickup aur drop complimentary hai, poore Delhi NCR mein. Team aapke ghar ya office se gaadi le jaati hai aur kaam ke baad wapas chhod deti hai.",
+     "q_en": "Is pickup available for a service?",
+     "a_en": "Yes, pickup and drop is complimentary across Delhi NCR. The team collects the car from your home or office and returns it after the work.",
+     "source_url": "https://autocarrepair.in/faq",
+     "fast_path": true
+    }
+   ],
+   "site_issues": [
+    "'Generally, vehicles should undergo servicing every 6,000 to 12,000 miles' (US miles) while /category/regular-car-service says every 10,000 km or 6-12 months."
+   ],
+   "source_url": "https://autocarrepair.in/car-service",
+   "search_words": "car service gaadi ki service servicing karwani hai maintenance general service गाड़ी की सर्विस कार सर्विस सर्विसिंग",
+   "conflict_note": null
+  },
+  "/detailing": {
+   "title": "Detailing",
+   "included": [
+    "Interior deep cleaning",
+    "Premium hand-finishing",
+    "Exterior wash, polish and wax",
+    "Paint correction and restoration",
+    "9H ceramic coating (hydrophobic, up to 5-year durability)",
+    "Paint protection film (PPF)",
+    "Studio services listed: foam wash, dry cleaning, deep cleaning, interior enrichment, exterior beautification, surface refinement (SRS), teflon coating, graphene/borophene coating, anti-rust underbody coating, AC disinfection, rodent repellent, windshield detailing"
+   ],
+   "process": "Two tracks on /detailing: Premium Car Care (cleaning, polish, paint correction by trained detailing specialists) and Long-Term Car Protection (ceramic coating and PPF).",
+   "time": "Full detailing 1-3 days depending on scope (site FAQ).",
+   "warranty": null,
+   "parts": null,
+   "about_suggested": "interior deep cleaning, polish, paint correction, ceramic coating aur PPF",
+   "faq": [
+    {
+     "q_hi": "Detailing mein kya kya hota hai?",
+     "a_hi": "Interior deep cleaning, exterior wash, polish aur wax, paint correction aur restoration, aur premium hand-finishing. Long-term protection ke liye ceramic coating aur PPF bhi hota hai.",
+     "q_en": "What does car detailing include?",
+     "a_en": "Interior deep cleaning, exterior wash, polish and wax, paint correction and restoration, and premium hand-finishing. For long-term protection there is ceramic coating and PPF.",
+     "source_url": "https://autocarrepair.in/detailing",
+     "fast_path": true
+    },
+    {
+     "q_hi": "Full detailing mein kitne din lagte hain?",
+     "a_hi": "Full detailing mein kaam ke hisaab se 1 se 3 din lagte hain; estimate ke saath exact timeline bata dete hain.",
+     "q_en": "How long does full detailing take?",
+     "a_en": "Full detailing takes 1 to 3 days depending on scope; we share the exact timeline with the estimate.",
+     "source_url": "https://autocarrepair.in/faq",
+     "fast_path": true
+    }
+   ],
+   "site_issues": [
+    "/detailing/services/rodent-repellent shows the Dry Wash text, /detailing/services/ac-disinfections shows the Interior Vacuuming text, /detailing/services/windshield-detailing shows the Gloss Maintenance (coating) text.",
+    "Template line 'Most detailing & coating jobs are completed the same day' vs /faq 'full detailing 1 to 3 days'."
+   ],
+   "source_url": "https://autocarrepair.in/detailing",
+   "search_words": "detailing car detailing safai chamak polish coating PPF ceramic डिटेलिंग कार डिटेलिंग सफाई",
+   "conflict_note": null
+  },
+  "/category/car-denting-painting": {
+   "title": "Denting and Painting",
+   "included": [
+    "Front bumper",
+    "Rear bumper",
+    "Bonnet",
+    "Boot paint",
+    "Fender paint (left/right)",
+    "Front and rear door paint (left/right)",
+    "Quarter panel paint (left/right)",
+    "Running board paint (left/right)",
+    "Alloy paint",
+    "Full body paint",
+    "Front bumper card: removal of minor dents and scratches, Grade A primer, high-quality 2K painting, clear coat, rubbing and polishing"
+   ],
+   "process": "Exact paint code pulled and computer-matched, blended into adjacent panels; 2K paint cured in a controlled bake oven. A single panel goes through denting, primer, colour, clear coat, polish and QC. Small dents without paint damage can be fixed by paintless dent removal (PDR).",
+   "time": "A single panel is typically 3-4 days; multi-panel and full-body jobs take longer (category FAQ). Daily progress shared, pickup-drop offered.",
+   "warranty": "Depends on the work and the part; the team confirms it (written warranty card with every job). See conflict_note.",
+   "conflict_note": "Paint warranty: Front Bumper card '2 Year Warranty on Paint', category FAQ '12-month warranty on paintwork', badge '1 Year Service Warranty'. Neha does not pick one.",
+   "parts": "100% genuine OEM/OES parts with manufacturer warranty (site badge and 'Services included').",
+   "faq": [
+    {
+     "q_hi": "Ek panel ki denting painting mein kitne din lagte hain?",
+     "a_hi": "Ek panel mein aam taur par 3 se 4 din lagte hain: denting, primer, colour, clear coat, polish aur quality check. Zyada panel ya full body mein zyada time lagta hai.",
+     "q_en": "How long does a single panel repaint take?",
+     "a_en": "A single panel typically takes 3 to 4 days: denting, primer, colour, clear coat, polish and a quality check. Multi-panel and full-body jobs take longer.",
+     "source_url": "https://autocarrepair.in/category/car-denting-painting",
+     "fast_path": true
+    },
+    {
+     "q_hi": "Paint ka colour match hoga kya?",
+     "a_hi": "Haan, hum exact paint code se shade computer-match karte hain aur aas-paas ke panel mein blend karte hain, metallic aur pearl finish ke liye bhi. Match na ho to rework karte hain.",
+     "q_en": "Will the new paint match my car's colour?",
+     "a_en": "Yes, we pull the exact paint code, computer-match the shade and blend it into the adjacent panels, including metallic and pearl finishes. If it does not match, we rework it.",
+     "source_url": "https://autocarrepair.in/category/car-denting-painting",
+     "fast_path": true
+    },
+    {
+     "q_hi": "Paint par warranty kitni hai?",
+     "a_hi": "Warranty kaam aur part par depend karti hai; team aapko exact warranty confirm karegi. Har kaam ke saath written warranty card milta hai.",
+     "q_en": "What warranty do you give on paint?",
+     "a_en": "The warranty depends on the work and the part; the team will confirm the exact warranty for you. Every job comes with a written warranty card.",
+     "source_url": "https://autocarrepair.in/category/car-denting-painting",
+     "fast_path": true
+    },
+    {
+     "q_hi": "Chhota dent bina paint ke theek ho sakta hai?",
+     "a_hi": "Haan, jis dent mein paint damage nahi hai, jaise door ding, wo paintless dent removal se theek hota hai; ye sasta aur jaldi hota hai aur original paint bachta hai.",
+     "q_en": "Can a small dent be fixed without repainting?",
+     "a_en": "Yes, dents without paint damage, such as door dings, are fixed with paintless dent removal, which is cheaper, faster and keeps your original paint.",
+     "source_url": "https://autocarrepair.in/category/car-denting-painting",
+     "fast_path": true
+    },
+    {
+     "q_hi": "Painting oven mein hoti hai ya hawa mein sukhate ho?",
+     "a_hi": "Hum 2K automotive paint use karte hain jo controlled bake oven mein cure hota hai, factory finish jaisa process, taaki durability aur gloss bana rahe.",
+     "q_en": "Do you use a bake oven or air-dry paint?",
+     "a_en": "We use 2K automotive paint cured in a controlled bake oven, the same process as the factory finish, for durability and gloss.",
+     "source_url": "https://autocarrepair.in/category/car-denting-painting",
+     "fast_path": true
+    }
+   ],
+   "site_issues": [
+    "Paint warranty conflict: Front Bumper card '2 Year Warranty on Paint' vs FAQ '12-month warranty on paintwork' vs badge '1 Year Service Warranty'."
+   ],
+   "source_url": "https://autocarrepair.in/category/car-denting-painting",
+   "search_words": "denting painting dent paint scratch bumper door panel body paint dent nikalna rang डेंटिंग पेंटिंग डेंट पेंट स्क्रैच बम्पर"
+  },
+  "/category/car-brake-wheel-maintenance": {
+   "title": "Brake and Wheel Maintenance",
+   "included": [
+    "Front brake disc replacement",
+    "Front brake pad replacement",
+    "Rear brake shoes replacement",
+    "Disc turning",
+    "Brake drums turning",
+    "Tyre rotation",
+    "Wheel alignment",
+    "Wheel balancing",
+    "Complete wheel care"
+   ],
+   "process": "Brake jobs include brake, caliper/rotor and hardware inspection; disc turning includes disc thickness measurement and runout check. Discs above minimum thickness are machined, below spec they are replaced. Vibration is diagnosed (wheel balance vs warped disc vs suspension) before work.",
+   "time": "Service cards: front brake disc about 5 hours, front brake pad 3 hours, tyre rotation, wheel alignment and wheel balancing about 2 hours each, complete wheel care 4 hours.",
+   "warranty": "Written warranty card with every job; the exact warranty depends on the work and the part and is confirmed by the team (the site's '1 Year Service Warranty' badge differs from per-service cards such as 1 month / 1000 km).",
+   "parts": "100% genuine OEM/OES parts with manufacturer warranty (site badge and 'Services included').",
+   "faq": [
+    {
+     "q_hi": "Brake pad kab badalne chahiye?",
+     "a_hi": "Jab brake lagate waqt cheekhne ya ghisne ki awaaz aaye, pedal zyada neeche jaaye ya vibration ho. Zyadatar pads 30,000 se 50,000 km chalte hain; kisi bhi centre par pad thickness free mein naap dete hain.",
+     "q_en": "When do brake pads need changing?",
+     "a_en": "When you hear squealing or grinding, the pedal travels further, or braking vibrates. Most pads last 30,000 to 50,000 km; we measure pad thickness free at any centre.",
+     "source_url": "https://autocarrepair.in/category/car-brake-wheel-maintenance",
+     "fast_path": true
+    },
+    {
+     "q_hi": "Alignment aur balancing mein kya fark hai?",
+     "a_hi": "Alignment wheel ke angles set karta hai taaki gaadi seedhi chale aur tyre barabar ghisein; balancing wheel ka weight theek karta hai taaki vibration na ho. Dono alag problem solve karte hain, kai gaadiyon ko dono chahiye.",
+     "q_en": "What is the difference between alignment and balancing?",
+     "a_en": "Alignment sets the wheel angles so the car tracks straight and tyres wear evenly; balancing corrects weight distribution so the wheel spins without vibration. Many cars need both.",
+     "source_url": "https://autocarrepair.in/category/car-brake-wheel-maintenance",
+     "fast_path": true
+    },
+    {
+     "q_hi": "Brake disc badalna padega ya turning se ho jayega?",
+     "a_hi": "Agar disc minimum thickness se upar hai aur halka scored ya warped hai to turning se theek ho jata hai; spec se kam, cracked ya gehre groove wali disc badalni padti hai.",
+     "q_en": "Should brake discs be replaced or machined?",
+     "a_en": "If the disc is above minimum thickness and only lightly scored or warped, turning restores it; below spec, cracked or heavily grooved discs must be replaced.",
+     "source_url": "https://autocarrepair.in/category/car-brake-wheel-maintenance",
+     "fast_path": true
+    },
+    {
+     "q_hi": "Highway par steering kyun vibrate karta hai?",
+     "a_hi": "Aksar wheels unbalanced hote hain, lekin brake lagane par vibration ho to disc warped ho sakti hai, ya suspension ghisa hua. Hum asli wajah diagnose karte hain.",
+     "q_en": "Why does my steering vibrate at highway speed?",
+     "a_en": "Most often unbalanced wheels, but it can be a warped brake disc (vibration only when braking) or worn suspension. We diagnose the exact cause.",
+     "source_url": "https://autocarrepair.in/category/car-brake-wheel-maintenance",
+     "fast_path": true
+    }
+   ],
+   "site_issues": [],
+   "source_url": "https://autocarrepair.in/category/car-brake-wheel-maintenance",
+   "search_words": "brake pad brake disc brake shoe brake se awaaz brake nahi lag raha tyre rotation wheel ब्रेक पैड ब्रेक डिस्क ब्रेक से आवाज़",
+   "conflict_note": null
+  },
+  "/wheel-alignment-service": {
+   "title": "Wheel Alignment",
+   "included": [
+    "Wheel alignment: steering adjustment and correction, caster and toe adjustment",
+    "Wheel balancing: precision weight adjustment, dynamic balancing",
+    "Signs checked: steering off-centre, uneven tread wear"
+   ],
+   "process": "Technicians adjust the wheel angles so wheels are parallel to each other and perpendicular to the ground. Website's 4 steps: 1) Inspection - multi-point check and computerised diagnostics; 2) Estimate - transparent, itemised quote with only the required repairs, approved by you before work starts; 3) Repair - by trained, brand-experienced technicians with genuine OEM/OES parts; 4) Delivery - washed, quality-checked and ready for the road, with a written warranty card.",
+   "time": "About 2 hours (Wheel Alignment card on the brake & wheel page).",
+   "warranty": "Written warranty card with every job; the exact warranty depends on the work and the part and is confirmed by the team (the site's '1 Year Service Warranty' badge differs from per-service cards such as 1 month / 1000 km).",
+   "parts": null,
+   "faq": [
+    {
+     "q_hi": "Kaise pata chalega ki wheel alignment chahiye?",
+     "a_hi": "Gaadi ek side kheenche, seedha chalate waqt steering tedha rahe, ya tyre ek kinare se zyada ghisein. Kerb ya gaddhe ki takkar ya suspension kaam ke baad alignment zaroori hai.",
+     "q_en": "How do I know my car needs wheel alignment?",
+     "a_en": "The car pulls to one side, the steering wheel sits off-centre when driving straight, or the tyres wear unevenly. After a kerb or pothole hit or suspension work, alignment is a must.",
+     "source_url": "https://autocarrepair.in/category/car-brake-wheel-maintenance",
+     "fast_path": true
+    },
+    {
+     "q_hi": "Wheel alignment kitni baar karwani chahiye?",
+     "a_hi": "Ye gaadi aur driving par depend karta hai, aam taur par kuch hazaar km ya kuch mahine mein ek baar; kerb ya gaddhe ki takkar ya suspension kaam ke baad zaroor karwaiye. Aapki gaadi ke liye sahi interval team batayegi.",
+     "q_en": "How often should I get a wheel alignment?",
+     "a_en": "It depends on the car and your driving, typically every few thousand km or few months, and always after a kerb or pothole hit or suspension work. The team will tell you the right interval for your car.",
+     "source_url": "https://autocarrepair.in/category/car-brake-wheel-maintenance",
+     "fast_path": true
+    },
+    {
+     "q_hi": "Wheel alignment se mileage badhta hai kya?",
+     "a_hi": "Haan, sahi alignment se rolling resistance kam hota hai, isse fuel efficiency behtar hoti hai aur tyre zyada chalte hain.",
+     "q_en": "Can wheel alignment improve fuel efficiency?",
+     "a_en": "Yes, proper alignment reduces rolling resistance, which improves fuel efficiency and extends tyre life.",
+     "source_url": "https://autocarrepair.in/wheel-alignment-service",
+     "fast_path": true
+    }
+   ],
+   "conflict_note": "Alignment interval: /wheel-alignment-service FAQ 'every 6,000 miles', brake & wheel FAQ 'every 10,000 km', Wheel Alignment card 'every 6 months'. Neha gives no single figure; the team advises the interval.",
+   "site_issues": [
+    "Interval conflict: 'every 6,000 miles' vs 'every 10,000 km' vs 'Every 6 months'."
+   ],
+   "source_url": "https://autocarrepair.in/wheel-alignment-service",
+   "search_words": "wheel alignment balancing gaadi ek taraf kheench rahi steering tedha tyre ghis raha व्हील अलाइनमेंट बैलेंसिंग"
+  },
+  "/category/car-clutch-work": {
+   "title": "Clutch Work",
+   "included": [
+    "Clutch assembly (opening and fitting, pressure plate strength, clutch fork, seals and gaskets, torque spec, road test)",
+    "Clutch bearing replacement",
+    "Flywheel replacement",
+    "Flywheel turning (resurfacing)",
+    "Clutch overhaul (clutch plate, pressure plate, bearing, slave cylinder and hydraulics check)"
+   ],
+   "process": "Inspection, opening and fitting of the clutch components, torque check and road test (service cards). Every job (category page 'Services included'): detailed multi-point inspection, 100% genuine OEM/OES parts with manufacturer warranty, computerised diagnostic scan, road-ready performance test, itemised quality report shared digitally, written warranty card.",
+   "time": "Clutch assembly about 6 hours; flywheel replacement about 8 hours (service cards).",
+   "warranty": "Clutch assembly and flywheel replacement: 15 days or 500 km (service cards).",
+   "parts": "100% genuine OEM/OES parts with manufacturer warranty (site badge and 'Services included').",
+   "faq": [
+    {
+     "q_hi": "Clutch ke kaam mein kya kya aata hai?",
+     "a_hi": "Clutch assembly, clutch bearing replacement, flywheel replacement, flywheel turning aur clutch overhaul jisme clutch plate, pressure plate, bearing, slave cylinder aur hydraulics check hote hain.",
+     "q_en": "What clutch work do you do?",
+     "a_en": "Clutch assembly, clutch bearing replacement, flywheel replacement, flywheel turning and a clutch overhaul covering the clutch plate, pressure plate, bearing, slave cylinder and hydraulics.",
+     "source_url": "https://autocarrepair.in/category/car-clutch-work",
+     "fast_path": true
+    },
+    {
+     "q_hi": "Clutch assembly badalne mein kitna time lagta hai?",
+     "a_hi": "Website ke service card ke hisaab se clutch assembly mein lagbhag 6 ghante aur flywheel replacement mein lagbhag 8 ghante lagte hain.",
+     "q_en": "How long does a clutch assembly replacement take?",
+     "a_en": "According to the website's service cards, a clutch assembly takes about 6 hours and a flywheel replacement about 8 hours.",
+     "source_url": "https://autocarrepair.in/category/car-clutch-work",
+     "fast_path": true
+    },
+    {
+     "q_hi": "Clutch ke kaam par warranty milti hai?",
+     "a_hi": "Haan, clutch assembly aur flywheel replacement par 15 din ya 500 km ki warranty hai.",
+     "q_en": "Is there a warranty on clutch work?",
+     "a_en": "Yes, clutch assembly and flywheel replacement carry a 15-day or 500 km warranty.",
+     "source_url": "https://autocarrepair.in/category/car-clutch-work",
+     "fast_path": true
+    }
+   ],
+   "site_issues": [
+    "The page has no FAQ section (other category pages do)."
+   ],
+   "source_url": "https://autocarrepair.in/category/car-clutch-work",
+   "search_words": "clutch plate clutch kharab clutch hard clutch slip flywheel bearing क्लच प्लेट क्लच खराब",
+   "conflict_note": null
+  },
+  "/category/car-suspension-work": {
+   "title": "Suspension Work",
+   "included": [
+    "Front shock absorber replacement",
+    "EPS replacement",
+    "Steering rack replacement",
+    "Lower arm replacement",
+    "Upper arm replacement",
+    "Link rod replacement",
+    "Tie rod replacement",
+    "Suspension overhaul (front/rear shocker, shocker mount, link rod, tie rod)"
+   ],
+   "process": "Suspension inspection, replacement, torque, alignment check and test drive (service cards). Shock absorbers and most arms are replaced axle-wise in pairs; a wheel alignment is strongly recommended after suspension work.",
+   "time": "A single shock or link rod is usually same-day; a full overhaul 1-2 days depending on parts and seized bolts (FAQ). Cards: front shock absorber about 6 hours, steering rack about 8 hours, upper arm about 4 hours.",
+   "warranty": "Front shock absorber, steering rack and upper arm replacement: 1 month (service cards).",
+   "parts": "100% genuine OEM/OES parts with manufacturer warranty (site badge and 'Services included').",
+   "faq": [
+    {
+     "q_hi": "Suspension kharab hone ke kya lakshan hain?",
+     "a_hi": "Gaddhon par khat-khat ki awaaz, gaadi ka uchhalna ya tairna, tyre ka uneven ghisna, gaadi ka ek side kheenchna, ya brake par aage jhukna.",
+     "q_en": "What are the signs of worn suspension?",
+     "a_en": "Clunking over bumps, a bouncy or floaty ride, uneven tyre wear, the car pulling to one side, or nose-dive when braking.",
+     "source_url": "https://autocarrepair.in/category/car-suspension-work",
+     "fast_path": true
+    },
+    {
+     "q_hi": "Suspension ke kaam mein kitna time lagta hai?",
+     "a_hi": "Ek shocker ya link rod aam taur par usi din ho jata hai; full overhaul mein parts ke hisaab se 1 se 2 din. Inspection ke baad timeline confirm karte hain.",
+     "q_en": "How long does suspension work take?",
+     "a_en": "A single shock or link rod is usually same-day; a full overhaul takes 1 to 2 days depending on parts. We confirm the timeline after inspection.",
+     "source_url": "https://autocarrepair.in/category/car-suspension-work",
+     "fast_path": true
+    },
+    {
+     "q_hi": "Suspension check free hai kya?",
+     "a_hi": "Haan, ACR chaaron centre par free suspension check karta hai.",
+     "q_en": "Is the suspension check free?",
+     "a_en": "Yes, ACR offers a free suspension check at all 4 centres.",
+     "source_url": "https://autocarrepair.in/category/car-suspension-work",
+     "fast_path": true
+    },
+    {
+     "q_hi": "Shocker dono side badalne padenge?",
+     "a_hi": "Haan, shock absorber aur zyadatar arms axle-wise jode mein badalne chahiye taaki dono side barabar chalein; sirf ek badalne se gaadi tedhi lagti hai.",
+     "q_en": "Should shock absorbers be replaced in pairs?",
+     "a_en": "Yes, shock absorbers and most arms should be replaced axle-wise in pairs so both sides respond evenly; replacing just one makes the car feel lopsided.",
+     "source_url": "https://autocarrepair.in/category/car-suspension-work",
+     "fast_path": true
+    }
+   ],
+   "site_issues": [],
+   "source_url": "https://autocarrepair.in/category/car-suspension-work",
+   "search_words": "suspension shocker shock absorber awaaz khat khat steering rack link rod tie rod सस्पेंशन शॉकर आवाज़",
+   "conflict_note": null
+  },
+  "/category/car-lights-and-glass-work": {
+   "title": "Glass and Lights",
+   "included": [
+    "Front headlight replacement (with headlight alignment)",
+    "Rear taillight replacement",
+    "Fog light replacement",
+    "Front windshield replacement",
+    "Rear windshield replacement",
+    "Door glass replacement",
+    "Side mirror replacement"
+   ],
+   "process": "Opening and fitting, replacement, electrical connections, sealing/weatherstripping, alignment and functional testing (service cards). Every job (category page 'Services included'): detailed multi-point inspection, 100% genuine OEM/OES parts with manufacturer warranty, computerised diagnostic scan, road-ready performance test, itemised quality report shared digitally, written warranty card.",
+   "time": null,
+   "warranty": "Written warranty card with every job; the exact warranty depends on the work and the part and is confirmed by the team (the site's '1 Year Service Warranty' badge differs from per-service cards such as 1 month / 1000 km).",
+   "parts": "OEM-grade glass with the correct tint, acoustic layer and sensor cut-outs (Windshield Replacement page). 100% genuine OEM/OES parts with manufacturer warranty (site badge and 'Services included').",
+   "faq": [
+    {
+     "q_hi": "Headlight ya taillight badal doge?",
+     "a_hi": "Haan, front headlight, rear taillight, fog light, side mirror, door glass aur aage-peeche ka windshield, sab replace hota hai.",
+     "q_en": "Do you replace headlights and taillights?",
+     "a_en": "Yes: front headlight, rear taillight, fog light, side mirror, door glass and front and rear windshield replacement.",
+     "source_url": "https://autocarrepair.in/category/car-lights-and-glass-work",
+     "fast_path": true
+    }
+   ],
+   "site_issues": [
+    "Rear Taillight Replacement card lists 'Headlight Replacement - Labor'.",
+    "The page has no FAQ section."
+   ],
+   "source_url": "https://autocarrepair.in/category/car-lights-and-glass-work",
+   "search_words": "headlight taillight fog light side mirror door glass sheesha shisha light kharab हेडलाइट टेललाइट शीशा लाइट",
+   "conflict_note": null
+  },
+  "/category/car-ac-service-repair": {
+   "title": "AC Service and Repair",
+   "included": [
+    "Periodic AC service: AC inspection, AC gas top-up (400 g), AC filter cleaning, AC vent cleaning, condenser cleaning",
+    "Full AC service: cooling coil cleaning, dashboard removal and refitting, compressor oil (up to 200 ml), AC gas top-up (600 g)",
+    "AC gas refill"
+   ],
+   "process": "Leak test first, then refrigerant work: low cooling is usually a slow leak, a dirty condenser or a tired compressor; ACR traces the leak electronically and fixes it instead of only topping up gas.",
+   "time": "Periodic AC service about 4 hours (card). Full AC service: 2-8 hours depending on the work (the site gives both 8 hours and 2-3 hours; see conflict_note); exact time after inspection.",
+   "warranty": "Periodic AC service: 500 km or 1 month; full AC service: 1000 km or 1 month (service cards).",
+   "parts": "100% genuine OEM/OES parts with manufacturer warranty (site badge and 'Services included').",
+   "faq": [
+    {
+     "q_hi": "AC thanda nahi kar raha, kya problem ho sakti hai?",
+     "a_hi": "Aksar dheere leak se gas kam hoti hai, condenser dhool se band hota hai, ya compressor kamzor hota hai. Pressure test aur condenser cleaning se cooling wapas aati hai; bina leak dhundhe gas bharna sirf problem ko taalna hai.",
+     "q_en": "My car AC is not cooling, what could it be?",
+     "a_en": "Usually low refrigerant from a slow leak, a condenser blocked by dust, or a tired compressor. A pressure test and condenser clean restore cooling; topping up gas without finding the leak only delays the problem.",
+     "source_url": "https://autocarrepair.in/category/car-ac-service-repair",
+     "fast_path": true
+    },
+    {
+     "q_hi": "Periodic AC service mein kya hota hai?",
+     "a_hi": "AC inspection, AC gas top-up 400 gram, AC filter cleaning, AC vent cleaning aur condenser cleaning. Ye har 5,000 km ya 3 mahine par recommended hai.",
+     "q_en": "What is included in a periodic AC service?",
+     "a_en": "AC inspection, an AC gas top-up of 400 g, AC filter cleaning, AC vent cleaning and condenser cleaning. Recommended every 5,000 km or 3 months.",
+     "source_url": "https://autocarrepair.in/category/car-ac-service-repair",
+     "fast_path": true
+    },
+    {
+     "q_hi": "Full AC service mein kya hota hai?",
+     "a_hi": "Cooling coil cleaning, dashboard kholkar wapas fitting, compressor oil 200 ml tak aur AC gas top-up 600 gram. Ye har 10,000 km ya saal mein ek baar recommended hai.",
+     "q_en": "What is included in a full AC service?",
+     "a_en": "Cooling coil cleaning, dashboard removal and refitting, compressor oil up to 200 ml and an AC gas top-up of 600 g. Recommended every 10,000 km or once a year.",
+     "source_url": "https://autocarrepair.in/category/car-ac-service-repair",
+     "fast_path": true
+    },
+    {
+     "q_hi": "AC gas refill se cooling hamesha ke liye theek ho jayegi?",
+     "a_hi": "Sirf tab jab gas bas kam thi. Agar leak hai, jo aam wajah hai, to refill temporary hai aur gas kuch hafton mein nikal jaati hai. Isliye hum pehle leak test karte hain.",
+     "q_en": "Will an AC gas refill fix poor cooling permanently?",
+     "a_en": "Only if the gas was simply low. If there is a leak, the usual reason, the refill is temporary and the gas escapes within weeks, so we leak-test first.",
+     "source_url": "https://autocarrepair.in/category/car-ac-service-repair",
+     "fast_path": true
+    },
+    {
+     "q_hi": "AC se badboo kyun aati hai?",
+     "a_hi": "Geele evaporator aur purane cabin filter par fungus aur bacteria jam jaate hain, khaas kar monsoon ke baad. Anti-bacterial evaporator treatment aur naya cabin filter smell hata deta hai.",
+     "q_en": "Why does my AC smell musty?",
+     "a_en": "Mould and bacteria build up on a damp evaporator and an old cabin filter, common after the monsoon. An anti-bacterial evaporator treatment and a new cabin filter clear the smell.",
+     "source_url": "https://autocarrepair.in/category/car-ac-service-repair",
+     "fast_path": true
+    },
+    {
+     "q_hi": "Full AC service mein kitna time lagta hai?",
+     "a_hi": "Full AC service mein kaam ke hisaab se 2 se 8 ghante lag sakte hain; exact time team inspection ke baad batayegi.",
+     "q_en": "How long does a full AC service take?",
+     "a_en": "A full AC service can take 2 to 8 hours depending on the work; the team will tell you the exact time after inspection.",
+     "source_url": "https://autocarrepair.in/category/car-ac-service-repair",
+     "fast_path": true
+    },
+    {
+     "q_hi": "AC service par warranty milti hai?",
+     "a_hi": "Haan, periodic AC service par 500 km ya 1 mahine ki, aur full AC service par 1000 km ya 1 mahine ki warranty hai.",
+     "q_en": "Is there a warranty on AC service?",
+     "a_en": "Yes: periodic AC service carries 500 km or 1 month, full AC service 1000 km or 1 month.",
+     "source_url": "https://autocarrepair.in/category/car-ac-service-repair",
+     "fast_path": true
+    }
+   ],
+   "conflict_note": "Full AC service time: the service card says 8 hours, the FAQ on the same page says about 2-3 hours. Neha gives the range 2-8 hours and says the team confirms after inspection.",
+   "site_issues": [
+    "Full AC service time: card '8 hours' vs FAQ 'about 2-3 hours'. FAQ's full-AC contents (refrigerant recovery, cabin filter change, vent sanitisation) differ from the card list."
+   ],
+   "source_url": "https://autocarrepair.in/category/car-ac-service-repair",
+   "search_words": "AC thanda nahi kar raha AC cooling nahi AC cooling kam thandi hawa nahi AC gas refill AC service AC repair compressor condenser एसी ठंडा नहीं कर रहा एसी कूलिंग एसी गैस एसी सर्विस"
+  },
+  "/category/car-battery": {
+   "title": "Car Battery",
+   "included": [
+    "Battery charging (available at doorstep)",
+    "Battery replacement (remove old battery, check for leaks and corrosion, test and reset electronics)",
+    "Free battery health check (voltage under load) at all 4 centres",
+    "Battery jump start (Emergency Services)"
+   ],
+   "process": "Health check (load test) first so the battery is replaced only when needed; replacement matched to the car's OEM specification (capacity and terminal layout).",
+   "time": "Battery replacement 2-3 hours (site FAQ).",
+   "warranty": null,
+   "parts": "Genuine Exide, Amaron, SF Sonic and Livguard batteries matched to the OEM specification; capacity never downgraded (site FAQ).",
+   "faq": [
+    {
+     "q_hi": "Battery check free hai kya?",
+     "a_hi": "Haan, chaaron centre par free battery health check hota hai, load par voltage test, taaki battery tabhi badlein jab sach mein zaroorat ho.",
+     "q_en": "Is the battery check free?",
+     "a_en": "Yes, we do a free battery health check (voltage under load) at all 4 centres, so you replace the battery only when it is really needed.",
+     "source_url": "https://autocarrepair.in/faq",
+     "fast_path": true
+    },
+    {
+     "q_hi": "Aap kaun si battery lagate ho?",
+     "a_hi": "Genuine Exide, Amaron, SF Sonic aur Livguard, aapki gaadi ke OEM specification ke hisaab se. Capacity kabhi kam nahi karte.",
+     "q_en": "Which battery brands do you fit?",
+     "a_en": "Genuine Exide, Amaron, SF Sonic and Livguard, matched to your car's OEM specification. We never downgrade capacity.",
+     "source_url": "https://autocarrepair.in/faq",
+     "fast_path": true
+    },
+    {
+     "q_hi": "Battery kharab hone ke kya signs hain?",
+     "a_hi": "Gaadi dheere start ho, idle par headlight dim ho, dashboard par battery light aaye, start karte waqt click ki awaaz aaye, ya baar baar jump-start chahiye.",
+     "q_en": "What are the signs of a failing battery?",
+     "a_en": "Sluggish cranking, headlights dimming at idle, the dashboard battery light, a clicking sound on start, or needing frequent jump-starts.",
+     "source_url": "https://autocarrepair.in/faq",
+     "fast_path": true
+    },
+    {
+     "q_hi": "Delhi mein car battery kitne saal chalti hai?",
+     "a_hi": "Delhi NCR ki garmi mein zyadatar battery 3 se 4 saal chalti hai, thande mausam mein 4 se 5 saal.",
+     "q_en": "How long does a car battery last in Delhi NCR?",
+     "a_en": "Most batteries last 3 to 4 years in Delhi NCR's heat, versus 4 to 5 years in milder climates.",
+     "source_url": "https://autocarrepair.in/faq",
+     "fast_path": true
+    },
+    {
+     "q_hi": "Battery badalne mein kitna time lagta hai?",
+     "a_hi": "Battery replacement jaisa routine kaam 2 se 3 ghante mein ho jata hai.",
+     "q_en": "How long does a battery replacement take?",
+     "a_en": "Routine work like a battery replacement takes 2 to 3 hours.",
+     "source_url": "https://autocarrepair.in/faq",
+     "fast_path": true
+    },
+    {
+     "q_hi": "Battery charging ghar par ho jayegi?",
+     "a_hi": "Haan, website ke hisaab se battery charging doorstep par available hai.",
+     "q_en": "Can the battery be charged at my home?",
+     "a_en": "Yes, the website lists battery charging as available at the doorstep.",
+     "source_url": "https://autocarrepair.in/category/car-battery",
+     "fast_path": true
+    }
+   ],
+   "site_issues": [
+    "The page has no FAQ section; battery facts are on /faq."
+   ],
+   "source_url": "https://autocarrepair.in/category/car-battery",
+   "search_words": "battery down battery dead gaadi start nahi ho rahi battery change battery charging jump start बैटरी डाउन बैटरी बदलनी बैटरी चार्जिंग",
+   "conflict_note": null
+  },
+  "/category/car-emergency-services": {
+   "title": "Emergency Services",
+   "included": [
+    "Battery jump start (battery inspection and condition check)",
+    "Wheel-lift towing",
+    "Flat-bed towing"
+   ],
+   "process": "Call the helpline with your exact location; the nearest unit is dispatched. The car is photographed before loading and is covered in transit. Flat-bed for AWD, low-clearance, luxury and non-rolling cars; wheel-lift for short hops of standard cars.",
+   "time": "Response typically 30-60 minutes across most of Delhi NCR, depending on traffic and distance from the 4 centres (FAQ).",
+   "warranty": null,
+   "parts": null,
+   "faq": [
+    {
+     "q_hi": "Gaadi kharab ho gayi, kitni der mein madad pahunchegi?",
+     "a_hi": "Delhi NCR ke zyadatar hisson mein aam taur par 30 se 60 minute lagte hain, traffic aur centre se doori ke hisaab se. Exact location ke saath call kijiye, nearest unit bhejte hain.",
+     "q_en": "How quickly can you reach me if I break down?",
+     "a_en": "Across most of Delhi NCR the response is typically 30 to 60 minutes, depending on traffic and your distance from our 4 centres. Call with your exact location and we dispatch the nearest unit.",
+     "source_url": "https://autocarrepair.in/category/car-emergency-services",
+     "fast_path": true
+    },
+    {
+     "q_hi": "Flatbed aur wheel-lift towing mein kya fark hai?",
+     "a_hi": "Flatbed charon pahiye utha leta hai, AWD, low-clearance, luxury ya na chalne wali gaadi ke liye sabse safe. Wheel-lift ek axle uthata hai, chhoti doori ke liye standard gaadi ke liye.",
+     "q_en": "What is the difference between flat-bed and wheel-lift towing?",
+     "a_en": "A flat-bed lifts all four wheels, safest for AWD, low-clearance, luxury and non-rolling cars. A wheel-lift raises one axle and suits short hops of standard cars.",
+     "source_url": "https://autocarrepair.in/category/car-emergency-services",
+     "fast_path": true
+    },
+    {
+     "q_hi": "Towing ke time gaadi safe aur insured rehti hai?",
+     "a_hi": "Haan, gaadi transit mein covered rehti hai, aur load karne se pehle uski photo lete hain taaki condition record rahe.",
+     "q_en": "Is my car safe and insured during towing?",
+     "a_en": "Yes, your vehicle is covered in transit, and we photograph it before loading so its condition is documented.",
+     "source_url": "https://autocarrepair.in/category/car-emergency-services",
+     "fast_path": true
+    },
+    {
+     "q_hi": "Baar baar jump start karna pad raha hai, kya karein?",
+     "a_hi": "Baar baar jump-start ka matlab alternator ya battery mein fault hai, jise diagnose karna chahiye. Galat polarity se ECU kharab ho sakta hai, isliye doubt ho to call kijiye.",
+     "q_en": "My car keeps needing a jump-start, what should I do?",
+     "a_en": "Repeated jump-starts point to an alternator or battery fault that should be diagnosed. Wrong polarity can damage the ECU, so call us if unsure.",
+     "source_url": "https://autocarrepair.in/category/car-emergency-services",
+     "fast_path": true
+    }
+   ],
+   "site_issues": [
+    "FAQ says towing is priced by distance 'beyond the included radius' but no radius is stated anywhere."
+   ],
+   "source_url": "https://autocarrepair.in/category/car-emergency-services",
+   "search_words": "breakdown gaadi band ho gayi raste mein towing tow truck flatbed jump start emergency गाड़ी बंद हो गई टोइंग ब्रेकडाउन",
+   "conflict_note": null
+  },
+  "/car-roadside-assistance": {
+   "title": "Roadside Assistance",
+   "included": [
+    "Breakdown assistance",
+    "Towing (tow trucks, flat-bed trucks)",
+    "Tyre change",
+    "Battery jump-start",
+    "Fuel delivery",
+    "Lockout assistance",
+    "Minor mechanical repairs"
+   ],
+   "process": "Call Auto Car Repair; a service vehicle is dispatched to your location to address the issue (page FAQ).",
+   "time": "Available 24x7 (page). Response typically 30-60 minutes (Emergency Services FAQ).",
+   "warranty": null,
+   "parts": null,
+   "faq": [
+    {
+     "q_hi": "Roadside assistance 24 ghante milti hai?",
+     "a_hi": "Haan, website ke hisaab se roadside assistance 24x7 available hai, din ho ya raat.",
+     "q_en": "Is roadside assistance available 24/7?",
+     "a_en": "Yes, the website says roadside assistance is available around the clock, day or night.",
+     "source_url": "https://autocarrepair.in/car-roadside-assistance",
+     "fast_path": true
+    },
+    {
+     "q_hi": "Roadside assistance mein kya kya milta hai?",
+     "a_hi": "Towing, tyre change, battery jump-start, fuel delivery, lockout assistance aur chhoti mechanical repair.",
+     "q_en": "What does roadside assistance include?",
+     "a_en": "Towing, tyre changes, battery jump-starts, fuel delivery, lockout assistance and minor mechanical repairs.",
+     "source_url": "https://autocarrepair.in/car-roadside-assistance",
+     "fast_path": true
+    }
+   ],
+   "site_issues": [
+    "Customer calls say ACR does not do towing-only jobs or fuel delivery; the page lists fuel delivery and 24x7 help (owner to confirm)."
+   ],
+   "source_url": "https://autocarrepair.in/car-roadside-assistance",
+   "search_words": "roadside assistance RSA 24x7 breakdown help puncture flat tyre fuel khatam lockout रोडसाइड असिस्टेंस पंक्चर",
+   "conflict_note": null
+  },
+  "/category/regular-car-service": {
+   "title": "Regular Car Service",
+   "included": [
+    "Primary service (every 5,000 km or 3 months): engine oil replacement, coolant top-up up to 200 ml, air filter cleaning, oil filter replacement, spark plug cleaning, wiper fluid top-up, exterior body wash, interior vacuuming with polishing, battery water top-up, 20-point check",
+    "Standard service (every 10,000 km or 6 months): adds air filter replacement, brake and clutch fluid top-up up to 50 ml, coolant up to 500 ml, spark plug cleaning and check, fuel filter check, AC filter cleaning, brake pad service, 30-point check",
+    "Comprehensive service (every 20,000 km or 12 months): adds AC filter replacement, brake fluid up to 100 ml, coolant up to 2 litres, spark plug clean and check, tyre rotation, wheel alignment, wheel balancing, 50-point check",
+    "Free pickup and drop on all three"
+   ],
+   "process": "Service by km and age following the manufacturer schedule; OEM-grade oil at the exact viscosity and genuine/OES filters; inspection and road test. Every job (category page 'Services included'): detailed multi-point inspection, 100% genuine OEM/OES parts with manufacturer warranty, computerised diagnostic scan, road-ready performance test, itemised quality report shared digitally, written warranty card.",
+   "time": "Primary about 3 hours, comprehensive about 8 hours (cards). Standard: same day, 3-6 hours depending on the work (card 6 hours vs FAQ 3-5 hours; see conflict_note).",
+   "conflict_note": "Standard service time: card says 6 hours, the FAQ says 3-5 hours. Neha says 3-6 hours, same day, exact time after inspection.",
+   "warranty": "1000 km or 1 month on primary, standard and comprehensive service (service cards).",
+   "parts": "OEM-grade engine oil at the specified viscosity and genuine/OES filters (FAQ).",
+   "faq": [
+    {
+     "q_hi": "Primary, standard aur comprehensive service mein kya fark hai?",
+     "a_hi": "Primary basic oil aur filter refresh hai; standard mein aur filters, fluids check aur brake inspection judte hain; comprehensive top-to-bottom service hai jisme saare filters, fluids, brakes, AC check aur detailed inspection hota hai.",
+     "q_en": "What is the difference between primary, standard and comprehensive service?",
+     "a_en": "Primary is a basic oil-and-filter refresh; standard adds more filters, fluid checks and brake inspection; comprehensive is a top-to-bottom service with all filters, fluids, brakes, an AC check and a detailed inspection.",
+     "source_url": "https://autocarrepair.in/category/regular-car-service",
+     "fast_path": true
+    },
+    {
+     "q_hi": "Primary service mein kya kya hota hai?",
+     "a_hi": "Engine oil replacement, oil filter replacement, air filter cleaning, coolant top-up, spark plug cleaning, wiper fluid top-up, battery water top-up, exterior wash, interior vacuuming aur 20 points check. Har 5,000 km ya 3 mahine par, pickup-drop free.",
+     "q_en": "What is included in a primary service?",
+     "a_en": "Engine oil and oil filter replacement, air filter cleaning, coolant top-up, spark plug cleaning, wiper fluid and battery water top-up, exterior wash, interior vacuuming and a 20-point check. Every 5,000 km or 3 months, with free pickup and drop.",
+     "source_url": "https://autocarrepair.in/category/regular-car-service",
+     "fast_path": true
+    },
+    {
+     "q_hi": "Comprehensive service mein kya kya hota hai?",
+     "a_hi": "Engine oil aur saare filters, saare fluid top-up, AC filter replacement, brake inspection, tyre rotation, wheel alignment, wheel balancing aur 50 points check. Har 20,000 km ya 12 mahine par.",
+     "q_en": "What is included in a comprehensive service?",
+     "a_en": "Engine oil and all filters, all fluid top-ups, AC filter replacement, brake inspection, tyre rotation, wheel alignment, wheel balancing and a 50-point check. Every 20,000 km or 12 months.",
+     "source_url": "https://autocarrepair.in/category/regular-car-service",
+     "fast_path": true
+    },
+    {
+     "q_hi": "Car service kitne km par karwani chahiye?",
+     "a_hi": "Aam taur par har 10,000 km ya 6 se 12 mahine mein, jo pehle aaye; Delhi NCR ki dhool mein air aur cabin filter par zyada dhyan chahiye. Hum aapki company ka schedule follow karte hain.",
+     "q_en": "How often should I service my car?",
+     "a_en": "Typically every 10,000 km or 6 to 12 months, whichever comes first; Delhi NCR dust means air and cabin filters need closer attention. We follow your manufacturer's schedule.",
+     "source_url": "https://autocarrepair.in/category/regular-car-service",
+     "fast_path": true
+    },
+    {
+     "q_hi": "Standard service mein kitna time lagta hai?",
+     "a_hi": "Standard service usi din ho jati hai; kaam ke hisaab se 3 se 6 ghante lag sakte hain, exact time team inspection ke baad batayegi. Free pickup-drop hai.",
+     "q_en": "How long does a standard service take?",
+     "a_en": "A standard service is done the same day; it can take 3 to 6 hours depending on the work, and the team will confirm the exact time after inspection. Pickup and drop is free.",
+     "source_url": "https://autocarrepair.in/category/regular-car-service",
+     "fast_path": true
+    },
+    {
+     "q_hi": "Service par warranty milti hai?",
+     "a_hi": "Haan, primary, standard aur comprehensive service par 1000 km ya 1 mahine ki warranty hai, aur har kaam ke saath written warranty card milta hai.",
+     "q_en": "Is there a warranty on the service?",
+     "a_en": "Yes, primary, standard and comprehensive services carry 1000 km or 1 month, and every job comes with a written warranty card.",
+     "source_url": "https://autocarrepair.in/category/regular-car-service",
+     "fast_path": true
+    }
+   ],
+   "site_issues": [
+    "Standard service time: card '6 hours' vs FAQ '3-5 hours'."
+   ],
+   "source_url": "https://autocarrepair.in/category/regular-car-service",
+   "search_words": "periodic service regular service primary standard comprehensive service oil change engine oil filter पीरियोडिक सर्विस रेगुलर सर्विस ऑयल चेंज"
+  },
+  "/category/car-repairs-inspection": {
+   "title": "Repairs and Inspection",
+   "included": [
+    "Alternator new / alternator repair",
+    "Starter motor repair",
+    "Faulty electricals (scanning, battery, alternator, wiring, ground connections, charging system)",
+    "Engine mounting replacement",
+    "Gearbox mounting",
+    "Radiator replacement / radiator flush clean",
+    "Cooling coil, condenser and compressor replacement (AC parts)",
+    "V-belt replacement",
+    "Car fluids check",
+    "Front and rear bumper replacement",
+    "Horn replacement",
+    "Mudflaps replacement",
+    "Silencer coating",
+    "Rat/pest (rodent repellent spray)",
+    "Engine scanning (check engine light analysis) is listed under /category/car-inspection: car inspection, engine scanning, second-hand car inspection, road trip inspection, insurance claim inspection, complete suspension inspection"
+   ],
+   "process": "Measure the part against spec and show it to you before recommending repair or replacement; electrical faults traced with multimeter and scan tool; old parts returned to you. Engine scanning reads stored and live ECU fault codes, then live data and physical checks before any part is replaced.",
+   "time": "Engine scanning: a basic scan 20-30 minutes, deeper live-data diagnosis longer (Engine Scanning page).",
+   "warranty": "Workmanship backed by ACR's written service guarantee; parts carry their manufacturer warranty separately; warranty card with every job (FAQ).",
+   "parts": "OEM or OES parts by default through authorised channels with warranty; certified aftermarket only with your consent (FAQ).",
+   "about_suggested": "alternator, radiator, engine aur gearbox mounting, electrical repairs aur AC parts (engine scanning /category/car-inspection par hai)",
+   "faq": [
+    {
+     "q_hi": "Engine check light jal rahi hai, kya gaadi chala sakte hain?",
+     "a_hi": "Steady light ka matlab hai dhyan se chalaiye aur jaldi scan karwaiye; blink karti light serious misfire hai, gaadi rok dijiye taaki catalytic converter kharab na ho. Engine scan se pata chalta hai kaunsa case hai.",
+     "q_en": "My check engine light is on, is it safe to drive?",
+     "a_en": "A steady light usually means drive with caution and get it scanned soon; a flashing light signals a serious misfire, so stop driving to avoid catalytic-converter damage. A scan tells which it is.",
+     "source_url": "https://autocarrepair.in/services/car-inspection/engine-scanning",
+     "fast_path": true
+    },
+    {
+     "q_hi": "Engine scanning mein kitna time lagta hai?",
+     "a_hi": "Basic scan mein 20 se 30 minute lagte hain; live data ke saath detailed diagnosis mein zyada. Repair quote se pehle codes aur unka matlab batate hain.",
+     "q_en": "How long does engine scanning take?",
+     "a_en": "A basic scan takes 20 to 30 minutes; a deeper live-data diagnosis takes longer. We share the codes and what they mean before quoting any repair.",
+     "source_url": "https://autocarrepair.in/services/car-inspection/engine-scanning",
+     "fast_path": true
+    },
+    {
+     "q_hi": "Error code clear karne se problem theek ho jayegi?",
+     "a_hi": "Nahi, clear karne se sirf light reset hoti hai; asli fault rahega to light wapas aayegi. Hum wajah theek karte hain, phir clear karke road test karte hain.",
+     "q_en": "Will clearing the error code fix the problem?",
+     "a_en": "No, clearing only resets the light; if the fault remains it comes back. We fix the cause, then clear it and road-test.",
+     "source_url": "https://autocarrepair.in/services/car-inspection/engine-scanning",
+     "fast_path": true
+    },
+    {
+     "q_hi": "Purane part wapas milenge kya?",
+     "a_hi": "Haan, badla hua har part aapko wapas diya jata hai, warranty ya core-return item ke alawa, aur batate hain ki wo kyun fail hua.",
+     "q_en": "Will you show me the old parts?",
+     "a_en": "Always. Every replaced part is returned to you, unless it is a warranty or core-return item, and we explain why it failed.",
+     "source_url": "https://autocarrepair.in/category/car-repairs-inspection",
+     "fast_path": true
+    },
+    {
+     "q_hi": "Alternator kharab hone ke kya signs hain?",
+     "a_hi": "Battery warning light jalna, lights ka dim ya flicker hona, whining awaaz, ya charge karne ke baad bhi battery baar baar khatam hona.",
+     "q_en": "How do I know my alternator is failing?",
+     "a_en": "A glowing battery warning light, dimming or flickering lights, a whining noise, or a battery that keeps dying despite charging.",
+     "source_url": "https://autocarrepair.in/category/car-repairs-inspection",
+     "fast_path": true
+    }
+   ],
+   "site_issues": [
+    "Engine scanning is not on this page (it is on /category/car-inspection); the persona 'about' line says engine scanning."
+   ],
+   "source_url": "https://autocarrepair.in/category/car-repairs-inspection",
+   "search_words": "engine check light check engine light engine light jal rahi hai engine scanning OBD scan engine ki jaanch alternator radiator starter electrical wiring engine mounting इंजन चेक लाइट इंजन की जांच इंजन लाइट",
+   "conflict_note": null
+  },
+  "/car-wash-service": {
+   "title": "Car Wash",
+   "included": [
+    "Exterior pressure wash",
+    "Tyre cleaning and dressing",
+    "Alloy polishing",
+    "Interior vacuuming and dashboard polishing",
+    "Bug and tar removal",
+    "Full-service packages: washing, waxing, vacuuming, polishing"
+   ],
+   "process": "High-grade cleaners and modern equipment; eco-friendly cleaning products (page).",
+   "time": "A basic wash 20-30 minutes; a full-service wash with detailing up to an hour (page FAQ).",
+   "warranty": null,
+   "parts": null,
+   "faq": [
+    {
+     "q_hi": "Car wash mein kitna time lagta hai?",
+     "a_hi": "Basic wash mein 20 se 30 minute, aur detailing ke saath full-service wash mein ek ghante tak lagta hai.",
+     "q_en": "How long does a car wash take?",
+     "a_en": "A basic wash takes 20 to 30 minutes; a full-service wash with detailing can take up to an hour.",
+     "source_url": "https://autocarrepair.in/car-wash-service",
+     "fast_path": true
+    },
+    {
+     "q_hi": "Car wash mein kya kya hota hai?",
+     "a_hi": "Exterior pressure wash, tyre cleaning aur dressing, alloy polishing, interior vacuuming aur dashboard polishing, aur bug aur tar removal.",
+     "q_en": "What is included in a car wash?",
+     "a_en": "Exterior pressure wash, tyre cleaning and dressing, alloy polishing, interior vacuuming and dashboard polishing, and bug and tar removal.",
+     "source_url": "https://autocarrepair.in/category/car-care-detailing",
+     "fast_path": true
+    },
+    {
+     "q_hi": "Gaadi kitni baar dhulwani chahiye?",
+     "a_hi": "Kam se kam har do hafte mein ek baar, mausam aur pollution ke hisaab se zyada bhi.",
+     "q_en": "How often should I wash my car?",
+     "a_en": "At least once every two weeks, more often depending on weather and pollution.",
+     "source_url": "https://autocarrepair.in/car-wash-service",
+     "fast_path": true
+    }
+   ],
+   "site_issues": [
+    "'We offer services in Delhi, Gurgaon, and Noida' (Okhla not named)."
+   ],
+   "source_url": "https://autocarrepair.in/car-wash-service",
+   "search_words": "car wash gaadi dhulwani dhulai washing foam wash कार वॉश गाड़ी धुलवानी धुलाई",
+   "conflict_note": null
+  },
+  "/car-interior-cleaning": {
+   "title": "Interior Cleaning",
+   "included": [
+    "Cleaning of upholstery, carpets, dashboard and vents",
+    "Stain, dirt and odour removal",
+    "Interior dry cleaning card: interior vacuuming, seat cleaning, dashboard polishing, anti-bacterial treatment, safe for electronics"
+   ],
+   "process": "Specialised cleaning products and techniques for all interior surfaces; vacuuming, stain removal, sanitising (page).",
+   "time": null,
+   "warranty": null,
+   "parts": null,
+   "faq": [
+    {
+     "q_hi": "Interior cleaning mein kya kya saaf hota hai?",
+     "a_hi": "Seats, upholstery, carpets, dashboard aur AC vents; dirt, stains aur badboo hatate hain, anti-bacterial treatment ke saath.",
+     "q_en": "What does interior cleaning cover?",
+     "a_en": "Seats and upholstery, carpets, the dashboard and the vents; dirt, stains and odours are removed, with an anti-bacterial treatment.",
+     "source_url": "https://autocarrepair.in/car-interior-cleaning",
+     "fast_path": true
+    },
+    {
+     "q_hi": "Seat ke purane daag nikal jayenge?",
+     "a_hi": "Haan, professional interior cleaning special tools aur products se ziddi daag bhi nikal deti hai.",
+     "q_en": "Can interior cleaning remove stubborn stains?",
+     "a_en": "Yes, professional interior cleaning removes stubborn stains using specialised tools and products.",
+     "source_url": "https://autocarrepair.in/car-interior-cleaning",
+     "fast_path": true
+    },
+    {
+     "q_hi": "Interior cleaning kitni baar karwani chahiye?",
+     "a_hi": "Har 3 se 6 mahine mein.",
+     "q_en": "How often should I get interior cleaning?",
+     "a_en": "Every 3 to 6 months.",
+     "source_url": "https://autocarrepair.in/car-interior-cleaning",
+     "fast_path": true
+    }
+   ],
+   "site_issues": [],
+   "source_url": "https://autocarrepair.in/car-interior-cleaning",
+   "search_words": "interior cleaning andar ki safai seat cleaning dry cleaning vacuum badboo daag इंटीरियर क्लीनिंग अंदर की सफाई सीट",
+   "conflict_note": null
+  },
+  "/rubbing-polish": {
+   "title": "Rubbing and Polish",
+   "included": [
+    "Removal of swirl marks, scratches and oxidation",
+    "Exterior rubbing and polishing card: polishing with compound, pressure wash, wax polishing (for dull paint)"
+   ],
+   "process": "Skilled technicians with high-quality products and machine techniques restore gloss and add a protective layer (page).",
+   "time": null,
+   "warranty": null,
+   "parts": null,
+   "faq": [
+    {
+     "q_hi": "Rubbing polish se scratches nikal jaate hain?",
+     "a_hi": "Rubbing polish swirl marks, halke scratches aur oxidation hata kar gloss wapas laata hai. Gehre scratch ya dent ke liye denting painting chahiye.",
+     "q_en": "Does rubbing and polishing remove scratches?",
+     "a_en": "Rubbing and polishing removes swirl marks, light scratches and oxidation and restores the gloss. Deep scratches or dents need denting and painting.",
+     "source_url": "https://autocarrepair.in/rubbing-polish",
+     "fast_path": false
+    },
+    {
+     "q_hi": "Rubbing polish mein kya hota hai?",
+     "a_hi": "Pressure wash, compound se polishing aur wax polishing, dull paint ki chamak wapas laane ke liye.",
+     "q_en": "What does rubbing and polishing include?",
+     "a_en": "A pressure wash, polishing with compound and wax polishing to bring back the shine of dull paint.",
+     "source_url": "https://autocarrepair.in/category/car-care-detailing",
+     "fast_path": true
+    }
+   ],
+   "site_issues": [
+    "The FAQ shows questions without answers ('How often should I get my car polished?', 'Will polishing remove all scratches?', ...)."
+   ],
+   "source_url": "https://autocarrepair.in/rubbing-polish",
+   "search_words": "rubbing polish polishing buffing chamak scratch hatana रबिंग पॉलिश पॉलिशिंग",
+   "conflict_note": null
+  },
+  "/ceramic-coating-service": {
+   "title": "Ceramic Coating",
+   "included": [
+    "Liquid polymer coating bonded to the paint",
+    "Hydrophobic surface (repels water and dirt)",
+    "Gloss enhancement",
+    "Protection against light scratches, UV, oxidation and fading",
+    "Detailing page: 9H ceramic coating, up to 5-year durability"
+   ],
+   "conflict_note": null,
+   "process": "Coating applied to the exterior and bonded with the paintwork (page).",
+   "time": null,
+   "warranty": null,
+   "parts": null,
+   "faq": [
+    {
+     "q_hi": "Ceramic coating kitne saal chalti hai?",
+     "a_hi": "Website ke detailing page par 9H ceramic coating ki up to 5 saal durability likhi hai; kitni chalegi ye maintenance aur mausam par depend karta hai, aur time ke saath dobara lagani pad sakti hai.",
+     "q_en": "How long does ceramic coating last?",
+     "a_en": "The website's detailing page states up to 5-year durability for its 9H ceramic coating; how long it lasts depends on maintenance and conditions, and it may need reapplication over time.",
+     "source_url": "https://autocarrepair.in/detailing",
+     "fast_path": true
+    },
+    {
+     "q_hi": "Ceramic coating ke kya fayde hain?",
+     "a_hi": "Scratches, UV, oxidation aur fading se protection, gaadi ki chamak, aur paani aur dhool phisal jaati hai to safai aasaan.",
+     "q_en": "What are the benefits of ceramic coating?",
+     "a_en": "Protection against scratches, UV, oxidation and fading, more gloss, and a water-repellent surface that makes cleaning easy.",
+     "source_url": "https://autocarrepair.in/ceramic-coating-service",
+     "fast_path": true
+    }
+   ],
+   "site_issues": [],
+   "source_url": "https://autocarrepair.in/ceramic-coating-service",
+   "search_words": "ceramic coating graphene coating 9H coating chamak सिरेमिक कोटिंग"
+  },
+  "/ppf-coating-service": {
+   "title": "PPF Coating",
+   "included": [
+    "Transparent paint protection film applied to the exterior",
+    "Absorbs impacts; protects against scratches, stone chips, bug splatter and road debris"
+   ],
+   "process": "Film applied to the car's exterior by certified technicians (page).",
+   "time": null,
+   "warranty": null,
+   "parts": null,
+   "faq": [
+    {
+     "q_hi": "PPF kya hota hai?",
+     "a_hi": "PPF yaani paint protection film ek transparent film hai jo gaadi ke paint par lagti hai, impact absorb karti hai aur scratches, stone chips aur road debris se bachati hai.",
+     "q_en": "What is PPF?",
+     "a_en": "PPF, paint protection film, is a transparent film applied over the paint that absorbs impacts and protects against scratches, stone chips and road debris.",
+     "source_url": "https://autocarrepair.in/ppf-coating-service",
+     "fast_path": true
+    },
+    {
+     "q_hi": "PPF permanent hai kya?",
+     "a_hi": "PPF durable hai, lekin mausam aur use ke hisaab se maintenance aur kabhi dobara lagwana pad sakta hai.",
+     "q_en": "Is PPF permanent?",
+     "a_en": "PPF is durable but may need periodic maintenance and reapplication depending on exposure and use.",
+     "source_url": "https://autocarrepair.in/ppf-coating-service",
+     "fast_path": true
+    }
+   ],
+   "site_issues": [],
+   "source_url": "https://autocarrepair.in/ppf-coating-service",
+   "search_words": "PPF paint protection film transparent film पीपीएफ पेंट प्रोटेक्शन फिल्म",
+   "conflict_note": null
+  },
+  "/paint-protection-service": {
+   "title": "Paint Protection",
+   "included": [
+    "Paint protection (the page's own text is a copy of the ceramic-coating text, so only its title is used)",
+    "Related protection services with their own pages: PPF coating (/ppf-coating-service) and ceramic coating (/ceramic-coating-service)"
+   ],
+   "process": null,
+   "time": null,
+   "warranty": null,
+   "parts": null,
+   "about_suggested": "paint protection (PPF aur ceramic coating ke apne pages hain)",
+   "copied_text_excluded": true,
+   "faq": [
+    {
+     "q_hi": "Paint protection kya hota hai?",
+     "a_hi": "Paint protection gaadi ke paint ko bachane ki service hai. Website par iske liye PPF aur ceramic coating ki services bhi hain. Aapki gaadi ke liye details aur sahi option hamari team batayegi.",
+     "q_en": "What is your paint protection service?",
+     "a_en": "Paint protection is a service to protect your car's paint; the website also lists PPF and ceramic coating for this. Our team will explain the details and the right option for your car.",
+     "source_url": "https://autocarrepair.in/paint-protection-service",
+     "fast_path": true
+    }
+   ],
+   "site_issues": [
+    "The page shows the ceramic-coating text and its Related Services show Front Bumper, Rear Bumper and Bonnet; that text is excluded from Neha's knowledge."
+   ],
+   "source_url": "https://autocarrepair.in/paint-protection-service",
+   "search_words": "paint protection coating paint bachana पेंट प्रोटेक्शन",
+   "conflict_note": null
+  },
+  "/anti-rust-coating": {
+   "title": "Anti Rust Coating",
+   "included": [
+    "Underbody anti-rust coating against moisture, salt and corrosive elements",
+    "Underchassis rust coating card: pre-coating preparation, chemical treatment, masking sensitive components, quality control inspection"
+   ],
+   "process": "Underbody cleaned and inspected for existing rust, sensitive parts masked, coating applied and dried (page FAQ and card).",
+   "time": "Usually a few hours, including preparation and drying (page FAQ).",
+   "warranty": null,
+   "parts": null,
+   "faq": [
+    {
+     "q_hi": "Anti rust coating mein kitna time lagta hai?",
+     "a_hi": "Underbody anti-rust coating mein aam taur par kuch ghante lagte hain, preparation aur drying milakar.",
+     "q_en": "How long does anti-rust coating take?",
+     "a_en": "Underbody anti-rust coating usually takes a few hours, including preparation and drying.",
+     "source_url": "https://autocarrepair.in/anti-rust-coating",
+     "fast_path": true
+    },
+    {
+     "q_hi": "Purani gaadi par anti rust coating ho sakti hai?",
+     "a_hi": "Haan, purani gaadi par bhi ho jaati hai; pehle underbody ko achhe se saaf karke purani zang check karte hain.",
+     "q_en": "Can anti-rust coating be applied to an older car?",
+     "a_en": "Yes; the underbody is first cleaned thoroughly and inspected for existing rust.",
+     "source_url": "https://autocarrepair.in/anti-rust-coating",
+     "fast_path": true
+    },
+    {
+     "q_hi": "Anti rust coating kitne saal chalti hai?",
+     "a_hi": "Driving conditions aur mausam ke hisaab se aam taur par kai saal chalti hai.",
+     "q_en": "How long does underbody anti-rust coating last?",
+     "a_en": "Typically several years, depending on driving conditions and the environment.",
+     "source_url": "https://autocarrepair.in/anti-rust-coating",
+     "fast_path": true
+    }
+   ],
+   "site_issues": [],
+   "source_url": "https://autocarrepair.in/anti-rust-coating",
+   "search_words": "anti rust coating zang underbody coating underchassis जंग एंटी रस्ट कोटिंग",
+   "conflict_note": null
+  },
+  "/windshield-repair": {
+   "title": "Windshield Repair",
+   "included": [
+    "Chip and crack repair (resin fill)",
+    "Front and rear windshield replacement",
+    "ADAS camera recalibration after replacement",
+    "Windshield replacement under insurance"
+   ],
+   "process": "Damaged area filled with specialised materials to restore strength and visibility; long, edge or line-of-sight cracks need full replacement; ADAS recalibrated after replacement.",
+   "time": "A chip or short crack away from the edge can usually be resin-repaired same day; after replacement the safe drive-away time is typically 1-3 hours (Windshield Replacement page).",
+   "warranty": null,
+   "parts": "OEM-grade glass with the correct tint, acoustic layer and sensor cut-outs (Windshield Replacement page).",
+   "faq": [
+    {
+     "q_hi": "Windshield ka crack repair ho jayega ya badalna padega?",
+     "a_hi": "Kinare se door chhota chip ya chhota crack, jo drivers ki nazar mein na ho, aam taur par usi din resin se repair ho jata hai. Lamba crack, kinare ka crack ya nazar ke saamne ka damage ho to poora windshield badalna padta hai.",
+     "q_en": "Can my windshield be repaired or does it need replacement?",
+     "a_en": "A chip or short crack away from the edge and outside your line of sight can usually be resin-repaired the same day. Long cracks, edge cracks or damage in the driver's view need a full replacement.",
+     "source_url": "https://autocarrepair.in/services/car-insurance-claim/windshield-replacement",
+     "fast_path": true
+    },
+    {
+     "q_hi": "Windshield insurance mein badal jayega?",
+     "a_hi": "Comprehensive cover mein aam taur par haan, aur ACR par aksar cashless; kai policies mein glass alag cover hota hai jisse NCB par asar nahi padta. Kaam se pehle policy verify karte hain.",
+     "q_en": "Is windshield replacement covered by insurance?",
+     "a_en": "Usually yes under comprehensive cover, often cashless at ACR; many policies treat glass as a separate cover with no NCB impact. We verify your policy first.",
+     "source_url": "https://autocarrepair.in/services/car-insurance-claim/windshield-replacement",
+     "fast_path": true
+    },
+    {
+     "q_hi": "Windshield badalne ke baad kab gaadi chala sakte hain?",
+     "a_hi": "Bonding ke liye aam taur par 1 se 3 ghante ka safe drive-away time chahiye; aapki gaadi ka exact time batate hain.",
+     "q_en": "How soon can I drive after a windshield replacement?",
+     "a_en": "The bonding needs a safe drive-away time, typically 1 to 3 hours; we tell you the exact time for your car.",
+     "source_url": "https://autocarrepair.in/services/car-insurance-claim/windshield-replacement",
+     "fast_path": true
+    },
+    {
+     "q_hi": "Windshield badalne ke baad ADAS camera theek chalega?",
+     "a_hi": "Haan, agar windshield par lane-keep ya emergency braking camera laga hai to replacement ke baad recalibration hum karte hain.",
+     "q_en": "Do you recalibrate ADAS after windshield replacement?",
+     "a_en": "Yes, if your car has a windshield-mounted camera for lane-keep or emergency braking, we handle the recalibration after replacement.",
+     "source_url": "https://autocarrepair.in/services/car-insurance-claim/windshield-replacement",
+     "fast_path": true
+    }
+   ],
+   "site_issues": [
+    "Related Services shows brake disc/pads/shoes and Related Guides shows wheel-alignment guides.",
+    "Template 'How long does Windshield Repair take? Most maintenance tips jobs are completed the same day.'"
+   ],
+   "source_url": "https://autocarrepair.in/windshield-repair",
+   "search_words": "windshield crack windscreen front sheesha toot gaya crack repair शीशा क्रैक विंडशील्ड",
+   "conflict_note": null
+  },
+  "/wiper-blade-replacement": {
+   "title": "Wiper Blades",
+   "included": [
+    "Assessment of the wiper blades' condition and replacement if necessary",
+    "Installation compatible with your car model"
+   ],
+   "process": "Technicians assess the blades and replace them if needed (page).",
+   "time": null,
+   "warranty": null,
+   "parts": null,
+   "faq": [
+    {
+     "q_hi": "Wiper blade kab badalne chahiye?",
+     "a_hi": "Jab wiper streak chhode, uchhle, ya chalane ke baad bhi paani ya dhool sheeshe par rahe, tab badalne ka time hai.",
+     "q_en": "When should wiper blades be replaced?",
+     "a_en": "When they streak, skip or leave water or debris on the windshield after use.",
+     "source_url": "https://autocarrepair.in/wiper-blade-replacement",
+     "fast_path": true
+    },
+    {
+     "q_hi": "Wiper blade kitne din chalte hain?",
+     "a_hi": "Aam taur par 6 se 12 mahine, use aur mausam ke hisaab se.",
+     "q_en": "How long do wiper blades last?",
+     "a_en": "Typically 6 to 12 months, depending on use and conditions.",
+     "source_url": "https://autocarrepair.in/wiper-blade-replacement",
+     "fast_path": true
+    }
+   ],
+   "site_issues": [
+    "Related Services shows brake disc/pads/shoes; template 'Most maintenance tips jobs are completed the same day.'"
+   ],
+   "source_url": "https://autocarrepair.in/wiper-blade-replacement",
+   "search_words": "wiper blade wiper kharab wiper badalna वाइपर ब्लेड",
+   "conflict_note": null
+  },
+  "/extended-warranty": {
+   "title": "Extended Warranty",
+   "included": [
+    "Coverage beyond the manufacturer's warranty for repair costs",
+    "May include engine, transmission, suspension and electrical repairs, depending on the plan"
+   ],
+   "process": null,
+   "time": null,
+   "warranty": null,
+   "parts": null,
+   "about_suggested": "company warranty ke baad extended warranty cover (plan details advisor batayenge)",
+   "faq": [
+    {
+     "q_hi": "Extended warranty kya hoti hai?",
+     "a_hi": "Extended warranty ek service contract hai jo company warranty khatam hone ke baad repair ka extra cover deta hai. Plan ke hisaab se engine, transmission, suspension aur electrical repair cover ho sakte hain.",
+     "q_en": "What is an extended warranty?",
+     "a_en": "An extended warranty is a service contract giving repair cover beyond the manufacturer's warranty. Depending on the plan it can include engine, transmission, suspension and electrical repairs.",
+     "source_url": "https://autocarrepair.in/extended-warranty",
+     "fast_path": true
+    }
+   ],
+   "site_issues": [
+    "The page names no plan, duration, provider or price; template FAQs 'How long does Extended Warranty take?' and 'Our Extended Warranty covers a thorough inspection, genuine OEM/OES parts...' make no sense."
+   ],
+   "source_url": "https://autocarrepair.in/extended-warranty",
+   "search_words": "extended warranty warranty badhani warranty plan एक्सटेंडेड वारंटी",
+   "conflict_note": null
+  },
+  "/detailing/services/rodent-repellent": {
+   "title": "Rodent Repellent",
+   "included": [
+    "Rodent repellent (listed among the ACR Detailing studio services on /detailing)"
+   ],
+   "process": null,
+   "time": null,
+   "warranty": null,
+   "parts": null,
+   "copied_text_excluded": true,
+   "in_persona": false,
+   "faq": [
+    {
+     "q_hi": "Rodent repellent kya hota hai?",
+     "a_hi": "Rodent repellent ACR Detailing studio ki ek service hai, gaadi ko chuhon jaise rodents se bachane ke liye. Iski details aur process hamari team aapko batayegi.",
+     "q_en": "What is rodent repellent?",
+     "a_en": "Rodent repellent is one of the ACR Detailing studio services, to protect your car from rodents such as rats. Our team will explain the details and the process.",
+     "source_url": "https://autocarrepair.in/detailing/services/rodent-repellent",
+     "fast_path": true
+    }
+   ],
+   "site_issues": [
+    "The page shows the Dry Wash text (and a 'From Rs 800' price); excluded."
+   ],
+   "source_url": "https://autocarrepair.in/detailing/services/rodent-repellent",
+   "search_words": "rodent repellent chuha chuhe rat gaadi mein chuhe wire kaat rahe रोडेंट रिपेलेंट चूहा चूहे",
+   "conflict_note": null
+  },
+  "/detailing/services/ac-disinfections": {
+   "title": "AC Disinfection",
+   "included": [
+    "AC disinfection (listed among the ACR Detailing studio services on /detailing)"
+   ],
+   "process": null,
+   "time": null,
+   "warranty": null,
+   "parts": null,
+   "copied_text_excluded": true,
+   "in_persona": false,
+   "faq": [
+    {
+     "q_hi": "AC disinfection kya hota hai?",
+     "a_hi": "AC disinfection ACR Detailing studio ki ek service hai, gaadi ke AC ko disinfect karne ke liye. Iski details hamari team aapko batayegi.",
+     "q_en": "What is AC disinfection?",
+     "a_en": "AC disinfection is one of the ACR Detailing studio services, to disinfect your car's AC. Our team will explain the details.",
+     "source_url": "https://autocarrepair.in/detailing/services/ac-disinfections",
+     "fast_path": true
+    }
+   ],
+   "site_issues": [
+    "The page shows the Interior Vacuuming text (and a 'From Rs 600' price); excluded."
+   ],
+   "source_url": "https://autocarrepair.in/detailing/services/ac-disinfections",
+   "search_words": "AC disinfection AC sanitization AC germ free एसी डिसइन्फेक्शन",
+   "conflict_note": null
+  },
+  "/detailing/services/windshield-detailing": {
+   "title": "Windshield Detailing (Crystal Vision for Windshield)",
+   "included": [
+    "Windshield detailing, titled 'crystal vision for windshield' (listed among the ACR Detailing studio services on /detailing)"
+   ],
+   "process": null,
+   "time": null,
+   "warranty": null,
+   "parts": null,
+   "copied_text_excluded": true,
+   "in_persona": false,
+   "faq": [
+    {
+     "q_hi": "Windshield detailing kya hota hai?",
+     "a_hi": "Windshield detailing ACR Detailing studio ki windshield ki service hai, website par iska naam 'crystal vision for windshield' hai. Iski details hamari team aapko batayegi.",
+     "q_en": "What is windshield detailing?",
+     "a_en": "Windshield detailing is the ACR Detailing studio's windshield service, called 'crystal vision for windshield' on the website. Our team will explain the details.",
+     "source_url": "https://autocarrepair.in/detailing/services/windshield-detailing",
+     "fast_path": true
+    }
+   ],
+   "site_issues": [
+    "The page shows the Gloss Maintenance (coating) text (and a 'From Rs 1,500' price); excluded."
+   ],
+   "source_url": "https://autocarrepair.in/detailing/services/windshield-detailing",
+   "search_words": "windshield detailing crystal vision windshield sheesha clear विंडशील्ड डिटेलिंग",
+   "conflict_note": null
+  }
+ }
+}

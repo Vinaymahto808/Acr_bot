@@ -47,6 +47,19 @@ class OutboxTests(unittest.TestCase):
         self.assertEqual(ob.status()["delivered"], 1)
         ob.close()
 
+    def test_booking_lead_then_end_of_call_update(self):
+        # 2026-11-25: the lead goes to Bitrix24 when the booking is filed; the end of the call pushes again
+        # (again=True) so the same lead gets the whole transcript (the sink upserts by conversation id)
+        sink = FlakySink()
+        ob = Outbox(self.db, sink, start_worker=False)
+        ob.enqueue(RECORD)
+        self.assertEqual(ob.process_once(), 1)
+        self.assertFalse(ob.enqueue(RECORD))                 # a plain re-save does not push twice
+        self.assertTrue(ob.enqueue(RECORD, again=True))      # the end of the call does
+        self.assertEqual(ob.process_once(), 1)
+        self.assertEqual(sink.calls, ["abc123", "abc123"])
+        ob.close()
+
     def test_failure_backs_off_then_succeeds(self):
         sink = FlakySink(fail_times=1)
         ob = Outbox(self.db, sink, start_worker=False)
@@ -67,6 +80,41 @@ class OutboxTests(unittest.TestCase):
         self.assertEqual(ob.process_once(), 0)
         self.assertEqual(ob.status()["pending"], 1)
         ob.close()
+
+
+class IgnoringPortal(Bitrix24Sink):
+    """A Bitrix24 portal without UF_CRM_CONVERSATION_ID: it ignores filters it cannot apply and lists every lead
+    (what happened live on 2026-11-14: a test call overwrote lead 51, a real converted lead)."""
+    def __init__(self, leads):
+        super().__init__("https://example.bitrix24.in/rest/1/x/")
+        self.leads, self.calls = leads, []
+
+    def call(self, method, params):
+        self.calls.append(method)
+        if method == "crm.lead.list":
+            return {"result": [dict(l) for l in self.leads]}
+        if method == "crm.lead.add":
+            return {"result": 999}
+        return {"result": True}
+
+
+class Bitrix24DedupTests(unittest.TestCase):
+    def test_an_ignored_filter_never_matches_someone_elses_lead(self):
+        portal = IgnoringPortal([{"ID": "51", "TITLE": "Rahul Creta service", "PHONE": [{"VALUE": "+91 98112 23344"}]},
+                                 {"ID": "52", "TITLE": "ACR web call: Swift brakes", "PHONE": [{"VALUE": "9000000000"}]}])
+        r = portal.push(RECORD)
+        self.assertEqual(r, {"id": "999", "action": "created"})   # a new lead, nothing updated
+        self.assertNotIn("crm.lead.update", portal.calls)
+
+    def test_nehas_own_lead_for_the_same_phone_is_updated(self):
+        portal = IgnoringPortal([{"ID": "60", "TITLE": "ACR web call: Creta AC repair", "PHONE": [{"VALUE": "+91 98112 23344"}]}])
+        self.assertEqual(portal.push(RECORD), {"id": "60", "action": "updated"})
+
+    def test_conversation_id_must_really_match(self):
+        portal = IgnoringPortal([{"ID": "70", "UF_CRM_CONVERSATION_ID": "abc123"}])
+        self.assertEqual(portal.find_existing({**RECORD, "phone": ""}), "70")
+        portal = IgnoringPortal([{"ID": "71", "UF_CRM_CONVERSATION_ID": None}])
+        self.assertIsNone(portal.find_existing({**RECORD, "phone": ""}))
 
 
 class Bitrix24MappingTests(unittest.TestCase):

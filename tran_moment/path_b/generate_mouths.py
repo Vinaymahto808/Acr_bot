@@ -234,7 +234,17 @@ def sharpen(im: Image.Image) -> Image.Image:
     """The same light unsharp mask on every face layer (base, mouth shapes, smile, eyes, brows), so her face is
     crisp on a phone and the sharpness never changes when the mouth shape does (2026-11-13 blur feedback)."""
     from PIL import ImageFilter  # noqa: PLC0415
-    rgb = im.convert("RGB").filter(ImageFilter.UnsharpMask(radius=1.3, percent=65, threshold=2))
+    from scipy.ndimage import maximum_filter, minimum_filter  # noqa: PLC0415
+    src = im.convert("RGB")
+    rgb = src.filter(ImageFilter.UnsharpMask(radius=1.3, percent=65, threshold=2))
+    # halo-free (2026-11-25): the plain unsharp mask overshot on high-contrast edges and drew a light rim along
+    # the jaw and cheek against the dark hair (and a dark one on the light side). Clamp every pixel to the range
+    # of its 3x3 neighbourhood in the source (+-3 levels): edges get steeper, but never brighter or darker than
+    # what is already there.
+    s = np.asarray(src, np.int16)
+    lo = minimum_filter(s, size=(3, 3, 1)) - 3
+    hi = maximum_filter(s, size=(3, 3, 1)) + 3
+    rgb = Image.fromarray(np.clip(np.asarray(rgb, np.int16), lo, hi).astype(np.uint8), "RGB")
     if im.mode == "RGBA":
         rgb.putalpha(im.getchannel("A"))
     return rgb
@@ -298,6 +308,9 @@ def main() -> int:
 
     OUT.mkdir(parents=True, exist_ok=True)
     sharpen(Image.fromarray(_clean_teeth_seam(rgb, pts))).save(OUT / "base.png")
+    if "--base-only" in sys.argv:   # only the puppet's base (e.g. after a change to sharpen()); shapes + index untouched
+        print("wrote", OUT / "base.png")
+        return 0
 
     # every shape, the resting mouth too: the photo's dark gap between the lips read as a black line while she
     # talked (2026-11-13 feedback). base.png (the face under the shapes) is cleaned the same way below.

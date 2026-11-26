@@ -25,7 +25,8 @@ assets as `/avatar_puppet/*`; no restart needed for the files. The voice widget 
 blink band and mouth patch. The **Simli live face** is a separate asset on the Simli account: generate a new
 face from the same photo in the Simli dashboard and set `SIMLI_FACE_ID`; until then run the bot with
 `HUMAN_BOT_AVATAR_PROVIDER=puppet`, or the old face would be composited over the new portrait. The previous
-Neha puppet assets are kept in `path_b/mouths_old_neha/`. Consent rule: only a synthetic or consented face.
+Neha puppet assets (`path_b/mouths_old_neha/`, `mouths_warp_v2/`, `face_sets/`) were deleted 2026-11-24; they are in
+git history (commit 349f8fe) if ever needed. Consent rule: only a synthetic or consented face.
 
 ## Reaction frames (2026-11-03)
 

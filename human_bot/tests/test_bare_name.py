@@ -73,12 +73,14 @@ class BareNameCollectorTests(unittest.TestCase):
 class BareNameBrainTests(unittest.TestCase):
     def test_brain_accepts_the_bare_name_and_moves_on(self):
         b = offline_brain(PERSONA)
-        for turn in ("Swift gaadi hai", "DL 12 AB 4321", "AC ka service karwana hai", "Gurgaon"):
-            b.reply(turn)
-        self.assertIn("naam", b.reply("junk-noise-turn"))  # the name question is on the floor
+        # 2026-11-24 order: which service first, then the mobile number, then the name
+        first = b.reply("namaste")
+        self.assertIn("service", first); self.assertNotIn("model", first); self.assertNotIn("number", first)
+        self.assertIn("mobile number", b.reply("AC ka service karwana hai"))
+        self.assertIn("naam", b.reply("9811223344"))  # the name question is on the floor
         out = b.reply("vinay")
         self.assertNotIn("Maaf kijiye", out)  # the apology loop is gone
-        self.assertIn("mobile number", out)
+        self.assertIn("request bhej doon", out)
         self.assertEqual(b.slots["name"], "Vinay")
 
     def test_brain_does_not_invent_a_name_without_the_question(self):

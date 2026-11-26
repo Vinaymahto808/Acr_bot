@@ -1,0 +1,88 @@
+{
+ "canvas": {
+  "width": 640,
+  "height": 852
+ },
+ "version": "lpba2d054f0c",
+ "layers": {
+  "eyes_half": {
+   "file": "lp_eyes_half.webp",
+   "kind": "eyes",
+   "box": [
+    219,
+    191,
+    419,
+    249
+   ],
+   "closed": 0.5,
+   "note": "LivePortrait"
+  },
+  "eyes_low": {
+   "file": "lp_eyes_low.webp",
+   "kind": "eyes",
+   "box": [
+    219,
+    191,
+    419,
+    249
+   ],
+   "closed": 0.85,
+   "note": "LivePortrait"
+  },
+  "eyes_closed": {
+   "file": "lp_eyes_closed.webp",
+   "kind": "eyes",
+   "box": [
+    219,
+    191,
+    419,
+    249
+   ],
+   "closed": 1.0,
+   "note": "LivePortrait"
+  },
+  "gaze_left": {
+   "file": "gaze_left.webp",
+   "kind": "eyes",
+   "box": [
+    219,
+    191,
+    419,
+    249
+   ],
+   "gaze": [
+    -5.0,
+    0.0
+   ]
+  },
+  "gaze_right": {
+   "file": "gaze_right.webp",
+   "kind": "eyes",
+   "box": [
+    219,
+    191,
+    419,
+    249
+   ],
+   "gaze": [
+    5.0,
+    0.0
+   ]
+  },
+  "gaze_up": {
+   "file": "gaze_up.webp",
+   "kind": "eyes",
+   "box": [
+    219,
+    191,
+    419,
+    249
+   ],
+   "gaze": [
+    0.0,
+    -2.5
+   ]
+  }
+ },
+ "note": "LivePortrait blink / gaze layers (lp_build.py); no brow warp layers, no poses"
+}

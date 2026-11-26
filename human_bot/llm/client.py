@@ -16,6 +16,7 @@ import os
 import uuid
 import re
 import sys
+import threading
 import time
 import urllib.error
 import urllib.parse
@@ -25,13 +26,16 @@ from typing import Callable, Iterator
 
 
 def _load_env() -> None:
-    env = Path(__file__).resolve().parents[2] / "voice_clone" / ".env"
-    if not env.exists():
-        return
-    for line in env.read_text(encoding="utf-8", errors="ignore").splitlines():
-        if "=" in line and not line.strip().startswith("#"):
-            k, v = line.split("=", 1)
-            os.environ.setdefault(k.strip(), v.strip())
+    # voice_clone/.env (API keys) first, then the project's root .env (e.g. BITRIX24_WEBHOOK_URL, 2026-11-14:
+    # the webhook was put there and never reached the bot). Both git-ignored; a variable already set wins.
+    root = Path(__file__).resolve().parents[2]
+    for env in (root / "voice_clone" / ".env", root / ".env"):
+        if not env.exists():
+            continue
+        for line in env.read_text(encoding="utf-8", errors="ignore").splitlines():
+            if "=" in line and not line.strip().startswith("#"):
+                k, v = line.split("=", 1)
+                os.environ.setdefault(k.strip(), v.strip().strip('"').strip("'"))
 
 
 _load_env()
@@ -78,7 +82,9 @@ def _mark_dead(name: str, why: str) -> None:
     if "429" in why:
         ttl = 30.0
     elif any(c in why for c in ("401", "403", "404")):
-        ttl = 300.0
+        # a bad key does not fix itself: after the second 401/403/404 leave it alone for 6 h (it was re-tried every
+        # 5 min, each time costing a customer's turn a failed round trip; 2026-11-24 latency trace)
+        ttl = 300.0 if n < 2 else 6 * 3600.0
     else:
         # transient blip: back off fast, but not so fast that a dead endpoint
         # hammers every turn; 5 s after first two failures, 30 s after that.
@@ -96,7 +102,9 @@ def _mark_alive(name: str) -> None:
 # Socket timeout per LLM request. Voice turns need a first token in under ~2 s:
 # Groq streams in ~0.2 s; anything slower than 3 s means the provider is stalled
 # and we fall back immediately instead of making the customer wait.
-LLM_TIMEOUT_S = int(os.getenv("HUMAN_BOT_LLM_TIMEOUT_S", "3"))
+LLM_TIMEOUT_S = float(os.getenv("HUMAN_BOT_LLM_TIMEOUT_S", "2"))
+# total time to a first token across every provider before the offline answer takes over (see stream_reply)
+LLM_BUDGET_S = float(os.getenv("HUMAN_BOT_LLM_BUDGET_S", "2.2"))
 
 # --------------------------------------------------------------------------- response cache
 # Exact-match cache for short, high-frequency customer questions. Avoids a network
@@ -138,8 +146,16 @@ def _post(url: str, payload: dict, key: str, timeout: int = LLM_TIMEOUT_S):
     return urllib.request.urlopen(req, timeout=timeout)
 
 
+GROQ_REASONING = os.getenv("HUMAN_BOT_GROQ_REASONING", "none").strip()   # "" = provider default
+
+
 def stream_openai(messages: list[dict], base: str, key: str, model: str) -> Iterator[str]:
     payload = {"model": model, "messages": messages, "stream": True, "temperature": 0.5, "max_tokens": 160}
+    # Qwen3 on Groq thinks before it answers: the first spoken token waited ~0.8 s (p50) and every sentence of
+    # the reply then arrived within ~60 ms of it (2026-11-24 trace), i.e. the wait is hidden reasoning, which
+    # also burns the free-tier token quota (the 429s). A voice reply needs no chain of thought.
+    if "groq.com" in base and "qwen3" in model.lower() and GROQ_REASONING:
+        payload["reasoning_effort"] = GROQ_REASONING
     with _post(f"{base}/chat/completions", payload, key) as r:
         for raw in r:
             line = raw.decode("utf-8", "ignore").strip()
@@ -171,12 +187,14 @@ def stream_gemini(messages: list[dict]) -> Iterator[str]:
         "generationConfig": {"temperature": 0.5, "maxOutputTokens": 160, "thinkingConfig": {"thinkingBudget": 0}},
     }
     models = [GEMINI_MODEL] + [m for m in GEMINI_MODELS if m != GEMINI_MODEL]
+    t0 = time.monotonic()
     for i, model in enumerate(models):
         try:
             yield from _stream_gemini_model(model, payload)
             return
         except urllib.error.HTTPError as ex:   # overloaded / unknown model: the next one, before any token went out
-            if i + 1 < len(models) and ex.code in (404, 429, 500, 503):
+            # ...but only while the turn's first-token budget lasts (two models in a row overran it: 5.4 s)
+            if i + 1 < len(models) and ex.code in (404, 429, 500, 503) and time.monotonic() - t0 < LLM_BUDGET_S / 2:
                 continue
             raise
 
@@ -227,6 +245,60 @@ def cached_reply(text: str) -> str | None:
     return _cache_get(text)
 
 
+class _Prefetch:
+    """Runs a token generator on a worker thread so the caller can wait for the FIRST non-blank token with a hard
+    wall-clock deadline (a socket timeout does not fire while a slow stream trickles bytes). After the first token
+    the rest is read through the same queue. A generator that misses the deadline keeps running in the background
+    and is simply ignored."""
+
+    def __init__(self, gen: Iterator[str], first_timeout: float) -> None:
+        import queue  # noqa: PLC0415
+        self.q: "queue.Queue[tuple[str, object]]" = queue.Queue()
+        self.first_timeout = first_timeout
+        self.timed_out = False
+
+        def run() -> None:
+            try:
+                for tok in gen:
+                    self.q.put(("tok", tok))
+                self.q.put(("end", None))
+            except Exception as ex:  # noqa: BLE001
+                self.q.put(("err", ex))
+
+        threading.Thread(target=run, daemon=True, name="llm-prefetch").start()
+
+    def first(self) -> str | None:
+        import queue  # noqa: PLC0415
+        deadline = time.monotonic() + self.first_timeout
+        while True:
+            left = deadline - time.monotonic()
+            if left <= 0:
+                self.timed_out = True
+                return None
+            try:
+                kind, val = self.q.get(timeout=left)
+            except queue.Empty:
+                self.timed_out = True
+                return None
+            if kind == "err":
+                raise val  # type: ignore[misc]
+            if kind == "end":
+                return None
+            if val and str(val).strip():
+                return str(val)
+
+    def __iter__(self):
+        import queue  # noqa: PLC0415
+        while True:
+            try:
+                kind, val = self.q.get(timeout=max(LLM_TIMEOUT_S * 3, 6))
+            except queue.Empty:
+                return                     # the stream stalled mid-answer: end the reply where it is
+            if kind != "tok":
+                return
+            yield val
+
+
 def stream_reply(messages: list[dict], fallback: "OfflineBrain | None" = None) -> Iterator[str]:
     """Try each configured provider; a provider that fails is skipped for a while.
 
@@ -248,18 +320,31 @@ def stream_reply(messages: list[dict], fallback: "OfflineBrain | None" = None) -
     candidates = [(n, available[n]) for n in LLM_ORDER if n in available]
     candidates += [(n, f) for n, f in available.items() if n not in LLM_ORDER]  # anything not listed goes last
 
+    # 2026-11-25 owner "respond in milliseconds": one first-token budget for ALL providers together. Each had its own
+    # 3 s timeout (+1 retry), so a slow Groq then Gemini added up to 5+ s of silence ("what are your timings?" took
+    # 5.1 s). Past the budget the offline script / KB answers at once.
+    t_start = time.monotonic()
     for name, make in candidates:
         if _is_dead(name):
             continue
+        if time.monotonic() - t_start > LLM_BUDGET_S:
+            print(f"[llm] first-token budget {LLM_BUDGET_S:.1f}s spent: offline answer", file=sys.stderr, flush=True)
+            break
         gen = None
         first = None
         for _attempt in (1, 2):
+            if _attempt == 2 and time.monotonic() - t_start > LLM_BUDGET_S / 2:
+                break                     # no time left for a retry of an empty completion
             try:
-                gen = make()
-                for tok in gen:
-                    if tok and tok.strip():
-                        first = tok
-                        break
+                # the first non-blank token must arrive inside what is left of the budget: a provider that accepts
+                # the request and then trickles (Groq free tier: 4.7 s to a first token) no longer holds the turn
+                left = max(0.4, LLM_BUDGET_S - (time.monotonic() - t_start))
+                gen = _Prefetch(make(), first_timeout=left)
+                first = gen.first()
+                if first is None and gen.timed_out:
+                    print(f"[llm] '{name}' no first token in {left:.1f}s: next / offline", file=sys.stderr, flush=True)
+                    gen = None
+                    break
             except Exception as ex:  # noqa: BLE001
                 _mark_dead(name, f"{type(ex).__name__}: {str(ex)[:120]}")
                 gen, first = None, None
@@ -459,7 +544,7 @@ class OfflineServiceBrain(OfflineBrain):
             if 1 <= len(words) <= 3 and not self._INFO.search(t):
                 self.slots["car"] = " ".join(words).title()
         # name and phone: the same patterns the server's service-request collector uses
-        from crm.service_request import NAME_RE, NAME_STOP, PHONE_RE, REG_RE, _bare_name  # noqa: PLC0415
+        from crm.service_request import PHONE_RE, REG_RE, _bare_name, name_from  # noqa: PLC0415
         m = PHONE_RE.search(text)
         if m:
             self.slots["phone"] = m.group(1)
@@ -477,11 +562,9 @@ class OfflineServiceBrain(OfflineBrain):
         m = REG_RE.search(text)
         if m:  # "DL 01 AB 1234": the registration number, asked together with the model
             self.slots["registration"] = re.sub(r"[\s-]", "", m.group(1)).upper()
-        m = NAME_RE.search(text)
-        if m:
-            words = [w for w in m.group(1).split() if w.lower() not in NAME_STOP]
-            if words:
-                self.slots["name"] = " ".join(words).title()
+        name = name_from(text)
+        if name:
+            self.slots["name"] = name
         if not self.slots.get("name") and getattr(self, "last_reply", ""):
             # the bare-name answer: the bot just asked "Aapka naam kya hai?" and the customer said
             # the name alone ("vinay" — STT also returns "VInay"/"VINAY"). _bare_name only fires when
@@ -526,29 +609,33 @@ class OfflineServiceBrain(OfflineBrain):
         return " ".join(x for x in (day, part, clock) if x)
 
     def _next_question(self) -> str:
+        # The server's booking step machine decides the next question (app.py booking_step): "-" = ask nothing (the
+        # server appends the step question itself), any other text = ask exactly that. Without it, the script below.
+        pa = getattr(self, "pending_ask", "")
+        if pa:
+            return "" if pa == "-" else pa
+        return self._own_next_question()
+
+    def _own_next_question(self) -> str:
+        """2026-11-24 owner: which servicing first; after it is known, the mobile number ("servicing ke liye aapko call
+        aa jayega"), then the name. Car model / number / area / time are never asked: used only if the customer says them."""
         s = self.slots
-        if not s.get("car"):
-            return "Aapki car ka model aur number kya hai?"
-        if not s.get("registration") and not self.asked_reg:
-            self.asked_reg = True  # asked once; a customer who does not have it handy is not asked again
-            return "Gaadi ka registration number bhi bata dijiye, record ke liye."
+        L = self._L
         if not s.get("service"):
-            return "Gaadi mein kya problem hai, ya kaunsi service karwani hai?"
-        if not s.get("area"):
-            return f"Aap kis area mein hain, {', '.join(self.areas[:-1])} ya {self.areas[-1]}?"
-        if not s.get("name"):
-            return "Aapka naam kya hai?"
+            return L("Gaadi mein kis cheez ki servicing karwani hai? Jaise engine, battery, tyres, AC, brakes ya denting-painting?",
+                     "Which service does the car need? For example engine, battery, tyres, AC, brakes, or denting and painting?")
         if not s.get("phone"):
-            return "Aapka mobile number bata dijiye, team usi par call karegi."
-        if not s.get("when"):
-            self.offered = True
-            return "Kab convenient rahega, aaj ya kal? Free pickup arrange kar deti hoon."
-        # everything known: read it back and ask for the go-ahead (the server files the request on "haan")
+            return L("Aapka mobile number bata dijiye, servicing ke liye aapko call aa jayega.",
+                     "Please share your mobile number; you'll get a call for the servicing.")
+        if not s.get("name"):
+            return L("Aapka naam kya hai?", "May I have your name?")
+        # everything needed is known: read it back and ask for the go-ahead (the server files the request on "haan")
         self.offered = True
         digits = " ".join(s["phone"])
-        car = f"{s['car']} {' '.join(s['registration'])}" if s.get("registration") else s["car"]  # spelt out for speech
-        return (f"{s['name']} ji, {car} ki {s['service']}, {s['area']} se {s['when']} pickup, number {digits}. "
-                "Main yeh request bhej doon?")
+        car = (f" {s['car']}" + (f" {' '.join(s['registration'])}" if s.get("registration") else "")) if s.get("car") else ""
+        if self.en:
+            return f"{s['name']}, {s['service']}{' for your' + car if car else ''}, number {digits}. Shall I send this request?"
+        return f"{s['name']} ji,{car + ' ki' if car else ''} {s['service']}, number {digits}. Main yeh request bhej doon?"
 
     _STOP = {"kitna", "kitne", "kitni", "price", "kharcha", "padega", "lagega", "karne", "karna", "hoga", "hota", "hai", "mein", "kya",
              "paisa", "paise", "rupees", "cost", "charge", "rate", "aapke", "yahan", "mere", "meri", "gaadi", "gadi", "car"}
@@ -577,12 +664,32 @@ class OfflineServiceBrain(OfflineBrain):
                 continue
             if (h.get("page_type") or "") == "qa":
                 # customer-call knowledge (kb/src/ingest_qa.js): the first line is already Neha's own answer
-                first = (h.get("text") or "").split("\n", 1)[0].strip()
+                # 2026-11-25 loop: a site FAQ chunk can start with its question ("How long does an AC gas refill
+                # take?"), which was echoed back cut short ("How long does an."): take the first answer line
+                lines = [x.strip() for x in (h.get("text") or "").split("\n") if x.strip()]
+                lines = [x for x in lines if not x.endswith("?") and not x.lower().startswith(("source:", "english:"))
+                         and len(x.split()) >= 4]
+                if not lines:
+                    continue
+                first = lines[0]
+                if self.en:   # call notes carry an "English: ..." line
+                    m = re.search(r"English:\s*(.+?)(?:\n|$)", h.get("text") or "")
+                    if m:
+                        first = m.group(1).strip()
                 return first if first.endswith((".", "!", "?")) else first + "."
-            snippet = " ".join(words[:38]).rstrip(",;:-")
-            if not snippet.endswith((".", "!", "?")):
-                snippet += "."
-            return f"Website ke hisaab se: {snippet} Detail ke liye main team se call karwa deti hoon?"
+            # 2026-11-25 loop: an FAQ chunk is mostly questions ("AC Gas Refill > COMMON QUESTIONS Will an AC gas
+            # refill...? How long does an") and was quoted as is, cut mid-question. Keep only answer sentences.
+            body = re.sub(r"^[^\n>]*>\s*[A-Z ]+\n", "", (h.get("text") or "").strip())
+            sents = [x.strip() for x in re.split(r"(?<=[.!?])\s+", " ".join(body.split())) if x.strip()]
+            sents = [x for x in sents if not x.endswith("?") and x.endswith((".", "!")) and len(x.split()) >= 4]
+            if not sents:
+                continue
+            # questions and answers alternate in an FAQ chunk: the next sentence answers another question
+            snippet = re.sub(r"^(?:A|Ans|Answer)\s*[:.-]\s*", "", sents[0])
+            if len(snippet.split()) > 38:
+                snippet = " ".join(snippet.split()[:38]).rstrip(",;:-") + "."
+            return self._L(f"Website ke hisaab se: {snippet} Detail ke liye main team se call karwa deti hoon?",
+                           f"According to our website: {snippet} Shall I have the team call you with details?")
         return None
 
     # -- turn -----------------------------------------------------------------------
@@ -619,69 +726,111 @@ class OfflineServiceBrain(OfflineBrain):
         self._remember(user)
         new = [k for k in self.slots if before.get(k) != self.slots.get(k)]  # facts this turn added
         t = " " + user.lower().strip() + " "
-        out = self._reply(user, t, new)
+        hint = getattr(self, "fast_hint", None)
+        self.fast_hint = None
+        # every AI provider failed on a Hindi-script question that a saved answer covers: give that answer
+        # (server/app.py sets it per turn) rather than "samajh nahi paayi"
+        out = hint if hint else self._reply(user, t, new)
         self.last_reply = out  # the next turn is an answer to THIS question (bare-name capture)
         return out
 
     def _reply(self, user: str, t: str, new: list[str]) -> str:
         if not t.strip() or re.search(r"\b(hi|hello|namaste|namaskar|hey)\b", t):
-            return f"Namaste! Main {self.name}, {self.company} se. Aapki gaadi mein kya problem hai, ya kaunsi service chahiye?"
+            return self._L(f"Namaste! Main {self.name}, {self.company} se. Aapki gaadi mein kya problem hai, ya kaunsi service chahiye?",
+                           f"Hello! I'm {self.name} from {self.company}. What's the problem with your car, or which service do you need?")
 
         if re.search(r"\b(human|real person|agent|insaan|manager|complaint|shikayat|dispute|legal|emergency)\b", t) or "baat karni" in t:
             return self.handoff
 
         if re.search(r"\b(thank|thanks|thanku|bye|ok bye|theek hai bye)\b", t):
             self.offered = False
-            return "Thank you ji. Pickup confirm hote hi main details WhatsApp par bhej deti hoon."
+            return self._L("Thank you ji. Pickup confirm hote hi main details WhatsApp par bhej deti hoon.",
+                           "Thank you! Once the pickup is confirmed I'll send the details on WhatsApp.")
 
         bare_yes = re.fullmatch(r"\s*(h+a+n*(\s*ji)?|hanji|haanji|ji(\s*haa*n*)?|हाँ|हां|जी|yes|ok|okay|theek hai|theek|sure|done|kar do|karo|book karo)\s*[.!]*\s*", t)
         if self.offered and bare_yes:
             self.offered = False
-            return "Done ji. Team aapko thodi der mein call karke pickup time confirm karegi. Koi aur help?"
+            return self._L("Done ji. Team aapko thodi der mein call karke pickup time confirm karegi. Koi aur help?",
+                           "Done. The team will call you shortly to confirm the pickup time. Anything else?")
         if bare_yes:  # a plain "haa" to a question: agree and move on, never "samajh nahi paayi"
-            return "Ji. " + self._next_question()
+            return self._L("Ji. ", "Sure. ") + self._next_question()
 
         if re.search(r"\b(pickup|pick up|drop|ghar se|doorstep)\b", t):
             if self.slots.get("area"):
-                return f"Haan ji, {self.slots['area']} mein free pickup and drop hai. " + self._next_question()
-            return "Haan ji, free pickup and drop hai. " + self._next_question()
+                return self._L(f"Haan ji, {self.slots['area']} mein free pickup and drop hai. ",
+                               f"Yes, pickup and drop is free in {self.slots['area']}. ") + self._next_question()
+            return self._L("Haan ji, free pickup and drop hai. ", "Yes, pickup and drop is free. ") + self._next_question()
 
         if self._INFO.search(t):
             web = self._from_website(t)
             if web:
                 return web
             if re.search(r"\b(insurance|claim|cashless|accident)\b", t):
-                return ("Claim ka kaam cashless hota hai: insurance company ka surveyor hum coordinate karte hain, aap sirf policy ke "
-                        "hisaab se deductible aur depreciation (agar zero-dep nahi hai) dete hain. Exact amount survey ke baad pata chalta "
-                        "hai. Policy aur damage ki photo WhatsApp kar dijiye. " + self._next_question())
+                return self._L("Claim ka kaam cashless hota hai: insurance company ka surveyor hum coordinate karte hain, aap sirf policy ke "
+                               "hisaab se deductible aur depreciation (agar zero-dep nahi hai) dete hain. Exact amount survey ke baad pata chalta "
+                               "hai. Policy aur damage ki photo WhatsApp kar dijiye. ",
+                               "Claims are cashless: we coordinate with the insurance surveyor, and you pay only the deductible and "
+                               "depreciation under your policy, if it isn't zero-dep. The exact amount is known after the survey. Please "
+                               "WhatsApp the policy and photos of the damage. ") + self._next_question()
             if re.search(r"\b(address|kahan|kaha|where|location|branch)\b", t):
-                return (f"Hamare workshops {', '.join(self.areas[:-1])} aur {self.areas[-1]} mein hain. "
-                        "Aap kis area mein hain? Main nearest workshop ka address bhijwa deti hoon.")
-            return ("Exact figure gaadi aur kaam par depend karta hai, main abhi verify nahi kar paa rahi. "
-                    "Team se quote dilwa deti hoon. " + self._next_question())
+                return self._L(f"Hamare workshops {', '.join(self.areas[:-1])} aur {self.areas[-1]} mein hain. "
+                               "Aap kis area mein hain? Main nearest workshop ka address bhijwa deti hoon.",
+                               f"Our workshops are in {', '.join(self.areas[:-1])} and {self.areas[-1]}. Which area are you in? "
+                               "I'll send you the nearest workshop's address.")
+            return self._L("Exact figure gaadi aur kaam par depend karta hai, main abhi verify nahi kar paa rahi. "
+                           "Team se quote dilwa deti hoon. ",
+                           "The exact figure depends on the car and the work, and I can't verify it right now. "
+                           "I'll get you a quote from the team. ") + self._next_question()
 
         if self.slots.get("service") and "service" in self.slots and re.search(self._SERVICES_UNION, t):
             label = self.slots["service"]
-            lead = f"{label[0].upper() + label[1:]} ho jayegi, genuine parts ke saath."
+            lead = self._L(f"{label[0].upper() + label[1:]} ho jayegi, genuine parts ke saath.",
+                           f"Yes, we do {label}, with genuine parts.")
             return lead + " " + self._next_question()
 
         if self.slots.get("car") and re.search(self._MAKES_UNION, t):
-            return "Theek hai ji. " + self._next_question()
+            return self._L("Theek hai ji. ", "Okay. ") + self._next_question()
 
         if self.slots.get("area") and re.search("|".join(self._AREAS), t):
-            return f"{self.slots['area']} mein free pickup and drop available hai. " + self._next_question()
+            # "kya aap Ghaziabad mein ho?" asks for a centre, not for pickup (2026-11-25 loop): the website/KB answer
+            # (nearest centre) first, the pickup line only when there is none
+            if re.search(r"\b(mein\s+ho|me\s+ho|branch|centre|center|workshop|office|located|address)\b", t):
+                web = self._from_website(user)
+                if web:
+                    return web + " " + self._next_question()
+            return self._L(f"{self.slots['area']} mein free pickup and drop available hai. ",
+                           f"Free pickup and drop is available in {self.slots['area']}. ") + self._next_question()
 
         if self.slots.get("when") and self._when(t):
             return self._next_question()
 
         if new:  # the customer answered the question (name, number, time...): acknowledge, move on
-            ack = "Number note kar liya. " if "phone" in new else "Theek hai ji. "
+            ack = self._L("Number note kar liya. ", "Got your number. ") if "phone" in new else self._L("Theek hai ji. ", "Okay. ")
             return ack + self._next_question()
         # Nothing recognised (noise, a mis-heard word): say so, then ask the next discovery question.
-        return "Maaf kijiye, main theek se samajh nahi paayi. " + self._next_question()
+        return self._L("Maaf kijiye, main theek se samajh nahi paayi. ", "Sorry, I didn't quite catch that. ") + self._next_question()
+
+    # en: the customer is speaking English (the server sets it from llm/language.py each turn), so the offline
+    # script answers in English too instead of switching back to Hinglish when the models are down
+    en = False
+
+    def _L(self, hinglish: str, english: str) -> str:
+        return english if self.en else hinglish
 
     _SERVICES_UNION = "|".join(p for p, _ in _SERVICES)
     _MAKES_UNION = r"\b(" + "|".join(re.escape(m) for m in _MAKES + _MODELS) + r")\b"
+
+
+_WHEN_EN = (("parso", "the day after tomorrow"), ("aaj", "today"), ("kal", "tomorrow"), ("subah", "morning"),
+            ("dopahar", "afternoon"), ("shaam", "evening"), ("raat", "night"))
+
+
+def when_en(when: str) -> str:
+    """'kal subah 10 baje' -> 'tomorrow morning at 10' (the slot is stored in Hinglish)."""
+    t = re.sub(r"(\d{1,2}(?::\d{2})?) baje", r"at \1", when or "")
+    for hi, en in _WHEN_EN:
+        t = re.sub(rf"\b{hi}\b", en, t)
+    return t
 
 
 def offline_brain(persona: dict | None = None) -> OfflineBrain:
@@ -833,6 +982,7 @@ def edge_voice_and_text(text: str, voice: str | None = None) -> tuple[str, str]:
 # EDGE_RATE / EDGE_PITCH and kept small so the voice stays the same person.
 EMOTION_PROSODY: dict[str, tuple[int, int]] = {  # emotion -> (rate % delta, pitch Hz delta)
     "neutral": (0, 0), "warm": (0, 3), "enthusiastic": (5, 10), "concerned": (-5, -6), "thinking": (-4, 0),
+    "empathetic": (-6, -3),   # apology / "samajh sakti hoon" to an upset customer: slower, soft, not gloomy
 }
 EMOTIONS = frozenset(EMOTION_PROSODY)
 
@@ -930,7 +1080,84 @@ DEEPGRAM_LANG = os.getenv("HUMAN_BOT_DEEPGRAM_LANGUAGE", "multi")
 DEEPGRAM_MIN_CONF = float(os.getenv("HUMAN_BOT_DEEPGRAM_MIN_CONF", "0.45"))   # below: background speech / noise
 DEEPGRAM_KEYTERMS = ["Auto Car Repair", "ACR", "Okhla", "Moti Nagar", "Noida", "Gurgaon", "denting", "painting",
                      "insurance claim", "pickup", "service", "Creta", "Swift", "Nexon", "Innova", "Fortuner", "Seltos"]
-STT_ORDER = [x.strip() for x in (os.getenv("HUMAN_BOT_STT_PROVIDER") or "deepgram,groq").lower().split(",") if x.strip()]
+STT_ORDER = [x.strip() for x in (os.getenv("HUMAN_BOT_STT_PROVIDER") or "deepgram,groq,local").lower().split(",") if x.strip()]
+
+# Local speech-to-text (2026-11-25 owner: "mic catch nahi kar raha"): Groq's free Whisper allows ~20 clips a minute
+# and a talking customer sends 2 per sentence (early + final), so it answered 429 and the card fell back to the
+# browser recogniser, which VS Code's browser does not have. faster-whisper (MIT; model Systran/faster-whisper-*,
+# MIT) runs on the CPU here, no key and no quota. Used after the cloud providers, and directly for 30 s after a 429.
+LOCAL_STT_MODEL = os.getenv("HUMAN_BOT_LOCAL_STT_MODEL", "base")   # "small": better Hindi but ~10 s a clip on this CPU
+_LOCAL = {"model": None, "error": "", "lock": threading.Lock(), "skip_groq_until": 0.0}
+
+
+def local_stt_available() -> bool:
+    try:
+        import faster_whisper  # noqa: F401, PLC0415
+        return True
+    except Exception:  # noqa: BLE001
+        return False
+
+
+def warm_local_stt() -> None:
+    """Load the local model once (downloads ~145 MB for "base" on first run); call from a background thread."""
+    if _LOCAL["model"] is not None or not local_stt_available():
+        return
+    with _LOCAL["lock"]:
+        if _LOCAL["model"] is not None:
+            return
+        try:
+            from faster_whisper import WhisperModel  # noqa: PLC0415
+            t0 = time.perf_counter()
+            _LOCAL["model"] = WhisperModel(LOCAL_STT_MODEL, device="cpu", compute_type="int8")
+            print(f"[stt] local faster-whisper '{LOCAL_STT_MODEL}' ready in {time.perf_counter() - t0:.0f}s", file=sys.stderr, flush=True)
+        except Exception as ex:  # noqa: BLE001
+            _LOCAL["error"] = f"{type(ex).__name__}: {ex}"[:200]
+            print(f"[stt] local model unavailable: {_LOCAL['error']}", file=sys.stderr, flush=True)
+
+
+def _decode_16k(audio: bytes):
+    """webm/opus, mp4, mp3 or wav bytes -> mono float32 at 16 kHz. Done here with PyAV directly because
+    faster-whisper 1.2's own decoder passes an option PyAV 19 removed (metadata_errors)."""
+    import io  # noqa: PLC0415
+
+    import av  # noqa: PLC0415
+    import numpy as np  # noqa: PLC0415
+    out = []
+    with av.open(io.BytesIO(audio), mode="r") as box:
+        stream = next((s for s in box.streams if s.type == "audio"), None)
+        if stream is None:
+            return None
+        rs = av.AudioResampler(format="s16", layout="mono", rate=16000)
+        for frame in box.decode(stream):
+            for f in rs.resample(frame) or []:
+                out.append(f.to_ndarray().reshape(-1))
+        for f in rs.resample(None) or []:      # flush
+            out.append(f.to_ndarray().reshape(-1))
+    if not out:
+        return None
+    return (np.concatenate(out).astype(np.float32) / 32768.0)
+
+
+def _transcribe_local(audio: bytes, mime: str) -> str:
+    if not local_stt_available():
+        raise STTUnavailable("local: faster-whisper not installed")
+    warm_local_stt()
+    m = _LOCAL["model"]
+    if m is None:
+        raise STTUnavailable("local: " + (_LOCAL["error"] or "model not loaded"))
+    try:
+        pcm = _decode_16k(audio)
+        if pcm is None or len(pcm) < 1600:      # under 0.1 s: nothing to hear
+            return ""
+        with _LOCAL["lock"]:   # one decode at a time keeps a small CPU responsive
+            segs, _info = m.transcribe(pcm, beam_size=1, vad_filter=True, initial_prompt=STT_PROMPT,
+                                       condition_on_previous_text=False)
+            parts = [s.text.strip() for s in segs
+                     if s.text.strip() and s.no_speech_prob < STT_NO_SPEECH and s.avg_logprob > STT_MIN_LOGPROB - 0.3]
+    except Exception as ex:  # noqa: BLE001
+        raise STTUnavailable(f"local {type(ex).__name__}: {ex}") from ex
+    text = " ".join(parts).strip()
+    return "" if _STT_NOISE.match(text) else text
 
 
 def _transcribe_deepgram(audio: bytes, mime: str) -> str:
@@ -964,9 +1191,13 @@ def transcribe(audio: bytes, mime: str = "audio/webm") -> str:
         try:
             if prov == "deepgram" and DEEPGRAM_KEY:
                 return _transcribe_deepgram(audio, mime)
-            if prov == "groq" and GROQ_KEY:
+            if prov == "groq" and GROQ_KEY and time.time() >= _LOCAL["skip_groq_until"]:
                 return _transcribe_groq(audio, mime)
+            if prov == "local":
+                return _transcribe_local(audio, mime)
         except STTUnavailable as ex:
+            if prov == "groq" and " 429" in str(ex):
+                _LOCAL["skip_groq_until"] = time.time() + 30   # rate-limited: local for the next 30 s, no wasted round trip
             errors.append(str(ex)[:120])
             print(f"[stt] {prov} failed: {str(ex)[:160]}", file=sys.stderr, flush=True)
     raise STTUnavailable("; ".join(errors) or "no speech-to-text key")

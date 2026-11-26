@@ -53,6 +53,9 @@
       "look_up.mp4",
       "look_up_2.mp4",
       "look_up_3.mp4",
+      "look_up_long.mp4",
+      "look_up_long_2.mp4",
+      "look_up_long_3.mp4",
       "look_left.mp4",
       "look_left_2.mp4",
       "look_left_3.mp4",
@@ -163,6 +166,15 @@
       "concerned.mp4",
       "concerned_2.mp4",
       "concerned_3.mp4",
+      "doubt.mp4",
+      "doubt_2.mp4",
+      "doubt_3.mp4",
+      "turn_left.mp4",
+      "turn_left_2.mp4",
+      "turn_left_3.mp4",
+      "turn_right.mp4",
+      "turn_right_2.mp4",
+      "turn_right_3.mp4",
       "shoulder_tilt.mp4",
       "shoulder_tilt_2.mp4",
       "shoulder_tilt_3.mp4"
@@ -182,6 +194,9 @@
       "look_up.mp4",
       "look_up_2.mp4",
       "look_up_3.mp4",
+      "look_up_long.mp4",
+      "look_up_long_2.mp4",
+      "look_up_long_3.mp4",
       "look_left.mp4",
       "look_left_2.mp4",
       "look_left_3.mp4",
@@ -204,6 +219,9 @@
       "both_hands.mp4",
       "both_hands_2.mp4",
       "both_hands_3.mp4",
+      "laugh.mp4",
+      "laugh_2.mp4",
+      "laugh_3.mp4",
       "explain.mp4",
       "explain_2.mp4",
       "explain_3.mp4"
@@ -233,12 +251,21 @@
     "surprised": [
       "surprised.mp4",
       "surprised_2.mp4",
-      "surprised_3.mp4"
+      "surprised_3.mp4",
+      "surprised_up.mp4",
+      "surprised_up_2.mp4",
+      "surprised_up_3.mp4"
     ],
     "question": [
       "surprised.mp4",
       "surprised_2.mp4",
       "surprised_3.mp4",
+      "surprised_up.mp4",
+      "surprised_up_2.mp4",
+      "surprised_up_3.mp4",
+      "doubt.mp4",
+      "doubt_2.mp4",
+      "doubt_3.mp4",
       "shrug.mp4",
       "shrug_2.mp4",
       "shrug_3.mp4"
@@ -258,6 +285,21 @@
       "look_down_2.mp4",
       "look_down_3.mp4"
     ],
+    "look_up_long": [
+      "look_up_long.mp4",
+      "look_up_long_2.mp4",
+      "look_up_long_3.mp4"
+    ],
+    "turn_left": [
+      "turn_left.mp4",
+      "turn_left_2.mp4",
+      "turn_left_3.mp4"
+    ],
+    "turn_right": [
+      "turn_right.mp4",
+      "turn_right_2.mp4",
+      "turn_right_3.mp4"
+    ],
     "lean_close": [
       "lean_close.mp4",
       "lean_close_2.mp4",
@@ -268,10 +310,20 @@
       "agree_2.mp4",
       "agree_3.mp4"
     ],
+    "head_shake": [
+      "head_shake.mp4",
+      "head_shake_2.mp4",
+      "head_shake_3.mp4"
+    ],
     "concerned": [
       "concerned.mp4",
       "concerned_2.mp4",
       "concerned_3.mp4"
+    ],
+    "doubt": [
+      "doubt.mp4",
+      "doubt_2.mp4",
+      "doubt_3.mp4"
     ],
     "apologetic": [
       "apologetic.mp4",
@@ -283,6 +335,11 @@
       "thank_2.mp4",
       "thank_3.mp4"
     ],
+    "laugh": [
+      "laugh.mp4",
+      "laugh_2.mp4",
+      "laugh_3.mp4"
+    ],
     "attentive": [
       "attentive.mp4",
       "attentive_2.mp4",
@@ -290,6 +347,11 @@
       "sit_up.mp4",
       "sit_up_2.mp4",
       "sit_up_3.mp4"
+    ],
+    "surprised_up": [
+      "surprised_up.mp4",
+      "surprised_up_2.mp4",
+      "surprised_up_3.mp4"
     ],
     "relax": [
       "relax.mp4",
