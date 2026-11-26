@@ -1,38 +1,30 @@
-# Render Blueprint: Neha (bot) + knowledge base, Free plan, Singapore (closest Render region to Delhi NCR).
+# Render blueprint (standalone Auto Car Repair project): the two servers the static site (Vercel) talks to.
+# Vercel hosts only files; the Python bot and the Node knowledge service need a real host like this.
 #   1. Render dashboard -> New -> Blueprint -> this repo.
 #   2. Fill the env vars marked sync:false (keys) in the dashboard. Never commit them.
-#   3. kb service -> Environment -> Secret Files: add qa_pages.jsonl.gz.b64 (customer-call answers, not in git).
-#   Full steps and checks: deploy/render/README.md
-#
-# Free plan: services sleep after 15 min idle (first call ~30-60 s), 512 MB RAM each, no persistent disk, and a
-# free service cannot receive private-network traffic, so the kb has a public URL with its search locked by a key.
-
-envVarGroups:
-  - name: neha-shared
-    envVars:
-      - key: KB_ADMIN_KEY            # one generated secret: the bot sends it, the kb requires it
-        generateValue: true
-
+#   3. Put the bot's public URL (https://acr-neha-bot.onrender.com) into the Vercel landing page / data-api.
 services:
-  # ---------------------------------------------------------------- Neha (Python voice server + widget)
   - type: web
     name: acr-neha-bot
-    # Docker: bakes in the meaning matcher (multilingual-e5-small ONNX, ~150 MB RAM), which the native Python
-    # build lacked. Same image as Railway.
-    runtime: docker
-    dockerfilePath: ./deploy/railway/bot.Dockerfile
-    dockerContext: .
-    # free = preview: sleeps after 15 min idle, no persistent disk. For customers: plan starter or higher.
+    runtime: python
+    # free = preview: sleeps after 15 min idle (first call ~30-50 s), no persistent disk (recordings
+    # vanish on redeploy). For customers: plan starter + the disk block below (see DEPLOYMENT.md).
     plan: free
-    region: singapore
+    region: singapore                 # closest Render region to Delhi NCR
+    buildCommand: pip install edge-tts numpy pillow
+    startCommand: python human_bot/server/app.py --host 0.0.0.0 --port $PORT --persona auto-car-repair
     healthCheckPath: /health
+    # disk:                           # paid plans only; conversation records + audio (human_bot/data)
+    #   name: data
+    #   mountPath: /opt/render/project/src/human_bot/data
+    #   sizeGB: 5
     envVars:
-      - fromGroup: neha-shared
+      - key: PYTHON_VERSION
+        value: 3.12.6
       - key: HUMAN_BOT_BEHIND_PROXY
         value: "1"
-      # "1": the bot's own URL shows autocarrepair.in with the Neha launcher injected, like
-      # http://127.0.0.1:4001 on the laptop (demo). Trackers are blocked and the site's form is answered
-      # locally in that copy, so no fake visits or leads reach ACR. For customers the dealer site carries the
+      # "1": the bot's own URL shows autocarrepair.in with the Neha launcher injected, exactly like
+      # http://127.0.0.1:4001 on the laptop (demo/preview). For customers the dealer site carries the
       # one-line script tag instead; set this to "0" then.
       - key: HUMAN_BOT_SITE_MIRROR
         value: "1"
@@ -42,9 +34,9 @@ services:
         value: puppet
       - key: HUMAN_BOT_VOICE_STYLE
         value: hindi
-      - key: HUMAN_BOT_RECORD        # off until the privacy-policy line about recording is live
-        value: "0"
-      - key: ACR_LEADS_MODE          # leads logged, not posted, until the website developer signs off
+      - key: HUMAN_BOT_RECORD
+        value: "1"
+      - key: ACR_LEADS_MODE
         value: dry
       - key: KB_URL
         fromService:
@@ -57,16 +49,13 @@ services:
         sync: false
       - key: OPENAI_API_KEY
         sync: false
-      - key: DEEPGRAM_API_KEY        # optional: faster speech-to-text
-        sync: false
-      - key: BITRIX24_WEBHOOK_URL    # optional: leads into Bitrix24
-        sync: false
       - key: SIMLI_API_KEY
         sync: false
       - key: HUMAN_BOT_ADMIN_KEY
         generateValue: true
+      - key: KB_ADMIN_KEY
+        sync: false
 
-  # ---------------------------------------------------------------- knowledge base (Node)
   - type: web
     name: acr-neha-kb
     runtime: node
@@ -75,12 +64,14 @@ services:
     region: singapore
     rootDir: kb
     buildCommand: npm ci --omit=dev --ignore-scripts
-    # seed.js copies the committed public-site snapshot (seed/kb.sqlite) into data/ when no database exists and
-    # imports the customer-call answers from the secret file (/etc/secrets/qa_pages.jsonl.gz.b64)
+    # seed.js copies the committed crawl snapshot (seed/kb.sqlite) into data/ when no database exists
     startCommand: node src/seed.js && node src/server.js
     healthCheckPath: /health
+    # disk:                           # paid plans only: kb.sqlite + the embedding model cache survive deploys
+    #   name: kbdata
+    #   mountPath: /opt/render/project/src/kb/data
+    #   sizeGB: 2
     envVars:
-      - fromGroup: neha-shared
       - key: NODE_VERSION
         value: "24"
       - key: KB_HOST
@@ -89,11 +80,11 @@ services:
         value: "10000"
       - key: KB_TRUST_PROXY
         value: "1"
-      - key: KB_SEARCH_REQUIRES_KEY  # the public URL answers searches only with KB_ADMIN_KEY
-        value: "1"
       - key: KB_QUERY_PROVIDER
-        value: gemini                # "local" once the service has >= 1 GB RAM (plan standard)
+        value: gemini               # "local" once the service has >= 1 GB RAM (plan standard)
       - key: KB_LOCAL_MODEL
-        value: none                  # the model OOM-killed a 512 MB free service; Render refuses an empty value
+        value: ""                   # skip the 130 MB model download on the free plan
       - key: GEMINI_API_KEY
+        sync: false
+      - key: KB_ADMIN_KEY
         sync: false
