@@ -49,13 +49,19 @@ export function importBundle(store, siteId, rows) {
     if (ov.suppress[String(r.url).split("#")[1] ?? ""]) continue;   // curated out (src/curate.js): never re-activated
     const ex = store.getPage(siteId, r.url);
     if (ex && ex.status === "active" && ex.content_hash === r.page_hash) { unchanged++; continue; }
-    store.assertModelCompatible(siteId, r.model, r.dim);
+    // the site may already mix the configured model and the local CPU model (src/pipeline.js allows the same pair)
+    // (named explicitly: on a host with KB_LOCAL_MODEL off the committed snapshot still carries local-model chunks)
+    store.assertModelCompatible(siteId, r.model, r.dim,
+      [settings.embedding.model, r.local_model, settings.embedding.localModel, "Xenova/multilingual-e5-small"].filter(Boolean));
     const page = { url: r.url, canonical: r.url, title: r.title, description: r.description, pageType: "qa", lang: r.lang, contentHash: r.page_hash };
     const chunk = { index: 0, heading: r.heading, text: r.text, hash: r.chunk_hash, vec: decodeVec16(r.vec16, r.dim) };
     const pageId = store.replacePage({ websiteId: siteId, page, chunks: [chunk], model: r.model, dim: r.dim, jobId: null, httpStatus: 200 });
-    if (r.local16 && r.local_model) {  // local CPU-model vector too, so a host never embeds at boot
+    // local CPU-model vector too, so a host never embeds at boot. A lean bundle (Render's 1 MB secret-file cap)
+    // carries the local vector once, as the main one (model === local_model), and it fills both indexes.
+    const l16 = r.local16 || (r.local_model && r.local_model === r.model ? r.vec16 : null);
+    if (l16 && r.local_model) {
       const cid = store.db.prepare("SELECT id FROM chunks WHERE page_id = ? AND chunk_index = 0").get(pageId)?.id;
-      const lv = decodeVec16(r.local16, r.local_dim);
+      const lv = decodeVec16(l16, r.local_dim || r.dim);
       if (cid) store.q.insertLocal.run(cid, r.local_model, r.local_dim, Buffer.from(lv.buffer, lv.byteOffset, lv.byteLength));
     }
     imported++;

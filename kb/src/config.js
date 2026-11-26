@@ -24,6 +24,9 @@ export const settings = {
   port: int("KB_PORT", 4100),
   host: env("KB_HOST", "127.0.0.1"),
   adminKey: env("KB_ADMIN_KEY", ""), // empty => management endpoints accept localhost only
+  // 1 => /api/knowledge/search also needs x-api-key (or loopback): for a host where the kb has a public URL
+  // (Render free plan) and serves the curated customer-call answers
+  searchNeedsKey: env("KB_SEARCH_REQUIRES_KEY", "0") === "1",
   dbPath: resolve(DATA_DIR, env("KB_DB_FILE", "kb.sqlite")),
   crawleeDir: resolve(DATA_DIR, "crawlee"),
   userAgent: env("KB_USER_AGENT", "Mozilla/5.0 (compatible; TSG-KB-Crawler/0.1; +https://thesachdevgroup.com)"),

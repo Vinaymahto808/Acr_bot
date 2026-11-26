@@ -709,7 +709,10 @@ def tts_cached(key: str) -> bytes | None:
             TTS_CACHE.pop(next(iter(TTS_CACHE)))
         TTS_CACHE[key] = audio
     return audio
-TTS_LOCK = threading.Lock()
+# RLock, not Lock (2026-11-26): cached_clip, /tts and tts_get_or_make call tts_cached() while holding it, and
+# tts_cached() takes it again on a disk hit; with a plain Lock a fresh process (empty memory cache, warm disk
+# cache: every restart / Render wake-up) deadlocked its first sessions
+TTS_LOCK = threading.RLock()
 TTS_LAST: dict[str, str] = {}
 TTS_INFLIGHT: dict[str, "TtsJob"] = {}   # key -> synthesis in progress (chunks appear as Edge sends them)
 # 400 was FIFO by insertion, so the start-up warm set (backchannels, openers, fast answers) was the first to go

@@ -229,8 +229,12 @@ export function createApp({ store, jobs }) {
     }
     res.json({ website_id: site.id, version: store.versionOf(site.id), count: out.length, rows: out });
   });
-  app.get("/api/knowledge/search", search);
-  app.post("/api/knowledge/search", search);
+  const searchGuard = (req, res, next) => {
+    if (!settings.searchNeedsKey || hasAdminKey(req) || isLoopback(req)) return next();
+    return res.status(401).json({ error: "x-api-key required" });
+  };
+  app.get("/api/knowledge/search", searchGuard, search);
+  app.post("/api/knowledge/search", searchGuard, search);
 
   app.use((_req, res) => res.status(404).json({ error: "not found" }));
   app.use((err, _req, res, _next) => { // eslint-disable-line no-unused-vars

@@ -35,7 +35,10 @@ def retrieve(website_id: str, query: str, k: int = 5, min_score: float | None = 
     url = f"{KB_URL}/api/knowledge/search?{urllib.parse.urlencode(params)}"
     t0 = time.perf_counter()
     try:
-        with urllib.request.urlopen(url, timeout=KB_TIMEOUT_S) as r:
+        # the kb key goes with every search: a kb with a public URL can require it (KB_SEARCH_REQUIRES_KEY=1)
+        key = os.getenv("KB_ADMIN_KEY", "")
+        req = urllib.request.Request(url, headers={"x-api-key": key} if key else {})
+        with urllib.request.urlopen(req, timeout=KB_TIMEOUT_S) as r:
             data = json.loads(r.read().decode("utf-8"))
         _STATUS["last_ok"] = time.time()
         _STATUS["last_error"] = None
